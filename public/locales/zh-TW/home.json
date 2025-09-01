@@ -1,0 +1,76 @@
+{
+  "hero": {
+    "title": "旅遊界的 Uber",
+    "subtitle": "連接在地地陪與旅客的雙邊媒合平台。輕鬆找到可信賴的在地嚮導，享受專業導覽服務。",
+    "popular_destinations": "熱門目的地",
+    "learn_more": "了解更多",
+    "become_guide": "成為地陪"
+  },
+  "stats": {
+    "guides": "位地陪",
+    "travelers": "位旅客",
+    "bookings": "次預訂",
+    "rating": "平均評分"
+  },
+  "features": {
+    "title": "為什麼選擇 Guidee？",
+    "subtitle": "我們提供安全、便捷、高品質的地陪媒合服務",
+    "trust": {
+      "title": "信任機制",
+      "description": "完整的身分驗證與評價系統，確保每次互動都安全可靠"
+    },
+    "quality": {
+      "title": "品質保證",
+      "description": "嚴格篩選地陪，提供專業的在地導覽服務"
+    },
+    "support": {
+      "title": "24/7 支援",
+      "description": "全天候客服支援，解決您的任何問題"
+    },
+    "payment": {
+      "title": "安全付款",
+      "description": "平台代收代付，保障雙方權益，支援多種付款方式"
+    }
+  },
+  "how_it_works": {
+    "title": "如何使用 Guidee？",
+    "subtitle": "簡單四步驟，輕鬆找到完美的地陪",
+    "step1": {
+      "title": "搜尋地陪",
+      "description": "根據目的地、日期、語言等條件搜尋合適的地陪"
+    },
+    "step2": {
+      "title": "查看檔案",
+      "description": "瀏覽地陪的個人介紹、專長領域和客戶評價"
+    },
+    "step3": {
+      "title": "預訂服務",
+      "description": "選擇服務時間，填寫需求，安全付款預訂"
+    },
+    "step4": {
+      "title": "享受旅程",
+      "description": "與地陪會面，享受專業的在地導覽服務"
+    }
+  },
+  "popular_services": {
+    "title": "熱門服務",
+    "subtitle": "發現最受歡迎的地陪服務",
+    "view_all": "查看全部"
+  },
+  "testimonials": {
+    "title": "用戶見證",
+    "subtitle": "看看其他用戶怎麼說"
+  },
+  "cta": {
+    "traveler": {
+      "title": "開始您的旅程",
+      "description": "立即搜尋並預訂您的專屬地陪",
+      "button": "尋找地陪"
+    },
+    "provider": {
+      "title": "成為地陪賺取收入",
+      "description": "分享您的在地知識，幫助旅客探索您的城市",
+      "button": "立即加入"
+    }
+  }
+}

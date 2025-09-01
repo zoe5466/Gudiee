@@ -1,0 +1,10 @@
+{
+  "name": "Guidee - 地陪媒合平台",
+  "short_name": "Guidee",
+  "description": "連接在地地陪與旅客的雙邊媒合平台",
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#FF5A5F",
+  "background_color": "#ffffff",
+  "icons": []
+}

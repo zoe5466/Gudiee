@@ -1,0 +1,54 @@
+/* Component hover effects */
+.card-hover {
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.card-hover:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+}
+
+.button-hover {
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.button-hover:hover {
+  transform: scale(1.05);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+}
+
+.icon-hover {
+  transition: transform 0.3s ease;
+}
+
+.icon-hover:hover {
+  transform: scale(1.1);
+}
+
+.text-hover {
+  transition: color 0.3s ease;
+}
+
+.text-hover:hover {
+  color: #2563eb !important;
+}
+
+.group:hover .group-hover-scale {
+  transform: scale(1.1);
+}
+
+.group:hover .group-hover-color {
+  color: #2563eb !important;
+}
+
+.badge-hover {
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.badge-hover:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1) !important;
+}

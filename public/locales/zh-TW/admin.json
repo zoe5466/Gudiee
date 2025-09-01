@@ -1,0 +1,148 @@
+{
+  "title": "系統儀表板",
+  "welcome": "歡迎回到 Guidee 管理中心",
+  "description": "即時掌握平台營運狀況",
+  "system_status": "系統運作正常",
+  "last_updated": "最後更新",
+  
+  "nav": {
+    "dashboard": "儀表板", 
+    "users": "用戶管理",
+    "guides": "地陪管理", 
+    "services": "服務管理",
+    "bookings": "預訂管理",
+    "chat": "客服對話",
+    "reviews": "評論管理",
+    "analytics": "數據分析",
+    "settings": "系統設定",
+    "logout": "安全登出"
+  },
+
+  "stats": {
+    "total_users": "總用戶數",
+    "total_services": "總服務數", 
+    "total_bookings": "總訂單數",
+    "total_revenue": "總營收",
+    "monthly_growth": "本月增長",
+    "published_content": "已發布內容",
+    "draft_content": "草稿內容",
+    "pending_services": "待審核服務",
+    "active_bookings": "進行中",
+    "average_rating": "平均評分",
+    "monthly_views": "本月瀏覽量"
+  },
+
+  "user_management": {
+    "title": "用戶管理",
+    "description": "管理平台所有註冊用戶和權限設定",
+    "view_manage": "查看管理",
+    "user": "位用戶"
+  },
+
+  "service_management": {
+    "title": "服務管理", 
+    "description": "審核和管理所有地陪服務的狀態",
+    "manage_services": "管理服務",
+    "service": "個服務",
+    "pending": "待審核"
+  },
+
+  "booking_management": {
+    "title": "訂單管理",
+    "description": "處理預訂和退款", 
+    "manage_bookings": "管理訂單",
+    "booking": "筆訂單",
+    "in_progress": "進行中"
+  },
+
+  "chat_management": {
+    "title": "客服對話",
+    "active_conversations": "進行中對話",
+    "pending_messages": "待處理訊息",
+    "avg_response_time": "平均回應時間",
+    "minutes": "分鐘",
+    "no_conversations": "目前沒有進行中的對話",
+    "search_conversations": "搜尋對話紀錄...",
+    "all_status": "所有狀態", 
+    "active": "進行中",
+    "waiting": "等待中",
+    "resolved": "已解決",
+    "conversation_details": "對話詳情",
+    "customer": "客戶",
+    "guide": "地陪",
+    "admin": "管理員",
+    "send_message": "發送訊息",
+    "resolve": "標記為已解決",
+    "reopen": "重新開啟"
+  },
+
+  "review_management": {
+    "title": "評論管理", 
+    "pending_reviews": "待審核評論",
+    "total_reviews": "總評論數",
+    "average_rating": "平均評分",
+    "flagged_reviews": "被檢舉評論",
+    "search_reviews": "搜尋評論...",
+    "all_status": "所有狀態",
+    "pending": "待審核", 
+    "approved": "已通過",
+    "rejected": "已拒絕",
+    "flagged": "被檢舉",
+    "approve": "通過",
+    "reject": "拒絕",
+    "view_details": "查看詳情",
+    "service": "服務",
+    "rating": "評分",
+    "comment": "評論內容",
+    "no_reviews": "目前沒有評論記錄"
+  },
+
+  "cms": {
+    "title": "內容管理系統",
+    "description": "管理網站內容、監控分析數據和配置系統設定",
+    "overview": "總覽",
+    "content_management": "內容管理", 
+    "analytics": "分析統計",
+    "system_settings": "系統設定",
+    "total_content": "總內容數量",
+    "published_content": "已發布內容",
+    "draft_content": "草稿內容",
+    "monthly_views": "本月瀏覽量",
+    "popular_content": "熱門內容",
+    "views": "瀏覽",
+    "analytics_coming_soon": "分析功能開發中",
+    "analytics_description": "詳細的內容分析和統計功能即將推出",
+    "settings_coming_soon": "設定功能開發中",
+    "settings_description": "CMS 配置和系統設定功能即將推出"
+  },
+
+  "common": {
+    "loading": "載入中...",
+    "search": "搜尋用戶、服務或訂單...",
+    "filter": "篩選",
+    "export": "匯出",
+    "refresh": "重新整理",
+    "view": "查看",
+    "edit": "編輯",
+    "delete": "刪除", 
+    "approve": "通過",
+    "reject": "拒絕",
+    "cancel": "取消",
+    "save": "儲存",
+    "close": "關閉",
+    "back": "返回",
+    "return_home": "返回首頁",
+    "role": {
+      "admin": "管理員",
+      "guide": "地陪",
+      "user": "用戶"
+    },
+    "status": {
+      "active": "活躍",
+      "inactive": "非活躍", 
+      "pending": "待處理",
+      "approved": "已通過",
+      "rejected": "已拒絕"
+    }
+  }
+}

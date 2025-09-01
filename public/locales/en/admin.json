@@ -1,0 +1,148 @@
+{
+  "title": "System Dashboard",
+  "welcome": "Welcome back to Guidee Admin Center",
+  "description": "Real-time platform operation insights",
+  "system_status": "System running normally",
+  "last_updated": "Last updated",
+  
+  "nav": {
+    "dashboard": "Dashboard", 
+    "users": "User Management",
+    "guides": "Guide Management", 
+    "services": "Service Management",
+    "bookings": "Booking Management",
+    "chat": "Customer Support",
+    "reviews": "Review Management",
+    "analytics": "Data Analytics",
+    "settings": "System Settings",
+    "logout": "Secure Logout"
+  },
+
+  "stats": {
+    "total_users": "Total Users",
+    "total_services": "Total Services", 
+    "total_bookings": "Total Bookings",
+    "total_revenue": "Total Revenue",
+    "monthly_growth": "Monthly Growth",
+    "published_content": "Published Content",
+    "draft_content": "Draft Content",
+    "pending_services": "Pending Services",
+    "active_bookings": "In Progress",
+    "average_rating": "Average Rating",
+    "monthly_views": "Monthly Views"
+  },
+
+  "user_management": {
+    "title": "User Management",
+    "description": "Manage all registered users and permission settings",
+    "view_manage": "View & Manage",
+    "user": "Users"
+  },
+
+  "service_management": {
+    "title": "Service Management", 
+    "description": "Review and manage all guide service statuses",
+    "manage_services": "Manage Services",
+    "service": "Services",
+    "pending": "Pending"
+  },
+
+  "booking_management": {
+    "title": "Booking Management",
+    "description": "Handle bookings and refunds", 
+    "manage_bookings": "Manage Bookings",
+    "booking": "Bookings",
+    "in_progress": "In Progress"
+  },
+
+  "chat_management": {
+    "title": "Customer Support",
+    "active_conversations": "Active Conversations",
+    "pending_messages": "Pending Messages",
+    "avg_response_time": "Avg Response Time",
+    "minutes": "minutes",
+    "no_conversations": "No active conversations at the moment",
+    "search_conversations": "Search conversation history...",
+    "all_status": "All Status", 
+    "active": "Active",
+    "waiting": "Waiting",
+    "resolved": "Resolved",
+    "conversation_details": "Conversation Details",
+    "customer": "Customer",
+    "guide": "Guide",
+    "admin": "Admin",
+    "send_message": "Send Message",
+    "resolve": "Mark as Resolved",
+    "reopen": "Reopen"
+  },
+
+  "review_management": {
+    "title": "Review Management", 
+    "pending_reviews": "Pending Reviews",
+    "total_reviews": "Total Reviews",
+    "average_rating": "Average Rating",
+    "flagged_reviews": "Flagged Reviews",
+    "search_reviews": "Search reviews...",
+    "all_status": "All Status",
+    "pending": "Pending", 
+    "approved": "Approved",
+    "rejected": "Rejected",
+    "flagged": "Flagged",
+    "approve": "Approve",
+    "reject": "Reject",
+    "view_details": "View Details",
+    "service": "Service",
+    "rating": "Rating",
+    "comment": "Comment",
+    "no_reviews": "No reviews found at the moment"
+  },
+
+  "cms": {
+    "title": "Content Management System",
+    "description": "Manage website content, monitor analytics and configure system settings",
+    "overview": "Overview",
+    "content_management": "Content Management", 
+    "analytics": "Analytics",
+    "system_settings": "System Settings",
+    "total_content": "Total Content",
+    "published_content": "Published Content",
+    "draft_content": "Draft Content",
+    "monthly_views": "Monthly Views",
+    "popular_content": "Popular Content",
+    "views": "views",
+    "analytics_coming_soon": "Analytics Feature In Development",
+    "analytics_description": "Detailed content analytics and statistics features coming soon",
+    "settings_coming_soon": "Settings Feature In Development",
+    "settings_description": "CMS configuration and system settings features coming soon"
+  },
+
+  "common": {
+    "loading": "Loading...",
+    "search": "Search users, services or orders...",
+    "filter": "Filter",
+    "export": "Export",
+    "refresh": "Refresh",
+    "view": "View",
+    "edit": "Edit",
+    "delete": "Delete", 
+    "approve": "Approve",
+    "reject": "Reject",
+    "cancel": "Cancel",
+    "save": "Save",
+    "close": "Close",
+    "back": "Back",
+    "return_home": "Return Home",
+    "role": {
+      "admin": "Administrator",
+      "guide": "Guide",
+      "user": "User"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive", 
+      "pending": "Pending",
+      "approved": "Approved",
+      "rejected": "Rejected"
+    }
+  }
+}
