@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
-import { Star, Upload, X, Plus } from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import { Star, Upload, X, Plus, Minus } from 'lucide-react';
 import { useAuth } from '@/store/auth';
 
 interface ReviewFormProps {
@@ -9,9 +9,12 @@ interface ReviewFormProps {
   serviceId: string;
   serviceName: string;
   guideName: string;
+  guideId: string;
   onSubmit: (reviewData: any) => Promise<void>;
   onCancel: () => void;
+  onClose?: () => void;
   isLoading?: boolean;
+  className?: string;
 }
 
 export default function ReviewForm({
@@ -19,9 +22,12 @@ export default function ReviewForm({
   serviceId,
   serviceName,
   guideName,
+  guideId,
   onSubmit,
   onCancel,
-  isLoading = false
+  onClose,
+  isLoading = false,
+  className = ''
 }: ReviewFormProps) {
   const { user } = useAuth();
   
@@ -33,6 +39,7 @@ export default function ReviewForm({
   const [cons, setCons] = useState<string[]>(['']);
   const [isAnonymous, setIsAnonymous] = useState(false);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -46,7 +53,7 @@ export default function ReviewForm({
     const imageFiles = files.filter(file => file.type.startsWith('image/'));
     
     if (imageFiles.length + photos.length > 5) {
-      error('上傳失敗', '最多只能上傳 5 張照片');
+      alert('最多只能上傳 5 張照片');
       return;
     }
     
@@ -93,22 +100,24 @@ export default function ReviewForm({
     e.preventDefault();
     
     if (!user) {
-      error('提交失敗', '請先登入');
+      alert('請先登入');
       return;
     }
     
     if (rating === 0) {
-      error('提交失敗', '請選擇評分');
+      alert('請選擇評分');
       return;
     }
     
     if (comment.trim().length < 10) {
-      error('提交失敗', '評論內容至少需要 10 個字符');
+      alert('評論內容至少需要 10 個字符');
       return;
     }
 
+    setIsSubmitting(true);
+
     try {
-      await submitReview({
+      await onSubmit({
         serviceId,
         guideId,
         userId: user.id,
@@ -125,11 +134,13 @@ export default function ReviewForm({
         tags: selectedTags.length > 0 ? selectedTags : undefined
       });
       
-      success('評論提交成功', '感謝您的寶貴意見！');
+      alert('評論提交成功！感謝您的寶貴意見！');
       onClose?.();
       
     } catch (err) {
-      // 錯誤已在 store 中處理
+      alert('提交失敗，請稍後再試');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 

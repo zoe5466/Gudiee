@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Eye, EyeOff, Mail, Lock, User, Phone, ArrowLeft, AlertCircle, Check } from 'lucide-react';
 import { useAuth } from '@/store/auth';
@@ -19,6 +19,7 @@ interface FormData {
 
 export default function RegisterPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { register, isLoading } = useAuth();
   
   const [formData, setFormData] = useState<FormData>({
@@ -31,6 +32,14 @@ export default function RegisterPage() {
     agreeTerms: false,
     subscribeNewsletter: false
   });
+  
+  // 檢查 URL 參數並設置預設用戶類型
+  useEffect(() => {
+    const type = searchParams.get('type');
+    if (type === 'guide') {
+      setFormData(prev => ({ ...prev, userType: 'guide' }));
+    }
+  }, [searchParams]);
   
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);

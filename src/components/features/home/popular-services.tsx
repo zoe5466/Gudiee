@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { Heart, MapPin, Clock, Users, Star, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -36,20 +37,25 @@ function ServiceCard({
   const [liked, setLiked] = useState(isLiked);
 
   return (
-    <div className="group relative bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border border-gray-100">
-      {/* 圖片區域 */}
-      <div className="relative h-64 overflow-hidden">
-        <img
-          src={image}
-          alt={title}
-          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+    <Link href={`/services/${id}`} className="block">
+      <div className="group relative bg-white rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border border-gray-100 cursor-pointer">
+        {/* 圖片區域 */}
+        <div className="relative h-64 overflow-hidden">
+          <img
+            src={image}
+            alt={title}
+            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
         
         {/* 喜歡按鈕 */}
         <button
-          onClick={() => setLiked(!liked)}
-          className="absolute top-4 right-4 w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-all duration-300 group-hover:scale-110"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setLiked(!liked);
+          }}
+          className="absolute top-4 right-4 w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-all duration-300 group-hover:scale-110 z-10"
         >
           <Heart 
             className={`w-5 h-5 transition-colors duration-300 ${
@@ -110,6 +116,11 @@ function ServiceCard({
           <Button
             size="sm"
             className="bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white rounded-full px-4 py-2 text-sm font-medium transition-all duration-300 transform hover:scale-105"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              window.location.href = `/services/${id}`;
+            }}
           >
             查看詳情
             <ArrowRight className="w-4 h-4 ml-1" />
@@ -117,58 +128,61 @@ function ServiceCard({
         </div>
       </div>
 
-      {/* 懸停效果 */}
-      <div className="absolute inset-0 border-2 border-sky-500 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
-    </div>
+        {/* 懸停效果 */}
+        <div className="absolute inset-0 border-2 border-sky-500 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+      </div>
+    </Link>
   );
 }
 
 export function PopularServices() {
+  // 使用真實的服務 ID，將來可以從 API 獲取
   const popularServices = [
     {
-      id: '1',
+      id: '7c29388c-db1b-4439-bcc0-5f6a74f8b3b1', // 台北101 & 信义区深度导览
       title: '台北101 & 信義區深度導覽',
       location: '台北市信義區',
       price: 800,
       rating: 4.9,
-      reviewCount: 127,
+      reviewCount: 0,
       duration: '4小時',
       maxGuests: 6,
       image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop',
-      guideName: '小美',
+      guideName: '演示導遊',
       guideAvatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face',
       isLiked: false
     },
     {
-      id: '2',
-      title: '九份老街 & 金瓜石礦業遺址',
-      location: '新北市瑞芳區',
-      price: 1000,
+      id: '79084261-80b4-44dc-8b21-89b9d55eaaff', // 夜市美食探险之旅
+      title: '夜市美食探險之旅',
+      location: '台北市士林區',
+      price: 600,
       rating: 4.8,
-      reviewCount: 89,
-      duration: '6小時',
-      maxGuests: 4,
-      image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop',
-      guideName: '阿明',
-      guideAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face',
-      isLiked: true
-    },
-    {
-      id: '3',
-      title: '日月潭環湖 & 邵族文化體驗',
-      location: '南投縣魚池鄉',
-      price: 1200,
-      rating: 4.9,
-      reviewCount: 156,
-      duration: '8小時',
+      reviewCount: 0,
+      duration: '3小時',
       maxGuests: 8,
-      image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop',
-      guideName: '小華',
-      guideAvatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face',
+      image: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=400&h=300&fit=crop',
+      guideName: '演示導遊',
+      guideAvatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face',
       isLiked: false
     },
     {
-      id: '4',
+      id: '14abe77f-7f14-4667-aeaf-560eb688823b', // 阳明山温泉秘境一日游
+      title: '陽明山溫泉秘境一日遊',
+      location: '台北市北投區',
+      price: 1200,
+      rating: 4.9,
+      reviewCount: 0,
+      duration: '6小時',
+      maxGuests: 4,
+      image: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=400&h=300&fit=crop',
+      guideName: '演示導遊',
+      guideAvatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face',
+      isLiked: false
+    },
+    // 可以添加更多模擬服務來填充網格
+    {
+      id: 'mock-4',
       title: '高雄駁二藝術特區 & 愛河',
       location: '高雄市鹽埕區',
       price: 700,
@@ -182,7 +196,7 @@ export function PopularServices() {
       isLiked: false
     },
     {
-      id: '5',
+      id: 'mock-5',
       title: '花蓮太魯閣峽谷探險',
       location: '花蓮縣秀林鄉',
       price: 1500,
@@ -196,7 +210,7 @@ export function PopularServices() {
       isLiked: true
     },
     {
-      id: '6',
+      id: 'mock-6',
       title: '台南古蹟巡禮 & 美食探索',
       location: '台南市中西區',
       price: 900,

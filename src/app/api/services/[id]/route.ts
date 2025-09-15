@@ -13,93 +13,11 @@ interface RouteParams {
   params: { id: string };
 }
 
-// 模擬服務數據
-const getMockService = (id: string) => {
-  const mockServices = {
-    'c1234567-1234-4567-8901-123456789001': {
-      id: 'c1234567-1234-4567-8901-123456789001',
-      title: '台北101 & 信義區深度導覽',
-      description: '專業地陪帶您探索台北最精華的商業區，包含101觀景台、信義商圈購物與在地美食體驗。我們將從象山開始，欣賞台北101的壯觀景色，然後前往信義商圈，體驗台北的繁華都市生活。',
-      shortDescription: '專業地陪帶您探索台北最精華的商業區',
-      price: 800,
-      currency: 'TWD',
-      durationHours: 4,
-      maxGuests: 6,
-      minGuests: 1,
-      location: '台北市信義區',
-      coordinates: [25.0330, 121.5654],
-      images: [
-        'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop',
-        'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop',
-        'https://images.unsplash.com/photo-1551918120-9739cb430c6d?w=800&h=600&fit=crop'
-      ],
-      highlights: ['專業攝影指導', '101觀景台門票', '在地美食推薦', '購物指南'],
-      included: ['專業導覽解說', '101觀景台門票', '美食試吃', '攝影指導'],
-      notIncluded: ['交通費用', '個人消費', '午餐費用'],
-      cancellationPolicy: '24小時前免費取消',
-      status: 'ACTIVE',
-      createdAt: new Date('2024-01-01'),
-      updatedAt: new Date('2024-01-01'),
-      guide: {
-        id: 'guide-001',
-        name: '小美',
-        avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face',
-        userProfile: {
-          bio: '台北資深地陪，擁有5年導覽經驗，熟悉台北各大景點與美食。',
-          location: '台北市',
-          languages: ['中文', '英文', '日文'],
-          specialties: ['城市導覽', '美食體驗', '攝影指導'],
-          experienceYears: 5
-        }
-      },
-      category: {
-        name: '城市導覽'
-      },
-      averageRating: 4.9,
-      totalReviews: 127,
-      totalBookings: 156,
-      reviews: [
-        {
-          id: 'review-001',
-          rating: 5,
-          comment: '小美導覽非常專業，帶我們去了很多隱藏版的美食！',
-          createdAt: new Date('2024-03-15'),
-          reviewer: {
-            id: 'reviewer-001',
-            name: '王小明',
-            avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face'
-          },
-          isAnonymous: false,
-          isVerified: true
-        },
-        {
-          id: 'review-002',
-          rating: 5,
-          comment: '非常棒的體驗！推薦給所有第一次來台北的朋友。',
-          createdAt: new Date('2024-03-10'),
-          reviewer: {
-            id: 'reviewer-002',
-            name: '李小華',
-            avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face'
-          },
-          isAnonymous: false,
-          isVerified: true
-        }
-      ]
-    },
-    // 可以添加更多模擬服務...
-  };
-  
-  return mockServices[id as keyof typeof mockServices];
-};
 
 // GET /api/services/[id] - 獲取單個服務詳情
 export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
-    let service;
-    
-    try {
-      service = await prisma.service.findUnique({
+    const service = await prisma.service.findUnique({
       where: { 
         id: params.id
       },
@@ -145,20 +63,9 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
         }
       }
     });
-    } catch (error) {
-      // 如果數據庫查詢失敗，使用模擬數據
-      console.log('Database query failed, using mock data:', error);
-      service = null;
-    }
 
-    // 如果數據庫中沒有找到服務，嘗試使用模擬數據
     if (!service) {
-      const mockService = getMockService(params.id);
-      if (mockService) {
-        return successResponse(mockService);
-      } else {
-        return notFoundResponse('服務');
-      }
+      return notFoundResponse('服務');
     }
 
     // 計算服務評分

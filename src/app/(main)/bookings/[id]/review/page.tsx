@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { ArrowLeft, Star } from 'lucide-react';
-import { ReviewForm } from '@/components/reviews/review-form';
+import ReviewForm from '@/components/reviews/review-form';
 import { ReviewsList } from '@/components/reviews/reviews-list';
 import { useAuth } from '@/store/auth';
 import { useBooking } from '@/store/booking';

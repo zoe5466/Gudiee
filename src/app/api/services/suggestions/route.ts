@@ -1,312 +1,132 @@
-import { NextRequest } from 'next/server';
-import { prisma } from '@/lib/prisma';
-import { successResponse, errorResponse } from '@/lib/api-response';
+import { NextRequest, NextResponse } from 'next/server';
+
+// 模擬搜尋建議數據
+const mockSuggestions = [
+  {
+    type: 'service',
+    title: '台北101 & 信義區深度導覽',
+    subtitle: '台北市信義區 - NT$ 1200',
+    url: '/services/1',
+    image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=100&h=100&fit=crop'
+  },
+  {
+    type: 'service',
+    title: '九份老街文化巡禮',
+    subtitle: '新北市瑞芳區 - NT$ 2800',
+    url: '/services/2',
+    image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=100&h=100&fit=crop'
+  },
+  {
+    type: 'location',
+    title: '台北市',
+    subtitle: '25+ 個活動',
+    url: '/search?location=taipei',
+    count: 25
+  },
+  {
+    type: 'location',
+    title: '台南市',
+    subtitle: '18+ 個活動',
+    url: '/search?location=tainan',
+    count: 18
+  },
+  {
+    type: 'category',
+    title: '文化導覽',
+    subtitle: '歷史古蹟巡禮',
+    url: '/search?category=culture',
+    count: 12
+  },
+  {
+    type: 'category',
+    title: '美食體驗',
+    subtitle: '在地小吃探索',
+    url: '/search?category=food',
+    count: 20
+  },
+  {
+    type: 'guide',
+    title: '小美導遊',
+    subtitle: '台北文化專家 - 4.9★',
+    url: '/guides/xiaomei',
+    avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face'
+  },
+  {
+    type: 'guide',
+    title: '阿明導遊',
+    subtitle: '山城嚮導 - 4.8★',
+    url: '/guides/aming',
+    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face'
+  }
+];
+
+const popularSuggestions = [
+  {
+    type: 'service',
+    title: '台北101觀景台',
+    subtitle: '熱門景點',
+    url: '/search?q=台北101',
+    count: 156
+  },
+  {
+    type: 'service',
+    title: '九份老街',
+    subtitle: '經典路線',
+    url: '/search?q=九份',
+    count: 89
+  },
+  {
+    type: 'category',
+    title: '夜市美食',
+    subtitle: '台灣特色',
+    url: '/search?category=night-market',
+    count: 45
+  }
+];
 
 // GET /api/services/suggestions - 搜尋建議和自動完成
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const query = searchParams.get('q') || '';
-    const type = searchParams.get('type') || 'all'; // all, services, locations, categories
+    const type = searchParams.get('type') || 'all';
     const limit = parseInt(searchParams.get('limit') || '10');
 
     if (!query || query.length < 2) {
-      return successResponse({
-        suggestions: [],
-        popular: await getPopularSuggestions()
-      });
-    }
-
-    const suggestions: any[] = [];
-
-    // 服務建議
-    if (type === 'all' || type === 'services') {
-      const services = await prisma.service.findMany({
-        where: {
-          status: 'ACTIVE',
-          OR: [
-            { title: { contains: query, mode: 'insensitive' } },
-            { shortDescription: { contains: query, mode: 'insensitive' } }
-          ]
-        },
-        select: {
-          id: true,
-          title: true,
-          location: true,
-          price: true,
-          images: true,
-          guide: {
-            select: {
-              name: true
-            }
-          },
-          _count: {
-            select: {
-              reviews: true
-            }
-          }
-        },
-        take: limit,
-        orderBy: {
-          createdAt: 'desc'
+      return NextResponse.json({
+        success: true,
+        data: {
+          suggestions: [],
+          popular: popularSuggestions.slice(0, limit)
         }
       });
-
-      suggestions.push(...services.map(service => ({
-        id: service.id,
-        type: 'service',
-        title: service.title,
-        subtitle: `${service.location} • ${service.guide.name}`,
-        price: service.price,
-        image: service.images[0] || null,
-        reviewCount: service._count.reviews,
-        url: `/services/${service.id}`
-      })));
     }
 
-    // 地點建議
-    if (type === 'all' || type === 'locations') {
-      const locations = await prisma.service.groupBy({
-        by: ['location'],
-        where: {
-          status: 'ACTIVE',
-          location: { contains: query, mode: 'insensitive' }
-        },
-        _count: {
-          location: true
-        },
-        orderBy: {
-          _count: {
-            location: 'desc'
-          }
-        },
-        take: Math.min(limit, 5)
-      });
-
-      suggestions.push(...locations.map(location => ({
-        type: 'location',
-        title: location.location,
-        subtitle: `${location._count.location} 個服務`,
-        count: location._count.location,
-        url: `/search?location=${encodeURIComponent(location.location)}`
-      })));
-    }
-
-    // 分類建議
-    if (type === 'all' || type === 'categories') {
-      const categories = await prisma.serviceCategory.findMany({
-        where: {
-          isActive: true,
-          name: { contains: query, mode: 'insensitive' }
-        },
-        include: {
-          _count: {
-            select: {
-              services: true
-            }
-          }
-        },
-        take: Math.min(limit, 5),
-        orderBy: {
-          services: {
-            _count: 'desc'
-          }
-        }
-      });
-
-      suggestions.push(...categories.map(category => ({
-        type: 'category',
-        title: category.name,
-        subtitle: `${category._count.services} 個服務`,
-        count: category._count.services,
-        url: `/search?category=${category.slug}`
-      })));
-    }
-
-    // 嚮導建議
-    if (type === 'all' || type === 'guides') {
-      const guides = await prisma.user.findMany({
-        where: {
-          role: 'GUIDE',
-          name: { contains: query, mode: 'insensitive' }
-        },
-        select: {
-          id: true,
-          name: true,
-          avatar: true,
-          userProfile: {
-            select: {
-              location: true,
-              languages: true,
-              specialties: true
-            }
-          },
-          _count: {
-            select: {
-              guidedServices: true,
-              reviewsAsGuide: true
-            }
-          }
-        },
-        take: Math.min(limit, 5),
-        orderBy: {
-          guidedServices: {
-            _count: 'desc'
-          }
-        }
-      });
-
-      suggestions.push(...guides.map(guide => ({
-        type: 'guide',
-        title: guide.name,
-        subtitle: `${guide._count.guidedServices} 個服務 • ${guide._count.reviewsAsGuide} 則評論`,
-        avatar: guide.avatar,
-        location: guide.userProfile?.location,
-        languages: guide.userProfile?.languages || [],
-        specialties: guide.userProfile?.specialties || [],
-        url: `/guides/${guide.id}`
-      })));
-    }
-
-    // 根據相關性排序
-    suggestions.sort((a, b) => {
-      const aRelevance = calculateRelevance(query, a.title);
-      const bRelevance = calculateRelevance(query, b.title);
-      return bRelevance - aRelevance;
+    // 過濾建議
+    let filteredSuggestions = mockSuggestions.filter(suggestion => {
+      const matchesQuery = suggestion.title.toLowerCase().includes(query.toLowerCase()) ||
+                          (suggestion.subtitle && suggestion.subtitle.toLowerCase().includes(query.toLowerCase()));
+      
+      if (type === 'all') return matchesQuery;
+      return matchesQuery && suggestion.type === type;
     });
 
-    return successResponse({
-      suggestions: suggestions.slice(0, limit),
-      query,
-      total: suggestions.length
+    // 限制數量
+    filteredSuggestions = filteredSuggestions.slice(0, limit);
+
+    return NextResponse.json({
+      success: true,
+      data: {
+        suggestions: filteredSuggestions,
+        popular: query.length < 3 ? popularSuggestions.slice(0, 3) : []
+      }
     });
 
   } catch (error) {
-    console.error('Get suggestions error:', error);
-    return errorResponse('取得建議失敗', 500);
-  }
-}
-
-// 計算相關性分數
-function calculateRelevance(query: string, title: string): number {
-  const queryLower = query.toLowerCase();
-  const titleLower = title.toLowerCase();
-  
-  // 完全匹配得最高分
-  if (titleLower === queryLower) return 100;
-  
-  // 開頭匹配得高分
-  if (titleLower.startsWith(queryLower)) return 80;
-  
-  // 包含匹配得中等分
-  if (titleLower.includes(queryLower)) return 60;
-  
-  // 模糊匹配得低分
-  let score = 0;
-  const queryChars = queryLower.split('');
-  let lastIndex = -1;
-  
-  for (const char of queryChars) {
-    const index = titleLower.indexOf(char, lastIndex + 1);
-    if (index > lastIndex) {
-      score += 1;
-      lastIndex = index;
-    }
-  }
-  
-  return Math.min(score / queryChars.length * 40, 40);
-}
-
-// 取得熱門建議
-async function getPopularSuggestions() {
-  try {
-    const [popularServices, popularLocations, popularCategories] = await Promise.all([
-      // 熱門服務
-      prisma.service.findMany({
-        where: { status: 'ACTIVE' },
-        select: {
-          id: true,
-          title: true,
-          location: true,
-          price: true,
-          images: true,
-          _count: {
-            select: {
-              bookings: true,
-              reviews: true
-            }
-          }
-        },
-        orderBy: {
-          bookings: {
-            _count: 'desc'
-          }
-        },
-        take: 5
-      }),
-      
-      // 熱門地點
-      prisma.service.groupBy({
-        by: ['location'],
-        where: { status: 'ACTIVE' },
-        _count: {
-          location: true
-        },
-        orderBy: {
-          _count: {
-            location: 'desc'
-          }
-        },
-        take: 3
-      }),
-      
-      // 熱門分類
-      prisma.serviceCategory.findMany({
-        where: { isActive: true },
-        include: {
-          _count: {
-            select: {
-              services: true
-            }
-          }
-        },
-        orderBy: {
-          services: {
-            _count: 'desc'
-          }
-        },
-        take: 3
-      })
-    ]);
-
-    return {
-      services: popularServices.map(service => ({
-        type: 'service',
-        title: service.title,
-        subtitle: service.location,
-        bookingCount: service._count.bookings,
-        reviewCount: service._count.reviews,
-        url: `/services/${service.id}`
-      })),
-      locations: popularLocations.map(location => ({
-        type: 'location',
-        title: location.location,
-        count: location._count.location,
-        url: `/search?location=${encodeURIComponent(location.location)}`
-      })),
-      categories: popularCategories.map(category => ({
-        type: 'category',
-        title: category.name,
-        count: category._count.services,
-        url: `/search?category=${category.slug}`
-      }))
-    };
-  } catch (error) {
-    console.error('Get popular suggestions error:', error);
-    return {
-      services: [],
-      locations: [],
-      categories: []
-    };
+    console.error('Search suggestions error:', error);
+    return NextResponse.json({
+      success: false,
+      error: '搜尋建議獲取失敗'
+    }, { status: 500 });
   }
 }

@@ -67,7 +67,7 @@ export async function GET(request: NextRequest) {
               avatar: true
             }
           },
-          payment: true
+          payments: true
         },
         orderBy: {
           createdAt: 'desc'
@@ -105,29 +105,36 @@ export async function POST(request: NextRequest) {
     const {
       serviceId,
       bookingDate,
-      startTime,
-      endTime,
+      totalPrice,
       guests,
-      durationHours,
       specialRequests,
       contactInfo
     } = body;
 
-    // 驗證必填字段
+    // 驗證輸入
     const errors: Record<string, string> = {};
     
     if (!serviceId) errors.serviceId = '服務 ID 為必填項目';
     if (!bookingDate) errors.bookingDate = '預訂日期為必填項目';
-    if (!startTime) errors.startTime = '開始時間為必填項目';
-    if (!guests || guests <= 0) errors.guests = '請提供有效的參與人數';
+    if (!totalPrice || totalPrice <= 0) errors.totalPrice = '總金額必須大於 0';
+    if (!guests || guests <= 0) errors.guests = '參與人數必須大於 0';
 
     if (Object.keys(errors).length > 0) {
       return validationErrorResponse(errors);
     }
 
-    // 檢查服務是否存在且可用
+    // 檢查服務是否存在
     const service = await prisma.service.findUnique({
-      where: { id: serviceId }
+      where: { id: serviceId },
+      include: {
+        guide: {
+          select: {
+            id: true,
+            name: true,
+            email: true
+          }
+        }
+      }
     });
 
     if (!service) {
@@ -135,54 +142,51 @@ export async function POST(request: NextRequest) {
     }
 
     if (service.status !== 'ACTIVE') {
-      return errorResponse('服務暫時不可用', 400);
+      return errorResponse('服務目前不可預訂', 400);
     }
 
+    // 檢查人數限制
     if (guests > service.maxGuests) {
       return errorResponse(`參與人數不能超過 ${service.maxGuests} 人`, 400);
     }
 
-    // 檢查同一天是否已有預訂衝突
-    const bookingDateTime = new Date(bookingDate);
-    const startTimeDate = new Date(`${bookingDate}T${startTime}`);
-    const endTimeDate = endTime ? new Date(`${bookingDate}T${endTime}`) : new Date(startTimeDate.getTime() + (durationHours || service.durationHours) * 60 * 60 * 1000);
+    if (guests < service.minGuests) {
+      return errorResponse(`參與人數不能少於 ${service.minGuests} 人`, 400);
+    }
 
-    const conflictingBookings = await prisma.booking.findMany({
+    // 檢查日期是否已被預訂 (同一時間只能有一個預訂)
+    const existingBooking = await prisma.booking.findFirst({
       where: {
         serviceId,
+        bookingDate: new Date(bookingDate),
         status: {
-          in: ['CONFIRMED', 'PENDING']
-        },
-        bookingDate: bookingDateTime
+          in: ['PENDING', 'CONFIRMED']
+        }
       }
     });
 
-    if (conflictingBookings.length > 0) {
-      return errorResponse('選擇的日期已被預訂', 400);
+    if (existingBooking) {
+      return errorResponse('該日期時段已被預訂', 409);
     }
 
-    // 計算總價
-    const basePrice = service.price * guests;
-    const serviceFee = basePrice * 0.1; // 10% 服務費
-    const totalAmount = basePrice + serviceFee;
-
     // 創建預訂
-    const booking = await prisma.booking.create({
+    const newBooking = await prisma.booking.create({
       data: {
         serviceId,
-        guideId: service.guideId,
         travelerId: user.id,
-        bookingDate: bookingDateTime,
-        startTime: startTimeDate,
-        endTime: endTimeDate,
-        guests,
-        durationHours: durationHours || service.durationHours,
-        basePrice,
-        serviceFee,
-        totalAmount,
-        specialRequests: specialRequests || '',
+        guideId: service.guideId,
+        bookingDate: new Date(bookingDate),
+        startTime: new Date(`${bookingDate}T09:00:00`), // 預設上午9點開始
+        durationHours: service.durationHours,
+        guests: parseInt(guests.toString()),
+        basePrice: parseFloat(totalPrice.toString()),
+        serviceFee: parseFloat((totalPrice * 0.1).toString()), // 10% 服務費
+        totalAmount: parseFloat((totalPrice * 1.1).toString()),
+        currency: service.currency || 'TWD',
+        specialRequests: specialRequests || null,
         contactInfo: contactInfo || {},
-        status: 'PENDING'
+        status: 'PENDING',
+        paymentStatus: 'PENDING'
       },
       include: {
         service: {
@@ -208,7 +212,10 @@ export async function POST(request: NextRequest) {
       }
     });
 
-    return successResponse(booking, '預訂創建成功');
+    // TODO: 發送通知給導遊
+    // await sendBookingNotification(newBooking);
+
+    return successResponse(newBooking, '預訂創建成功');
 
   } catch (error) {
     console.error('Create booking error:', error);

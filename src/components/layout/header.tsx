@@ -1,11 +1,14 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { Search, Globe, Menu, User } from 'lucide-react';
 import { LanguageToggle } from '@/components/i18n/language-switcher';
 import { UserMenu } from '@/components/ui/user-menu';
 
 export function Header() {
+  const router = useRouter();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
 
@@ -64,9 +67,13 @@ export function Header() {
             {/* Right Side */}
             <div className="flex items-center space-x-4">
               {/* Become a Host */}
-              <button className="hidden lg:block text-sm font-medium text-gray-900 hover:bg-gray-100 px-3 py-2 rounded-full transition-colors">
+              <Link
+                href="/auth/register"
+                className="hidden lg:block text-sm font-medium text-gray-900 hover:bg-gray-100 px-3 py-2 rounded-full transition-colors cursor-pointer"
+                style={{ textDecoration: 'none' }}
+              >
                 成為地陪
-              </button>
+              </Link>
 
               {/* Language */}
               <LanguageToggle />

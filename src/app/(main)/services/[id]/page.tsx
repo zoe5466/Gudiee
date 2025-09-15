@@ -71,16 +71,56 @@ export default function ServiceDetailPage({ params }: { params: { id: string } }
     const loadService = async () => {
       setIsLoading(true);
       try {
-        // TODO: 實際 API 調用
         const response = await fetch(`/api/services/${params.id}`);
         if (!response.ok) {
           throw new Error('服務不存在');
         }
-        const serviceData = await response.json();
+        const result = await response.json();
         
-        // 使用模擬資料
-        const mockService = getMockService(params.id);
-        setService(mockService);
+        if (result.success) {
+          // 轉換數據格式以符合前端界面需求
+          const serviceData: ServiceData = {
+            id: result.data.id,
+            title: result.data.title,
+            description: result.data.description,
+            location: result.data.location,
+            price: result.data.price,
+            rating: result.data.stats.averageRating,
+            reviewCount: result.data.stats.totalReviews,
+            duration: result.data.duration.toString(),
+            maxGuests: result.data.maxGuests,
+            images: result.data.images,
+            guide: {
+              id: result.data.guide.id,
+              name: result.data.guide.name,
+              avatar: result.data.guide.avatar || 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face',
+              rating: 4.9, // TODO: 從導遊評價計算
+              reviewCount: 156, // TODO: 從導遊評價計算
+              languages: result.data.guide.languages || ['中文'],
+              experience: `${result.data.guide.experienceYears || 3}年導覽經驗`,
+              specialties: result.data.guide.specialties || ['專業導覽'],
+              bio: result.data.guide.bio || '專業導遊，熱愛分享旅遊體驗'
+            },
+            highlights: result.data.highlights,
+            reviews: result.data.reviews.map((review: any) => ({
+              id: review.id,
+              userName: review.reviewer?.name || '匿名用戶',
+              userAvatar: review.reviewer?.avatar || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face',
+              rating: review.rating,
+              comment: review.comment,
+              date: new Date(review.createdAt).toISOString().split('T')[0]
+            })),
+            category: result.data.category?.name || '旅遊導覽',
+            isAvailable: result.data.status === 'ACTIVE',
+            cancellationPolicy: result.data.cancellationPolicy,
+            included: result.data.included,
+            notIncluded: result.data.excluded
+          };
+          
+          setService(serviceData);
+        } else {
+          throw new Error('載入失敗');
+        }
         
       } catch (err) {
         error('載入失敗', '無法載入服務詳情，請稍後再試');
@@ -150,79 +190,6 @@ export default function ServiceDetailPage({ params }: { params: { id: string } }
     }
   };
 
-  const getMockService = (id: string): ServiceData => {
-    // 模擬不同的服務資料
-    const services: Record<string, ServiceData> = {
-      '1': {
-        id: '1',
-        title: '台北101 & 信義區深度導覽',
-        description: '帶您深度探索台北最精華的信義區，從台北101觀景台俯瞰整個台北盆地，漫步信義商圈感受現代都市魅力，並深入了解台灣的經濟發展歷程。專業導覽員將為您介紹台北的歷史變遷，並帶您品嚐道地美食。',
-        location: '台北市信義區',
-        price: 800,
-        rating: 4.9,
-        reviewCount: 127,
-        duration: '4',
-        maxGuests: 6,
-        category: '文化導覽',
-        isAvailable: true,
-        cancellationPolicy: '免費取消，24小時前可全額退款',
-        images: [
-          'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop',
-          'https://images.unsplash.com/photo-1519832064-53bbda4fb58f?w=800&h=600&fit=crop',
-          'https://images.unsplash.com/photo-1590736969955-71cc94901144?w=800&h=600&fit=crop'
-        ],
-        guide: {
-          id: 'guide-1',
-          name: '小美',
-          avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=200&h=200&fit=crop&crop=face',
-          rating: 4.9,
-          reviewCount: 156,
-          languages: ['中文', '英文', '日文'],
-          experience: '5年導覽經驗',
-          specialties: ['文化導覽', '美食探索', '攝影指導'],
-          bio: '擁有豐富的台北在地知識，熱愛分享台灣文化與美食。曾擔任國際旅遊雜誌特約撰稿人，精通多國語言。'
-        },
-        highlights: [
-          '台北101觀景台門票包含',
-          '專業攝影指導服務',
-          '精選在地美食推薦',
-          '深度文化歷史解說',
-          '交通便利，捷運直達',
-          '小班制精緻導覽'
-        ],
-        included: ['專業導覽服務', '台北101門票', '美食推薦', '攝影指導', '交通指引'],
-        notIncluded: ['個人餐食費用', '交通費', '購物費用', '小費'],
-        reviews: [
-          {
-            id: '1',
-            userName: '張小明',
-            userAvatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face',
-            rating: 5,
-            comment: '小美導遊非常專業，對台北的歷史文化了解很深，行程安排也很合理。特別是在台北101的解說，讓我對台灣的經濟發展有了全新的認識。強烈推薦！',
-            date: '2024-01-15'
-          },
-          {
-            id: '2',
-            userName: '李小華',
-            userAvatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face',
-            rating: 5,
-            comment: '超棒的體驗！小美不只是導遊，更像是台北的活字典。推薦的美食都很棒，攝影指導也很專業，拍了很多美照。',
-            date: '2024-01-10'
-          },
-          {
-            id: '3',
-            userName: '王大明',
-            userAvatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face',
-            rating: 4,
-            comment: '整體很不錯，導覽內容豐富，時間安排合理。唯一小建議是希望能多一些互動環節。',
-            date: '2024-01-05'
-          }
-        ]
-      }
-    };
-    
-    return services[id] || services['1']!;
-  };
 
   const handleShare = async () => {
     try {

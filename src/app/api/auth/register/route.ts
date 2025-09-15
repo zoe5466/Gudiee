@@ -115,10 +115,10 @@ export async function POST(request: NextRequest) {
     return successResponse({
       user: userWithoutPassword,
       token
-    }, '註冊成功！歡迎加入 Guidee');
+    }, '註冊成功，歡迎加入 Guidee！');
 
   } catch (error) {
-    console.error('Registration error:', error);
+    console.error('Register error:', error);
     return errorResponse('註冊失敗，請稍後再試', 500);
   }
 }
