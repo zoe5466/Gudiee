@@ -1,29 +1,32 @@
+// 服務詳情頁面組件
+// 功能：顯示導遊服務的詳細資訊，包含預訂功能
 'use client';
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Star, MapPin, Users, Heart, Share2, MessageCircle, Shield, Award, ChevronLeft, Calendar, Clock, ChevronRight, ImageIcon } from 'lucide-react';
-import { useAuth } from '@/store/auth';
-import { useToast } from '@/components/ui/toast';
-import { Rating } from '@/components/ui/rating';
-import { Loading } from '@/components/ui/loading';
-import { DatePicker } from '@/components/ui/date-picker';
-import { FullNavigation } from '@/components/layout/page-navigation';
-import { ReviewsList } from '@/components/reviews/reviews-list';
-import { ReviewsSummary } from '@/components/reviews/reviews-summary';
+import { useAuth } from '@/store/auth'; // 用戶認證狀態管理
+import { useToast } from '@/components/ui/toast'; // 通知訊息組件
+import { Rating } from '@/components/ui/rating'; // 評分顯示組件
+import { Loading } from '@/components/ui/loading'; // 載入狀態組件
+import { DatePicker } from '@/components/ui/date-picker'; // 日期選擇組件
+import { FullNavigation } from '@/components/layout/page-navigation'; // 導航組件
+import { ReviewsList } from '@/components/reviews/reviews-list'; // 評論列表組件
+import { ReviewsSummary } from '@/components/reviews/reviews-summary'; // 評論摘要組件
 
+// 服務資料的型別定義
 interface ServiceData {
-  id: string;
-  title: string;
-  description: string;
-  location: string;
-  price: number;
-  rating: number;
-  reviewCount: number;
-  duration: string;
-  maxGuests: number;
-  images: string[];
-  guide: {
+  id: string; // 服務唯一識別碼
+  title: string; // 服務標題
+  description: string; // 服務詳細描述
+  location: string; // 服務地點
+  price: number; // 每小時價格
+  rating: number; // 平均評分
+  reviewCount: number; // 評論數量
+  duration: string; // 建議時長
+  maxGuests: number; // 最大人數
+  images: string[]; // 服務圖片列表
+  guide: { // 導遊資訊
     id: string;
     name: string;
     avatar: string;
@@ -34,43 +37,59 @@ interface ServiceData {
     specialties: string[];
     bio?: string;
   };
-  highlights: string[];
-  reviews: Review[];
-  category: string;
-  isAvailable: boolean;
-  cancellationPolicy: string;
-  included: string[];
-  notIncluded: string[];
+  highlights: string[]; // 主要亮點
+  reviews: Review[]; // 評論列表
+  category: string; // 服務類別
+  isAvailable: boolean; // 是否可預訂
+  cancellationPolicy: string; // 取消政策
+  included: string[]; // 包含項目
+  notIncluded: string[]; // 不包含項目
 }
 
+// 評論資料的型別定義
 interface Review {
-  id: string
-  userName: string
-  userAvatar: string
-  rating: number
-  comment: string
-  date: string
+  id: string // 評論 ID
+  userName: string // 評論用戶名稱
+  userAvatar: string // 用戶頭像
+  rating: number // 評分 (1-5)
+  comment: string // 評論內容
+  date: string // 評論日期
 }
 
+/**
+ * 服務詳情頁面主組件
+ * 
+ * 功能：
+ * 1. 顯示服務詳細資訊（標題、圖片、描述、導遊等）
+ * 2. 提供預訂功能（日期選擇、人數設定）
+ * 3. 支援收藏和分享功能
+ * 4. 顯示評論和評分
+ * 
+ * @param params - 路由參數，包含服務 ID
+ */
 export default function ServiceDetailPage({ params }: { params: { id: string } }) {
+  // 路由和認證相關的 hooks
   const router = useRouter();
   const { user, isAuthenticated } = useAuth();
   const { success, error } = useToast();
   
-  const [service, setService] = useState<ServiceData | null>(null);
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const [guests, setGuests] = useState(2);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isBooking, setIsBooking] = useState(false);
-  const [isLiked, setIsLiked] = useState(false);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [showAllReviews, setShowAllReviews] = useState(false);
+  // 頁面狀態管理
+  const [service, setService] = useState<ServiceData | null>(null); // 服務資料
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null); // 用戶選擇的日期
+  const [guests, setGuests] = useState(2); // 預訂人數
+  const [isLoading, setIsLoading] = useState(true); // 載入狀態
+  const [isBooking, setIsBooking] = useState(false); // 預訂中狀態
+  const [isLiked, setIsLiked] = useState(false); // 是否已收藏
+  const [currentImageIndex, setCurrentImageIndex] = useState(0); // 當前顯示的圖片索引
+  const [showAllReviews, setShowAllReviews] = useState(false); // 是否顯示所有評論
   
-  // 載入服務資料
+  // 載入服務資料的副作用
+  // 當組件載入或服務 ID 變更時觸發
   useEffect(() => {
     const loadService = async () => {
       setIsLoading(true);
       try {
+        // 從 API 取得服務資料
         const response = await fetch(`/api/services/${params.id}`);
         if (!response.ok) {
           throw new Error('服務不存在');
@@ -78,43 +97,43 @@ export default function ServiceDetailPage({ params }: { params: { id: string } }
         const result = await response.json();
         
         if (result.success) {
-          // 轉換數據格式以符合前端界面需求
+          // 轉換後端 API 資料格式為前端界面所需的格式
           const serviceData: ServiceData = {
             id: result.data.id,
             title: result.data.title,
             description: result.data.description,
             location: result.data.location,
             price: result.data.price,
-            rating: result.data.stats.averageRating,
-            reviewCount: result.data.stats.totalReviews,
-            duration: result.data.duration.toString(),
-            maxGuests: result.data.maxGuests,
-            images: result.data.images,
-            guide: {
+            rating: result.data.stats.averageRating, // 平均評分
+            reviewCount: result.data.stats.totalReviews, // 評論總數
+            duration: result.data.duration.toString(), // 時長（小時）
+            maxGuests: result.data.maxGuests, // 最大人數
+            images: result.data.images, // 服務圖片列表
+            guide: { // 導遊資訊轉換
               id: result.data.guide.id,
               name: result.data.guide.name,
-              avatar: result.data.guide.avatar || 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face',
-              rating: 4.9, // TODO: 從導遊評價計算
-              reviewCount: 156, // TODO: 從導遊評價計算
-              languages: result.data.guide.languages || ['中文'],
-              experience: `${result.data.guide.experienceYears || 3}年導覽經驗`,
-              specialties: result.data.guide.specialties || ['專業導覽'],
-              bio: result.data.guide.bio || '專業導遊，熱愛分享旅遊體驗'
+              avatar: result.data.guide.avatar || 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face', // 預設頭像
+              rating: 4.9, // TODO: 從導遊評價計算實際評分
+              reviewCount: 156, // TODO: 從導遊評價計算實際數量
+              languages: result.data.guide.languages || ['中文'], // 支援語言
+              experience: `${result.data.guide.experienceYears || 3}年導覽經驗`, // 經驗年數
+              specialties: result.data.guide.specialties || ['專業導覽'], // 專長領域
+              bio: result.data.guide.bio || '專業導遊，熱愛分享旅遊體驗' // 個人簡介
             },
-            highlights: result.data.highlights,
-            reviews: result.data.reviews.map((review: any) => ({
+            highlights: result.data.highlights, // 服務亮點
+            reviews: result.data.reviews.map((review: any) => ({ // 評論資料轉換
               id: review.id,
-              userName: review.reviewer?.name || '匿名用戶',
+              userName: review.reviewer?.name || '匿名用戶', // 處理匿名評論
               userAvatar: review.reviewer?.avatar || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face',
               rating: review.rating,
               comment: review.comment,
-              date: new Date(review.createdAt).toISOString().split('T')[0]
+              date: new Date(review.createdAt).toISOString().split('T')[0] // 日期格式化
             })),
-            category: result.data.category?.name || '旅遊導覽',
-            isAvailable: result.data.status === 'ACTIVE',
-            cancellationPolicy: result.data.cancellationPolicy,
-            included: result.data.included,
-            notIncluded: result.data.excluded
+            category: result.data.category?.name || '旅遊導覽', // 服務類別
+            isAvailable: result.data.status === 'ACTIVE', // 是否可預訂
+            cancellationPolicy: result.data.cancellationPolicy, // 取消政策
+            included: result.data.included, // 包含項目
+            notIncluded: result.data.excluded // 不包含項目
           };
           
           setService(serviceData);
@@ -123,6 +142,7 @@ export default function ServiceDetailPage({ params }: { params: { id: string } }
         }
         
       } catch (err) {
+        // 錯誤處理：顯示錯誤訊息並跳轉到搜尋頁面
         error('載入失敗', '無法載入服務詳情，請稍後再試');
         router.push('/search');
       } finally {
@@ -131,16 +151,21 @@ export default function ServiceDetailPage({ params }: { params: { id: string } }
     };
     
     loadService();
-  }, [params.id, error, router]);
+  }, [params.id, error, router]); // 依賴陣列：服務 ID 變更時重新載入
 
+  /**
+   * 處理收藏/取消收藏操作
+   * 需要用戶登入才能使用
+   */
   const handleFavoriteToggle = async () => {
+    // 檢查用戶是否已登入
     if (!isAuthenticated) {
       router.push('/login');
       return;
     }
     
     try {
-      // TODO: 實際收藏 API
+      // TODO: 實作收藏 API 請求到後端
       setIsLiked(!isLiked);
       success(isLiked ? '已取消收藏' : '已加入收藏', '');
     } catch (err) {
@@ -148,12 +173,18 @@ export default function ServiceDetailPage({ params }: { params: { id: string } }
     }
   };
   
+  /**
+   * 處理預訂操作
+   * 驗證用戶登入、日期選擇，然後跳轉到預訂頁面
+   */
   const handleBooking = async () => {
+    // 檢查用戶是否已登入
     if (!isAuthenticated) {
       router.push('/login');
       return;
     }
     
+    // 檢查是否已選擇日期
     if (!selectedDate) {
       error('請選擇日期', '預訂前請選擇服務日期');
       return;
@@ -164,7 +195,7 @@ export default function ServiceDetailPage({ params }: { params: { id: string } }
     setIsBooking(true);
     
     try {
-      // TODO: 檢查可用性並建立預訂
+      // TODO: 在跳轉前檢查日期可用性
       const bookingData = {
         serviceId: params.id,
         guideId: service.guide.id,
@@ -174,7 +205,7 @@ export default function ServiceDetailPage({ params }: { params: { id: string } }
         totalPrice: service.price * parseInt(service.duration)
       };
       
-      // 暫時導向預訂頁面，傳遞必要資料
+      // 組裝 URL 參數並跳轉到預訂頁面
       const queryParams = new URLSearchParams({
         serviceId: params.id,
         date: selectedDate.toISOString(),
@@ -191,8 +222,13 @@ export default function ServiceDetailPage({ params }: { params: { id: string } }
   };
 
 
+  /**
+   * 處理分享操作
+   * 優先使用原生分享 API，否則複製連結到剪貼板
+   */
   const handleShare = async () => {
     try {
+      // 檢查是否支援原生分享 API
       if (navigator.share) {
         await navigator.share({
           title: service?.title,
@@ -200,7 +236,7 @@ export default function ServiceDetailPage({ params }: { params: { id: string } }
           url: window.location.href
         });
       } else {
-        // 複製連結到剪貼板
+        // Fallback: 複製連結到剪貼板
         await navigator.clipboard.writeText(window.location.href);
         success('已複製連結', '連結已複製到剪貼板');
       }
@@ -209,6 +245,7 @@ export default function ServiceDetailPage({ params }: { params: { id: string } }
     }
   };
 
+  // 載入中的顯示狀態
   if (isLoading) {
     return (
       <div style={{ 
@@ -223,6 +260,7 @@ export default function ServiceDetailPage({ params }: { params: { id: string } }
     )
   }
 
+  // 服務不存在或載入失敗的顯示狀態
   if (!service) {
     return (
       <div style={{ 

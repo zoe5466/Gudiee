@@ -1,22 +1,37 @@
+// 評論表單組件
+// 功能：讓用戶對導遊服務提供詳細評論，包含評分、照片、優缺點等
 'use client';
 
 import React, { useState, useRef } from 'react';
-import { Star, Upload, X, Plus, Minus } from 'lucide-react';
-import { useAuth } from '@/store/auth';
+import { Star, Upload, X, Plus, Minus } from 'lucide-react'; // 圖標組件
+import { useAuth } from '@/store/auth'; // 用戶認證狀態
 
+// 評論表單組件屬性定義
 interface ReviewFormProps {
-  bookingId: string;
-  serviceId: string;
-  serviceName: string;
-  guideName: string;
-  guideId: string;
-  onSubmit: (reviewData: any) => Promise<void>;
-  onCancel: () => void;
-  onClose?: () => void;
-  isLoading?: boolean;
-  className?: string;
+  bookingId: string; // 預訂 ID
+  serviceId: string; // 服務 ID
+  serviceName: string; // 服務名稱
+  guideName: string; // 導遊名稱
+  guideId: string; // 導遊 ID
+  onSubmit: (reviewData: any) => Promise<void>; // 提交回調函數
+  onCancel: () => void; // 取消回調函數
+  onClose?: () => void; // 關閉回調函數（可選）
+  isLoading?: boolean; // 載入狀態（可選）
+  className?: string; // 自定義 CSS 類名（可選）
 }
 
+/**
+ * 評論表單主組件
+ * 
+ * 功能：
+ * 1. 評分選擇（1-5 星）
+ * 2. 詳細評論內容輸入
+ * 3. 照片上傳（最多 5 張）
+ * 4. 優缺點列表編輯
+ * 5. 服務標籤選擇
+ * 6. 匿名評論選項
+ * 7. 表單驗證和提交
+ */
 export default function ReviewForm({
   bookingId,
   serviceId,
@@ -29,49 +44,65 @@ export default function ReviewForm({
   isLoading = false,
   className = ''
 }: ReviewFormProps) {
-  const { user } = useAuth();
+  const { user } = useAuth(); // 獲取当前登入用戶
   
-  const [rating, setRating] = useState(0);
-  const [hoverRating, setHoverRating] = useState(0);
-  const [comment, setComment] = useState('');
-  const [photos, setPhotos] = useState<File[]>([]);
-  const [pros, setPros] = useState<string[]>(['']);
-  const [cons, setCons] = useState<string[]>(['']);
-  const [isAnonymous, setIsAnonymous] = useState(false);
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  // 表單狀態管理
+  const [rating, setRating] = useState(0); // 評分 (1-5)
+  const [hoverRating, setHoverRating] = useState(0); // 鼠標懸停評分
+  const [comment, setComment] = useState(''); // 評論內容
+  const [photos, setPhotos] = useState<File[]>([]); // 上傳的照片列表
+  const [pros, setPros] = useState<string[]>(['']); // 優點列表
+  const [cons, setCons] = useState<string[]>(['']); // 缺點列表
+  const [isAnonymous, setIsAnonymous] = useState(false); // 是否匿名評論
+  const [selectedTags, setSelectedTags] = useState<string[]>([]); // 選中的服務標籤
+  const [isSubmitting, setIsSubmitting] = useState(false); // 是否正在提交
   
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null); // 文件上傳輸入框參照
 
+  // 預定義的服務標籤列表，供用戶選擇
   const availableTags = [
     '專業', '準時', '親切', '知識豐富', '溝通良好', '行程豐富',
     '價格合理', '服務周到', '安全可靠', '幽默風趣', '攝影技術好', '語言能力強'
   ];
 
+  /**
+   * 處理照片上傳
+   * 限制最多 5 張，只接受圖片文件
+   */
   const handlePhotoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(event.target.files || []);
-    const imageFiles = files.filter(file => file.type.startsWith('image/'));
+    const imageFiles = files.filter(file => file.type.startsWith('image/')); // 只接受圖片文件
     
+    // 檢查照片數量限制
     if (imageFiles.length + photos.length > 5) {
       alert('最多只能上傳 5 張照片');
       return;
     }
     
-    setPhotos(prev => [...prev, ...imageFiles]);
+    setPhotos(prev => [...prev, ...imageFiles]); // 添加新照片到列表
   };
 
+  /**
+   * 移除指定索引的照片
+   */
   const removePhoto = (index: number) => {
     setPhotos(prev => prev.filter((_, i) => i !== index));
   };
 
+  /**
+   * 添加優點或缺點項目
+   */
   const addProCon = (type: 'pros' | 'cons') => {
     if (type === 'pros') {
-      setPros(prev => [...prev, '']);
+      setPros(prev => [...prev, '']); // 添加空優點項目
     } else {
-      setCons(prev => [...prev, '']);
+      setCons(prev => [...prev, '']); // 添加空缺點項目
     }
   };
 
+  /**
+   * 移除指定的優點或缺點項目
+   */
   const removeProCon = (type: 'pros' | 'cons', index: number) => {
     if (type === 'pros') {
       setPros(prev => prev.filter((_, i) => i !== index));
@@ -80,6 +111,9 @@ export default function ReviewForm({
     }
   };
 
+  /**
+   * 更新指定的優點或缺點內容
+   */
   const updateProCon = (type: 'pros' | 'cons', index: number, value: string) => {
     if (type === 'pros') {
       setPros(prev => prev.map((item, i) => i === index ? value : item));
@@ -88,35 +122,46 @@ export default function ReviewForm({
     }
   };
 
+  /**
+   * 切換服務標籤的選中狀態
+   */
   const toggleTag = (tag: string) => {
     setSelectedTags(prev => 
       prev.includes(tag) 
-        ? prev.filter(t => t !== tag)
-        : [...prev, tag]
+        ? prev.filter(t => t !== tag) // 如果已選中則移除
+        : [...prev, tag] // 如果未選中則添加
     );
   };
 
+  /**
+   * 處理表單提交
+   * 驗證必填欄位和数據格式，然後提交評論
+   */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    // 檢查用戶是否已登入
     if (!user) {
       alert('請先登入');
       return;
     }
     
+    // 檢查評分是否已選擇
     if (rating === 0) {
       alert('請選擇評分');
       return;
     }
     
+    // 檢查評論內容長度
     if (comment.trim().length < 10) {
       alert('評論內容至少需要 10 個字符');
       return;
     }
 
-    setIsSubmitting(true);
+    setIsSubmitting(true); // 設置提交狀態
 
     try {
+      // 組裝評論資料並提交
       await onSubmit({
         serviceId,
         guideId,
@@ -124,26 +169,28 @@ export default function ReviewForm({
         bookingId,
         rating,
         comment: comment.trim(),
-        photos: photos.map(f => URL.createObjectURL(f)), // 實際應上傳到雲端
-        pros: pros.filter(p => p.trim()).length > 0 ? pros.filter(p => p.trim()) : undefined,
-        cons: cons.filter(c => c.trim()).length > 0 ? cons.filter(c => c.trim()) : undefined,
-        isVerified: true, // 來自真實預訂
+        photos: photos.map(f => URL.createObjectURL(f)), // TODO: 實際應上傳到雲端儲存
+        pros: pros.filter(p => p.trim()).length > 0 ? pros.filter(p => p.trim()) : undefined, // 過濾空的優點
+        cons: cons.filter(c => c.trim()).length > 0 ? cons.filter(c => c.trim()) : undefined, // 過濾空的缺點
+        isVerified: true, // 來自真實預訂的評論為已驗證
         isAnonymous,
-        helpful: 0,
-        reported: 0,
-        tags: selectedTags.length > 0 ? selectedTags : undefined
+        helpful: 0, // 初始有用數
+        reported: 0, // 初始被檢舉數
+        tags: selectedTags.length > 0 ? selectedTags : undefined // 只在有選中標籤時包含
       });
       
       alert('評論提交成功！感謝您的寶貴意見！');
-      onClose?.();
+      onClose?.(); // 提交成功後關閉表單
       
     } catch (err) {
+      // 提交失敗處理
       alert('提交失敗，請稍後再試');
     } finally {
-      setIsSubmitting(false);
+      setIsSubmitting(false); // 重設提交狀態
     }
   };
 
+  // 計算是否可以提交：需要有評分、評論內容足夠且未在提交中
   const canSubmit = rating > 0 && comment.trim().length >= 10 && !isSubmitting;
 
   return (

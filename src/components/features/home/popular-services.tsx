@@ -1,25 +1,33 @@
+// 首頁熱門服務展示組件
+// 功能：展示精選的熱門導遊服務，支援收藏和預訂功能
 'use client';
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Heart, MapPin, Clock, Users, Star, ArrowRight } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Heart, MapPin, Clock, Users, Star, ArrowRight } from 'lucide-react'; // 圖標組件
+import { Button } from '@/components/ui/button'; // 按鈕組件
 
+// 服務卡片屬性定義
 interface ServiceCardProps {
-  id: string;
-  title: string;
-  location: string;
-  price: number;
-  rating: number;
-  reviewCount: number;
-  duration: string;
-  maxGuests: number;
-  image: string;
-  guideName: string;
-  guideAvatar: string;
-  isLiked?: boolean;
+  id: string; // 服務唯一識別碼
+  title: string; // 服務標題
+  location: string; // 服務地點
+  price: number; // 服務價格（每小時）
+  rating: number; // 服務評分
+  reviewCount: number; // 評論數量
+  duration: string; // 服務時長
+  maxGuests: number; // 最大人數
+  image: string; // 服務主圖片
+  guideName: string; // 導遊姓名
+  guideAvatar: string; // 導遊頭像
+  isLiked?: boolean; // 是否已收藏（可選）
 }
 
+/**
+ * 服務卡片組件
+ * 展示單個服務的詳細資訊，包含圖片、價格、評分、導遊等
+ * 支援收藏功能和點擊查看詳情
+ */
 function ServiceCard({
   id,
   title,
@@ -32,9 +40,9 @@ function ServiceCard({
   image,
   guideName,
   guideAvatar,
-  isLiked = false
+  isLiked = false // 預設未收藏
 }: ServiceCardProps) {
-  const [liked, setLiked] = useState(isLiked);
+  const [liked, setLiked] = useState(isLiked); // 局部收藏狀態管理
 
   return (
     <Link href={`/services/${id}`} className="block">
@@ -48,7 +56,7 @@ function ServiceCard({
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
         
-        {/* 喜歡按鈕 */}
+        {/* 收藏/取消收藏按鈕 */}
         <button
           onClick={(e) => {
             e.preventDefault();
@@ -135,8 +143,13 @@ function ServiceCard({
   );
 }
 
+/**
+ * 熱門服務展示組件
+ * 展示首頁的熱門導遊服務列表
+ * 包含服務卡片網格、特色標籤和查看更多按鈕
+ */
 export function PopularServices() {
-  // 使用真實的服務 ID，將來可以從 API 獲取
+  // 熱門服務資料列表（使用真實的服務 ID，將來可以從 API 獲取）
   const popularServices = [
     {
       id: '7c29388c-db1b-4439-bcc0-5f6a74f8b3b1', // 台北101 & 信义区深度导览
@@ -144,11 +157,11 @@ export function PopularServices() {
       location: '台北市信義區',
       price: 800,
       rating: 4.9,
-      reviewCount: 0,
+      reviewCount: 0, // TODO: 從資料庫獲取實際評論數
       duration: '4小時',
       maxGuests: 6,
       image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop',
-      guideName: '演示導遊',
+      guideName: '演示導遊', // TODO: 從資料庫獲取實際導遊資料
       guideAvatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face',
       isLiked: false
     },
@@ -180,7 +193,7 @@ export function PopularServices() {
       guideAvatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face',
       isLiked: false
     },
-    // 可以添加更多模擬服務來填充網格
+    // 額外的模擬服務資料，用於展示網格佈局效果
     {
       id: 'mock-4',
       title: '高雄駁二藝術特區 & 愛河',
@@ -228,7 +241,7 @@ export function PopularServices() {
   return (
     <section className="py-24 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* 標題區域 */}
+        {/* 區段標題和描述 */}
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
             熱門地陪服務
@@ -238,14 +251,14 @@ export function PopularServices() {
           </p>
         </div>
 
-        {/* 服務卡片網格 */}
+        {/* 服務卡片響應式網格佈局 */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
           {popularServices.map((service) => (
             <ServiceCard key={service.id} {...service} />
           ))}
         </div>
 
-        {/* 查看更多按鈕 */}
+        {/* 查看更多服務的行動號召按鈕 */}
         <div className="text-center">
           <Button
             size="lg"
@@ -256,8 +269,9 @@ export function PopularServices() {
           </Button>
         </div>
 
-        {/* 特色標籤 */}
+        {/* 平台特色和價值主張展示 */}
         <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">
+          {/* 特色1: 精選地陪 */}
           <div className="text-center p-6 bg-gradient-to-br from-sky-50 to-blue-50 rounded-3xl">
             <div className="w-16 h-16 bg-gradient-to-br from-sky-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
               <Star className="w-8 h-8 text-white" />
@@ -266,6 +280,7 @@ export function PopularServices() {
             <p className="text-gray-600">經過嚴格審核的專業地陪，確保服務品質</p>
           </div>
           
+          {/* 特色2: 在地體驗 */}
           <div className="text-center p-6 bg-gradient-to-br from-sky-50 to-blue-50 rounded-3xl">
             <div className="w-16 h-16 bg-gradient-to-br from-sky-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
               <MapPin className="w-8 h-8 text-white" />
@@ -274,6 +289,7 @@ export function PopularServices() {
             <p className="text-gray-600">深度探索當地文化，體驗最真實的台灣之美</p>
           </div>
           
+          {/* 特色3: 安全保障 */}
           <div className="text-center p-6 bg-gradient-to-br from-sky-50 to-blue-50 rounded-3xl">
             <div className="w-16 h-16 bg-gradient-to-br from-sky-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
               <Heart className="w-8 h-8 text-white" />
@@ -285,4 +301,4 @@ export function PopularServices() {
       </div>
     </section>
   );
-}
+} // PopularServices 組件結束
