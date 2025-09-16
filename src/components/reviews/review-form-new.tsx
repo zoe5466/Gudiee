@@ -175,7 +175,7 @@ export default function ReviewForm({
         <div>
           <h2 className="text-xl font-semibold text-gray-900">撰寫評論</h2>
           <p className="text-sm text-gray-600 mt-1">
-            對 "{serviceName}" 的體驗評價 • 嚮導：{guideName}
+            對 &ldquo;{serviceName}&rdquo; 的體驗評價 • 嚮導：{guideName}
           </p>
         </div>
         <button

@@ -126,6 +126,14 @@ export default function BookingReviewPage() {
               serviceId={booking.serviceId}
               guideId={booking.guideId}
               bookingId={booking.id}
+              serviceName={booking.service?.title || '服務'}
+              guideName={booking.service?.guide?.name || '導遊'}
+              onSubmit={async (reviewData) => {
+                // TODO: 實作評論提交邏輯
+                console.log('提交評論:', reviewData);
+                handleReviewSubmitted();
+              }}
+              onCancel={handleReviewSubmitted}
               onClose={handleReviewSubmitted}
             />
           </div>

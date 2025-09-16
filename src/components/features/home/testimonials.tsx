@@ -220,7 +220,7 @@ export function Testimonials() {
                   fontStyle: 'italic'
                 }}
               >
-                "{testimonial.content}"
+                &ldquo;{testimonial.content}&rdquo;
               </blockquote>
 
               {/* 服務資訊 */}
