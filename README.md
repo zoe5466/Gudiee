@@ -280,4 +280,4 @@ kubectl apply -f deploy/k8s/
 
 ---
 
-**Guidee Team** - 讓每一次旅程都有專屬的在地嚮導 🌟
+**Guidee Team** - 讓每一次旅程都有專屬的在地嚮導 🌟# Force redeploy trigger
