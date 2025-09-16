@@ -151,6 +151,34 @@ interface Translations {
   'admin.chat_management.all_status': string;
   'admin.chat_management.send_message': string;
   'admin.chat_management.resolve': string;
+  
+  // CMS 管理
+  'admin.cms.title': string;
+  'admin.cms.description': string;
+  'admin.cms.total_content': string;
+  'admin.cms.published_content': string;
+  'admin.cms.draft_content': string;
+  'admin.cms.monthly_views': string;
+  'admin.cms.popular_content': string;
+  'admin.cms.overview': string;
+  'admin.cms.content_management': string;
+  'admin.cms.analytics': string;
+  'admin.cms.system_settings': string;
+  'admin.cms.analytics_coming_soon': string;
+  'admin.cms.analytics_description': string;
+  'admin.cms.settings_coming_soon': string;
+  'admin.cms.settings_description': string;
+  
+  // 評論管理
+  'admin.review_management.title': string;
+  'admin.review_management.total_reviews': string;
+  'admin.review_management.pending_reviews': string;
+  'admin.review_management.search_reviews': string;
+  'admin.review_management.all_status': string;
+  'admin.review_management.pending': string;
+  'admin.review_management.approved': string;
+  'admin.review_management.rejected': string;
+  'admin.review_management.flagged': string;
 }
 
 // 翻譯資源
@@ -297,7 +325,35 @@ const translations: Record<SupportedLocale, Translations> = {
     'admin.chat_management.search_conversations': '搜尋對話...',
     'admin.chat_management.all_status': '所有狀態',
     'admin.chat_management.send_message': '輸入回覆訊息...',
-    'admin.chat_management.resolve': '標記為已解決'
+    'admin.chat_management.resolve': '標記為已解決',
+    
+    // CMS 管理
+    'admin.cms.title': '內容管理系統',
+    'admin.cms.description': '管理網站內容、文章和媒體資源',
+    'admin.cms.total_content': '總內容數',
+    'admin.cms.published_content': '已發布內容',
+    'admin.cms.draft_content': '草稿內容',
+    'admin.cms.monthly_views': '月瀏覽量',
+    'admin.cms.popular_content': '熱門內容',
+    'admin.cms.overview': '總覽',
+    'admin.cms.content_management': '內容管理',
+    'admin.cms.analytics': '數據分析',
+    'admin.cms.system_settings': '系統設定',
+    'admin.cms.analytics_coming_soon': '數據分析即將推出',
+    'admin.cms.analytics_description': '詳細的流量和用戶行為分析功能正在開發中',
+    'admin.cms.settings_coming_soon': '系統設定即將推出',
+    'admin.cms.settings_description': '網站配置和系統參數設定功能正在開發中',
+    
+    // 評論管理
+    'admin.review_management.title': '評論管理',
+    'admin.review_management.total_reviews': '總評論數',
+    'admin.review_management.pending_reviews': '待審核評論',
+    'admin.review_management.search_reviews': '搜尋評論...',
+    'admin.review_management.all_status': '全部狀態',
+    'admin.review_management.pending': '待審核',
+    'admin.review_management.approved': '已批准',
+    'admin.review_management.rejected': '已拒絕',
+    'admin.review_management.flagged': '已舉報'
   },
   
   'zh-CN': {
@@ -442,7 +498,35 @@ const translations: Record<SupportedLocale, Translations> = {
     'admin.chat_management.search_conversations': '搜索对话...',
     'admin.chat_management.all_status': '所有状态',
     'admin.chat_management.send_message': '输入回复消息...',
-    'admin.chat_management.resolve': '标记为已解决'
+    'admin.chat_management.resolve': '标记为已解决',
+    
+    // CMS 管理
+    'admin.cms.title': '内容管理系统',
+    'admin.cms.description': '管理网站内容、文章和媒体资源',
+    'admin.cms.total_content': '总内容数',
+    'admin.cms.published_content': '已发布内容',
+    'admin.cms.draft_content': '草稿内容',
+    'admin.cms.monthly_views': '月浏览量',
+    'admin.cms.popular_content': '热门内容',
+    'admin.cms.overview': '总览',
+    'admin.cms.content_management': '内容管理',
+    'admin.cms.analytics': '数据分析',
+    'admin.cms.system_settings': '系统设置',
+    'admin.cms.analytics_coming_soon': '数据分析即将推出',
+    'admin.cms.analytics_description': '详细的流量和用户行为分析功能正在开发中',
+    'admin.cms.settings_coming_soon': '系统设置即将推出',
+    'admin.cms.settings_description': '网站配置和系统参数设置功能正在开发中',
+    
+    // 评论管理
+    'admin.review_management.title': '评论管理',
+    'admin.review_management.total_reviews': '总评论数',
+    'admin.review_management.pending_reviews': '待审核评论',
+    'admin.review_management.search_reviews': '搜索评论...',
+    'admin.review_management.all_status': '全部状态',
+    'admin.review_management.pending': '待审核',
+    'admin.review_management.approved': '已批准',
+    'admin.review_management.rejected': '已拒绝',
+    'admin.review_management.flagged': '已举报'
   },
   
   'en': {
@@ -587,7 +671,35 @@ const translations: Record<SupportedLocale, Translations> = {
     'admin.chat_management.search_conversations': 'Search conversations...',
     'admin.chat_management.all_status': 'All Status',
     'admin.chat_management.send_message': 'Enter reply message...',
-    'admin.chat_management.resolve': 'Mark as Resolved'
+    'admin.chat_management.resolve': 'Mark as Resolved',
+    
+    // CMS Management
+    'admin.cms.title': 'Content Management System',
+    'admin.cms.description': 'Manage website content, articles and media resources',
+    'admin.cms.total_content': 'Total Content',
+    'admin.cms.published_content': 'Published Content',
+    'admin.cms.draft_content': 'Draft Content',
+    'admin.cms.monthly_views': 'Monthly Views',
+    'admin.cms.popular_content': 'Popular Content',
+    'admin.cms.overview': 'Overview',
+    'admin.cms.content_management': 'Content Management',
+    'admin.cms.analytics': 'Analytics',
+    'admin.cms.system_settings': 'System Settings',
+    'admin.cms.analytics_coming_soon': 'Analytics Coming Soon',
+    'admin.cms.analytics_description': 'Detailed traffic and user behavior analysis features are in development',
+    'admin.cms.settings_coming_soon': 'Settings Coming Soon',
+    'admin.cms.settings_description': 'Website configuration and system parameter settings are in development',
+    
+    // Review Management
+    'admin.review_management.title': 'Review Management',
+    'admin.review_management.total_reviews': 'Total Reviews',
+    'admin.review_management.pending_reviews': 'Pending Reviews',
+    'admin.review_management.search_reviews': 'Search reviews...',
+    'admin.review_management.all_status': 'All Status',
+    'admin.review_management.pending': 'Pending',
+    'admin.review_management.approved': 'Approved',
+    'admin.review_management.rejected': 'Rejected',
+    'admin.review_management.flagged': 'Flagged'
   },
   
   'ja': {

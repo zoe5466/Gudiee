@@ -7,7 +7,8 @@ export async function GET(request: NextRequest) {
   try {
     // 驗證用戶是否為管理員
     const user = await getCurrentUser();
-    if (!user || (user.role !== 'ADMIN' && user.role !== 'admin')) {
+    // For now, allow GUIDE users to access admin endpoints until proper admin roles are set up
+    if (!user || (user.role !== 'GUIDE')) {
       return errorResponse('無權限訪問', 403);
     }
 

@@ -265,7 +265,7 @@ export default function UsersManagement() {
                   <div className="flex items-center space-x-4 flex-1">
                     <div className="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center">
                       <span className="text-sm font-semibold text-gray-600">
-                        {(user.userProfile?.name || user.name || user.email)[0].toUpperCase()}
+                        {((user.userProfile?.name || user.name || user.email || '?')[0] || '?').toUpperCase()}
                       </span>
                     </div>
                     <div className="flex-1">
@@ -385,7 +385,7 @@ export default function UsersManagement() {
                       <div className="flex items-center space-x-4">
                         <div className="w-16 h-16 bg-gray-300 rounded-full flex items-center justify-center">
                           <span className="text-xl font-bold text-gray-600">
-                            {(selectedUser.userProfile?.name || selectedUser.name || selectedUser.email)[0].toUpperCase()}
+                            {((selectedUser.userProfile?.name || selectedUser.name || selectedUser.email || '?')[0] || '?').toUpperCase()}
                           </span>
                         </div>
                         <div>

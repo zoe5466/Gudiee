@@ -213,7 +213,7 @@ export default function UserDetailPage() {
                 <div className="text-center mb-6">
                   <div className="w-24 h-24 bg-gray-300 rounded-full flex items-center justify-center mx-auto mb-4">
                     <span className="text-2xl font-bold text-gray-600">
-                      {(user.userProfile?.name || user.name || user.email)[0].toUpperCase()}
+                      {((user.userProfile?.name || user.name || user.email || '?')[0] || '?').toUpperCase()}
                     </span>
                   </div>
                   <h3 className="text-lg font-semibold">
