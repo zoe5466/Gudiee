@@ -21,11 +21,11 @@ const nextConfig = {
 
   // 前端環境變數 - 僅在客戶端可訪問的變數
   env: {
-    NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
-    NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
-    NEXT_PUBLIC_MAPBOX_TOKEN: process.env.NEXT_PUBLIC_MAPBOX_TOKEN,
-    NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
-    NEXT_PUBLIC_APP_VERSION: process.env.npm_package_version,
+    NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
+    NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '',
+    NEXT_PUBLIC_MAPBOX_TOKEN: process.env.NEXT_PUBLIC_MAPBOX_TOKEN || '',
+    NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || '',
+    NEXT_PUBLIC_APP_VERSION: process.env.npm_package_version || '0.1.0',
   },
 
   // 編譯優化設定
@@ -34,11 +34,11 @@ const nextConfig = {
     styledComponents: true, // 支援 styled-components (如果使用)
   },
 
-  // 實驗性功能
+  // 實驗性功能 (修正配置)
   experimental: {
-    serverActions: true, // 啟用 Server Actions
     optimizeCss: true,   // CSS 優化
     typedRoutes: true,   // 類型安全的路由
+    // serverActions: true 已移除，Next.js 14 預設啟用
   },
 
 

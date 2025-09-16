@@ -467,7 +467,7 @@ export default function GuideDashboardPage() {
                           </div>
                         </div>
                         <p className="text-sm text-gray-700 leading-relaxed">
-                          "{review.comment}"
+                          &ldquo;{review.comment}&rdquo;
                         </p>
                         <p className="text-xs text-gray-500 mt-2">
                           {review.serviceTitle} • {new Date(review.createdAt).toLocaleDateString('zh-TW')}

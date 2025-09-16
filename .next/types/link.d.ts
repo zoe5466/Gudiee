@@ -29,97 +29,97 @@ declare namespace __next_route_internal_types__ {
     S extends `${string}${SearchOrHash}` ? never : S
 
   type StaticRoutes = 
-    | `/`
-    | `/about`
+    | `/api/admin/bookings/seed`
+    | `/api/admin/activity`
+    | `/api/admin/bookings`
+    | `/api/admin/chat`
+    | `/api/admin/chat/seed`
+    | `/api/admin/guides`
+    | `/api/admin/dashboard`
+    | `/api/admin/notifications`
+    | `/api/admin/services`
+    | `/api/admin/users`
+    | `/api/auth/admin/login`
+    | `/api/auth/logout`
+    | `/api/auth/login`
+    | `/api/auth/refresh`
+    | `/api/auth/me`
+    | `/api/auth/register`
+    | `/api/bookings/payment`
+    | `/api/bookings`
+    | `/api/health`
+    | `/api/conversations`
+    | `/api/guides`
+    | `/api/notifications/unsubscribe`
+    | `/api/notifications/send`
+    | `/api/notifications/subscribe`
+    | `/api/services`
+    | `/api/reviews`
+    | `/api/services/suggestions`
+    | `/api/users/profile`
+    | `/api/services/search`
+    | `/auth/login`
+    | `/auth/register`
     | `/booking`
     | `/booking/confirmation`
     | `/chat`
-    | `/bookings`
-    | `/favorites`
     | `/forgot-password`
-    | `/guide-dashboard`
-    | `/guides`
-    | `/history`
-    | `/kyc`
-    | `/auth/register`
-    | `/auth/login`
-    | `/guide/dashboard`
-    | `/guide/tasks`
-    | `/guide/messages`
-    | `/guide/orders`
     | `/guide/account`
+    | `/favorites`
+    | `/about`
+    | `/guide/messages`
+    | `/history`
+    | `/bookings`
     | `/login`
-    | `/messages`
-    | `/profile`
     | `/my-bookings`
-    | `/search`
+    | `/messages`
     | `/privacy`
     | `/register`
-    | `/tasks`
     | `/terms`
-    | `/admin`
+    | `/guide-dashboard`
+    | `/tasks`
+    | `/guide/dashboard`
     | `/admin/bookings`
-    | `/admin/demo`
-    | `/admin/guides`
-    | `/admin/chat`
+    | `/profile`
     | `/admin/cms`
-    | `/admin/services`
-    | `/admin/simple`
+    | `/admin/guides`
+    | `/admin/demo`
+    | `/admin`
+    | `/admin/chat`
+    | `/search`
     | `/admin/test`
-    | `/admin/users`
-    | `/admin/login`
+    | `/kyc`
+    | `/admin/simple`
     | `/admin/reviews`
-    | `/api/admin/activity`
-    | `/api/admin/chat`
-    | `/api/admin/chat/seed`
-    | `/api/admin/bookings`
-    | `/api/admin/bookings/seed`
-    | `/api/admin/guides`
-    | `/api/admin/dashboard`
-    | `/api/admin/users`
-    | `/api/admin/services`
-    | `/api/admin/notifications`
-    | `/api/auth/admin/login`
-    | `/api/auth/logout`
-    | `/api/auth/me`
-    | `/api/auth/refresh`
-    | `/api/auth/login`
-    | `/api/auth/register`
-    | `/api/bookings`
-    | `/api/bookings/payment`
-    | `/api/conversations`
-    | `/api/guides`
-    | `/api/health`
-    | `/api/reviews`
-    | `/api/services`
-    | `/api/services/search`
-    | `/api/services/suggestions`
-    | `/api/notifications/send`
-    | `/api/notifications/subscribe`
-    | `/api/notifications/unsubscribe`
-    | `/api/users/profile`
+    | `/admin/users`
+    | `/`
+    | `/guides`
+    | `/guide/orders`
+    | `/guide/tasks`
+    | `/admin/services`
+    | `/admin/login`
     | `/guide`
     | `/guides`
     | `/home`
   type DynamicRoutes<T extends string = string> = 
-    | `/bookings/${SafeSlug<T>}/review`
-    | `/guides/${SafeSlug<T>}`
-    | `/services/${SafeSlug<T>}`
-    | `/admin/users/${SafeSlug<T>}`
-    | `/api/admin/chat/${SafeSlug<T>}`
     | `/api/admin/bookings/${SafeSlug<T>}`
-    | `/api/admin/users/${SafeSlug<T>}`
+    | `/api/admin/chat/${SafeSlug<T>}`
     | `/api/admin/services/${SafeSlug<T>}`
-    | `/api/bookings/${SafeSlug<T>}/cancel`
+    | `/api/admin/users/${SafeSlug<T>}`
     | `/api/bookings/${SafeSlug<T>}/confirm`
-    | `/api/bookings/${SafeSlug<T>}/review`
-    | `/api/conversations/${SafeSlug<T>}`
+    | `/api/bookings/${SafeSlug<T>}/cancel`
     | `/api/conversations/${SafeSlug<T>}/messages`
+    | `/api/conversations/${SafeSlug<T>}`
+    | `/api/bookings/${SafeSlug<T>}/review`
     | `/api/guides/${SafeSlug<T>}`
-    | `/api/reviews/${SafeSlug<T>}`
     | `/api/reviews/${SafeSlug<T>}/helpful`
     | `/api/reviews/${SafeSlug<T>}/responses`
+    | `/api/reviews/${SafeSlug<T>}`
     | `/api/services/${SafeSlug<T>}`
+    | `/bookings/${SafeSlug<T>}/review`
+    | `/services/${SafeSlug<T>}`
+    | `/guides/${SafeSlug<T>}`
+    | `/admin/users/${SafeSlug<T>}`
     | `/api/v1/${OptionalCatchAllSlug<T>}`
 
   type RouteImpl<T> = 
