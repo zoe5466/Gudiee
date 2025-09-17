@@ -105,9 +105,28 @@ interface Translations {
   'admin.system_status': string;
   'admin.last_updated': string;
   
+  // 管理面板導航
+  'admin.nav.dashboard': string;
+  'admin.nav.users': string;
+  'admin.nav.guides': string;
+  'admin.nav.services': string;
+  'admin.nav.bookings': string;
+  'admin.nav.reviews': string;
+  'admin.nav.chat': string;
+  'admin.nav.analytics': string;
+  'admin.nav.settings': string;
+  'admin.nav.logout': string;
+  'admin.nav.cms': string;
+  'admin.nav.user_management': string;
+  'admin.nav.guide_management': string;
+  'admin.nav.booking_management': string;
+  'admin.nav.review_management': string;
+  'admin.nav.chat_management': string;
+  
   // 管理面板通用
   'admin.common.loading': string;
   'admin.common.return_home': string;
+  'admin.common.search': string;
   'admin.common.role.admin': string;
   
   // 管理面板統計
@@ -280,9 +299,28 @@ const translations: Record<SupportedLocale, Translations> = {
     'admin.system_status': '系統狀態正常',
     'admin.last_updated': '最後更新時間',
     
+    // 管理面板導航
+    'admin.nav.dashboard': '儀表板',
+    'admin.nav.users': '用戶',
+    'admin.nav.guides': '地陪',
+    'admin.nav.services': '服務',
+    'admin.nav.bookings': '預訂',
+    'admin.nav.reviews': '評論',
+    'admin.nav.chat': '客服',
+    'admin.nav.analytics': '數據分析',
+    'admin.nav.settings': '設定',
+    'admin.nav.logout': '登出',
+    'admin.nav.cms': '內容管理',
+    'admin.nav.user_management': '用戶管理',
+    'admin.nav.guide_management': '地陪管理',
+    'admin.nav.booking_management': '預訂管理',
+    'admin.nav.review_management': '評論管理',
+    'admin.nav.chat_management': '客服管理',
+    
     // 管理面板通用
     'admin.common.loading': '載入中...',
     'admin.common.return_home': '返回首頁',
+    'admin.common.search': '搜尋...',
     'admin.common.role.admin': '管理員',
     
     // 管理面板統計
@@ -453,9 +491,28 @@ const translations: Record<SupportedLocale, Translations> = {
     'admin.system_status': '系统状态正常',
     'admin.last_updated': '最后更新时间',
     
+    // 管理面板导航
+    'admin.nav.dashboard': '仪表板',
+    'admin.nav.users': '用户',
+    'admin.nav.guides': '导游',
+    'admin.nav.services': '服务',
+    'admin.nav.bookings': '预订',
+    'admin.nav.reviews': '评论',
+    'admin.nav.chat': '客服',
+    'admin.nav.analytics': '数据分析',
+    'admin.nav.settings': '设置',
+    'admin.nav.logout': '登出',
+    'admin.nav.cms': '内容管理',
+    'admin.nav.user_management': '用户管理',
+    'admin.nav.guide_management': '导游管理',
+    'admin.nav.booking_management': '预订管理',
+    'admin.nav.review_management': '评论管理',
+    'admin.nav.chat_management': '客服管理',
+    
     // 管理面板通用
     'admin.common.loading': '加载中...',
     'admin.common.return_home': '返回首页',
+    'admin.common.search': '搜索...',
     'admin.common.role.admin': '管理员',
     
     // 管理面板统计
@@ -626,9 +683,28 @@ const translations: Record<SupportedLocale, Translations> = {
     'admin.system_status': 'System Status Online',
     'admin.last_updated': 'Last Updated',
     
+    // Admin Navigation
+    'admin.nav.dashboard': 'Dashboard',
+    'admin.nav.users': 'Users',
+    'admin.nav.guides': 'Guides',
+    'admin.nav.services': 'Services',
+    'admin.nav.bookings': 'Bookings',
+    'admin.nav.reviews': 'Reviews',
+    'admin.nav.chat': 'Support',
+    'admin.nav.analytics': 'Analytics',
+    'admin.nav.settings': 'Settings',
+    'admin.nav.logout': 'Logout',
+    'admin.nav.cms': 'Content Management',
+    'admin.nav.user_management': 'User Management',
+    'admin.nav.guide_management': 'Guide Management',
+    'admin.nav.booking_management': 'Booking Management',
+    'admin.nav.review_management': 'Review Management',
+    'admin.nav.chat_management': 'Customer Support',
+    
     // Admin Common
     'admin.common.loading': 'Loading...',
     'admin.common.return_home': 'Return Home',
+    'admin.common.search': 'Search...',
     'admin.common.role.admin': 'Administrator',
     
     // Admin Stats
@@ -755,6 +831,11 @@ const translations: Record<SupportedLocale, Translations> = {
     'search.rating': '評価',
     'search.category': 'カテゴリ',
     'search.no_results': '条件に合うサービスが見つかりません',
+    'search.destination': '目的地',
+    'search.departure_date': '出発',
+    'search.return_date': '戻り',
+    'search.departure_placeholder': '出発日を選択',
+    'search.return_placeholder': '戻り日を選択',
     
     // 予約
     'booking.title': 'サービスを予約',
@@ -785,7 +866,108 @@ const translations: Record<SupportedLocale, Translations> = {
     'success.register': '登録成功',
     'success.booking': '予約成功',
     'success.payment': '支払い成功',
-    'success.review': 'レビューの送信が完了しました'
+    'success.review': 'レビューの送信が完了しました',
+
+    // 管理パネル
+    'admin.title': '管理パネル',
+    'admin.welcome': 'おかえりなさい',
+    'admin.description': 'システムは正常に動作しており、すべてのサービスが稼働しています',
+    'admin.system_status': 'システム状態オンライン',
+    'admin.last_updated': '最終更新',
+    
+    // 管理パネルナビゲーション
+    'admin.nav.dashboard': 'ダッシュボード',
+    'admin.nav.users': 'ユーザー',
+    'admin.nav.guides': 'ガイド',
+    'admin.nav.services': 'サービス',
+    'admin.nav.bookings': '予約',
+    'admin.nav.reviews': 'レビュー',
+    'admin.nav.chat': 'サポート',
+    'admin.nav.analytics': 'アナリティクス',
+    'admin.nav.settings': '設定',
+    'admin.nav.logout': 'ログアウト',
+    'admin.nav.cms': 'コンテンツ管理',
+    'admin.nav.user_management': 'ユーザー管理',
+    'admin.nav.guide_management': 'ガイド管理',
+    'admin.nav.booking_management': '予約管理',
+    'admin.nav.review_management': 'レビュー管理',
+    'admin.nav.chat_management': 'カスタマーサポート',
+    
+    // 管理パネル共通
+    'admin.common.loading': '読み込み中...',
+    'admin.common.return_home': 'ホームに戻る',
+    'admin.common.search': '検索...',
+    'admin.common.role.admin': '管理者',
+    
+    // 管理パネル統計
+    'admin.stats.total_users': '総ユーザー数',
+    'admin.stats.total_services': '総サービス数',
+    'admin.stats.total_bookings': '総予約数',
+    'admin.stats.total_revenue': '総収益',
+    'admin.stats.monthly_growth': '月次成長率',
+    'admin.stats.pending_services': '承認待ち',
+    'admin.stats.active_bookings': 'アクティブ',
+    'admin.stats.average_rating': '平均評価',
+    
+    // ユーザー管理
+    'admin.user_management.title': 'ユーザー管理',
+    'admin.user_management.description': '登録ユーザーとガイドを管理',
+    'admin.user_management.user': 'ユーザー',
+    'admin.user_management.view_manage': '表示と管理',
+    
+    // サービス管理
+    'admin.service_management.title': 'サービス管理',
+    'admin.service_management.description': 'ガイドサービスの審査と管理',
+    'admin.service_management.service': 'サービス',
+    'admin.service_management.pending': '承認待ち',
+    'admin.service_management.manage_services': 'サービス管理',
+    
+    // 予約管理
+    'admin.booking_management.title': '予約管理',
+    'admin.booking_management.description': 'ユーザー予約の処理',
+    'admin.booking_management.booking': '予約',
+    'admin.booking_management.in_progress': '進行中',
+    'admin.booking_management.manage_bookings': '予約管理',
+    
+    // チャット管理
+    'admin.chat_management.title': 'カスタマーサポート',
+    'admin.chat_management.admin': 'サポートエージェント',
+    'admin.chat_management.active_conversations': 'アクティブな会話',
+    'admin.chat_management.pending_messages': '返信待ちメッセージ',
+    'admin.chat_management.avg_response_time': '平均返信時間',
+    'admin.chat_management.minutes': '分',
+    'admin.chat_management.search_conversations': '会話を検索...',
+    'admin.chat_management.all_status': 'すべてのステータス',
+    'admin.chat_management.send_message': '返信メッセージを入力...',
+    'admin.chat_management.resolve': '解決済みとしてマーク',
+    
+    // CMS管理
+    'admin.cms.title': 'コンテンツ管理システム',
+    'admin.cms.description': 'ウェブサイトコンテンツ、記事、メディアリソースを管理',
+    'admin.cms.total_content': '総コンテンツ数',
+    'admin.cms.published_content': '公開済みコンテンツ',
+    'admin.cms.draft_content': '下書きコンテンツ',
+    'admin.cms.monthly_views': '月間ビュー数',
+    'admin.cms.popular_content': '人気コンテンツ',
+    'admin.cms.overview': '概要',
+    'admin.cms.content_management': 'コンテンツ管理',
+    'admin.cms.analytics': 'アナリティクス',
+    'admin.cms.system_settings': 'システム設定',
+    'admin.cms.analytics_coming_soon': 'アナリティクス機能は近日公開',
+    'admin.cms.analytics_description': '詳細なトラフィックとユーザー行動分析機能を開発中',
+    'admin.cms.settings_coming_soon': '設定機能は近日公開',
+    'admin.cms.settings_description': 'ウェブサイト設定とシステムパラメータ設定機能を開発中',
+    
+    // レビュー管理
+    'admin.review_management.title': 'レビュー管理',
+    'admin.review_management.total_reviews': '総レビュー数',
+    'admin.review_management.pending_reviews': '承認待ちレビュー',
+    'admin.review_management.search_reviews': 'レビューを検索...',
+    'admin.review_management.all_status': 'すべてのステータス',
+    'admin.review_management.pending': '承認待ち',
+    'admin.review_management.approved': '承認済み',
+    'admin.review_management.rejected': '拒否済み',
+    'admin.review_management.flagged': 'フラグ付き'
   },
   
   'ko': {
@@ -841,6 +1023,11 @@ const translations: Record<SupportedLocale, Translations> = {
     'search.rating': '평점',
     'search.category': '카테고리',
     'search.no_results': '조건에 맞는 서비스를 찾을 수 없습니다',
+    'search.destination': '목적지',
+    'search.departure_date': '출발',
+    'search.return_date': '돌아옴',
+    'search.departure_placeholder': '출발 날짜 선택',
+    'search.return_placeholder': '돌아오는 날짜 선택',
     
     // 예약
     'booking.title': '서비스 예약',
@@ -871,7 +1058,108 @@ const translations: Record<SupportedLocale, Translations> = {
     'success.register': '회원가입 성공',
     'success.booking': '예약 성공',
     'success.payment': '결제 성공',
-    'success.review': '리뷰가 성공적으로 제출되었습니다'
+    'success.review': '리뷰가 성공적으로 제출되었습니다',
+
+    // 관리 패널
+    'admin.title': '관리 패널',
+    'admin.welcome': '다시 오신 것을 환영합니다',
+    'admin.description': '시스템이 원활하게 실행 중이며 모든 서비스가 작동 중입니다',
+    'admin.system_status': '시스템 상태 온라인',
+    'admin.last_updated': '마지막 업데이트',
+    
+    // 관리 패널 네비게이션
+    'admin.nav.dashboard': '대시보드',
+    'admin.nav.users': '사용자',
+    'admin.nav.guides': '가이드',
+    'admin.nav.services': '서비스',
+    'admin.nav.bookings': '예약',
+    'admin.nav.reviews': '리뷰',
+    'admin.nav.chat': '지원',
+    'admin.nav.analytics': '분석',
+    'admin.nav.settings': '설정',
+    'admin.nav.logout': '로그아웃',
+    'admin.nav.cms': '콘텐츠 관리',
+    'admin.nav.user_management': '사용자 관리',
+    'admin.nav.guide_management': '가이드 관리',
+    'admin.nav.booking_management': '예약 관리',
+    'admin.nav.review_management': '리뷰 관리',
+    'admin.nav.chat_management': '고객 지원',
+    
+    // 관리 패널 공통
+    'admin.common.loading': '로딩 중...',
+    'admin.common.return_home': '홈으로 돌아가기',
+    'admin.common.search': '검색...',
+    'admin.common.role.admin': '관리자',
+    
+    // 관리 패널 통계
+    'admin.stats.total_users': '총 사용자 수',
+    'admin.stats.total_services': '총 서비스 수',
+    'admin.stats.total_bookings': '총 예약 수',
+    'admin.stats.total_revenue': '총 수익',
+    'admin.stats.monthly_growth': '월간 성장률',
+    'admin.stats.pending_services': '승인 대기 중',
+    'admin.stats.active_bookings': '활성',
+    'admin.stats.average_rating': '평균 평점',
+    
+    // 사용자 관리
+    'admin.user_management.title': '사용자 관리',
+    'admin.user_management.description': '등록된 사용자와 가이드 관리',
+    'admin.user_management.user': '사용자',
+    'admin.user_management.view_manage': '보기 및 관리',
+    
+    // 서비스 관리
+    'admin.service_management.title': '서비스 관리',
+    'admin.service_management.description': '가이드 서비스 검토 및 관리',
+    'admin.service_management.service': '서비스',
+    'admin.service_management.pending': '승인 대기 중',
+    'admin.service_management.manage_services': '서비스 관리',
+    
+    // 예약 관리
+    'admin.booking_management.title': '예약 관리',
+    'admin.booking_management.description': '사용자 예약 처리',
+    'admin.booking_management.booking': '예약',
+    'admin.booking_management.in_progress': '진행 중',
+    'admin.booking_management.manage_bookings': '예약 관리',
+    
+    // 채팅 관리
+    'admin.chat_management.title': '고객 지원',
+    'admin.chat_management.admin': '지원 담당자',
+    'admin.chat_management.active_conversations': '활성 대화',
+    'admin.chat_management.pending_messages': '답변 대기 메시지',
+    'admin.chat_management.avg_response_time': '평균 응답 시간',
+    'admin.chat_management.minutes': '분',
+    'admin.chat_management.search_conversations': '대화 검색...',
+    'admin.chat_management.all_status': '모든 상태',
+    'admin.chat_management.send_message': '답변 메시지 입력...',
+    'admin.chat_management.resolve': '해결됨으로 표시',
+    
+    // CMS 관리
+    'admin.cms.title': '콘텐츠 관리 시스템',
+    'admin.cms.description': '웹사이트 콘텐츠, 기사 및 미디어 리소스 관리',
+    'admin.cms.total_content': '총 콘텐츠 수',
+    'admin.cms.published_content': '게시된 콘텐츠',
+    'admin.cms.draft_content': '임시 저장 콘텐츠',
+    'admin.cms.monthly_views': '월간 조회수',
+    'admin.cms.popular_content': '인기 콘텐츠',
+    'admin.cms.overview': '개요',
+    'admin.cms.content_management': '콘텐츠 관리',
+    'admin.cms.analytics': '분석',
+    'admin.cms.system_settings': '시스템 설정',
+    'admin.cms.analytics_coming_soon': '분석 기능 곧 출시',
+    'admin.cms.analytics_description': '상세한 트래픽 및 사용자 행동 분석 기능을 개발 중입니다',
+    'admin.cms.settings_coming_soon': '설정 기능 곧 출시',
+    'admin.cms.settings_description': '웹사이트 구성 및 시스템 매개변수 설정 기능을 개발 중입니다',
+    
+    // 리뷰 관리
+    'admin.review_management.title': '리뷰 관리',
+    'admin.review_management.total_reviews': '총 리뷰 수',
+    'admin.review_management.pending_reviews': '승인 대기 리뷰',
+    'admin.review_management.search_reviews': '리뷰 검색...',
+    'admin.review_management.all_status': '모든 상태',
+    'admin.review_management.pending': '승인 대기 중',
+    'admin.review_management.approved': '승인됨',
+    'admin.review_management.rejected': '거부됨',
+    'admin.review_management.flagged': '신고됨'
   }
 };
 

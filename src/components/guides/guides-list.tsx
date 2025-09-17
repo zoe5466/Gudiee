@@ -197,8 +197,8 @@ export default function GuidesList({ className = '' }: GuidesListProps) {
                 value={`${sortBy}_${sortOrder}`}
                 onChange={(e) => {
                   const [newSortBy, newSortOrder] = e.target.value.split('_');
-                  setSortBy(newSortBy);
-                  setSortOrder(newSortOrder);
+                  setSortBy(newSortBy || 'rating');
+                  setSortOrder(newSortOrder as 'asc' | 'desc' || 'desc');
                 }}
                 className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               >

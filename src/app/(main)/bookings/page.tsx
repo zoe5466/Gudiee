@@ -8,7 +8,7 @@ import { useBooking, type Booking } from '@/store/booking';
 import { useToast } from '@/components/ui/toast';
 import { Loading } from '@/components/ui/loading';
 
-type BookingStatus = 'all' | 'pending' | 'confirmed' | 'completed' | 'cancelled';
+type BookingStatus = 'all' | 'PENDING' | 'CONFIRMED' | 'completed' | 'cancelled';
 type SortOption = 'newest' | 'oldest' | 'status' | 'date';
 
 export default function BookingsPage() {
@@ -41,7 +41,7 @@ export default function BookingsPage() {
 
   // 過濾和排序預訂
   const filteredAndSortedBookings = bookings
-    .filter(booking => statusFilter === 'all' || booking.status === statusFilter)
+    .filter(booking => statusFilter === 'all' || booking.status === statusFilter || booking.status === statusFilter.toLowerCase())
     .sort((a, b) => {
       switch (sortBy) {
         case 'oldest':
@@ -67,7 +67,7 @@ export default function BookingsPage() {
     }
   };
 
-  const getStatusText = (status: Booking['status']) => {
+  const getStatusText = (status: Booking['status'] | BookingStatus) => {
     const statusMap: Record<string, string> = {
       PENDING: '待確認',
       CONFIRMED: '已確認', 
@@ -158,7 +158,7 @@ export default function BookingsPage() {
             <div className="mt-4 pt-4 border-t border-gray-200">
               <div className="flex flex-wrap gap-2">
                 <h3 className="text-sm font-medium text-gray-700 w-full mb-2">狀態篩選：</h3>
-                {(['all', 'pending', 'confirmed', 'completed', 'cancelled'] as const).map((status) => (
+                {(['all', 'PENDING', 'CONFIRMED', 'completed', 'cancelled'] as BookingStatus[]).map((status) => (
                   <button
                     key={status}
                     onClick={() => setStatusFilter(status)}
@@ -234,7 +234,7 @@ export default function BookingsPage() {
 
                   {/* 右側：操作按鈕 */}
                   <div className="flex flex-col gap-2 lg:min-w-[200px]">
-                    {booking.status === 'pending' && (
+                    {booking.status === 'PENDING' && (
                       <button
                         onClick={() => handleCancelBooking(booking.id)}
                         className="btn btn-secondary btn-sm w-full"
@@ -243,7 +243,7 @@ export default function BookingsPage() {
                       </button>
                     )}
                     
-                    {booking.status === 'confirmed' && (
+                    {booking.status === 'CONFIRMED' && (
                       <>
                         <button
                           onClick={() => router.push(`/messages?guide=${booking.guideId}`)}

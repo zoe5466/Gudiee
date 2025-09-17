@@ -13,7 +13,7 @@ export default function MyBookingsPage() {
   const { isAuthenticated, user } = useAuth();
   const { bookings, fetchBookings, cancelBooking, submitReview, isLoading } = useBooking();
   
-  const [selectedTab, setSelectedTab] = useState<'all' | 'pending' | 'confirmed' | 'completed' | 'cancelled'>('all');
+  const [selectedTab, setSelectedTab] = useState<'all' | 'PENDING' | 'CONFIRMED' | 'completed' | 'cancelled'>('all');
   const [showReviewModal, setShowReviewModal] = useState(false);
   const [reviewBookingId, setReviewBookingId] = useState<string | null>(null);
   const [reviewRating, setReviewRating] = useState(5);
@@ -115,8 +115,8 @@ export default function MyBookingsPage() {
         <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '2rem', flexWrap: 'wrap' }}>
           {[
             { key: 'all', label: '全部' },
-            { key: 'pending', label: '待確認' },
-            { key: 'confirmed', label: '已確認' },
+            { key: 'PENDING', label: '待確認' },
+            { key: 'CONFIRMED', label: '已確認' },
             { key: 'completed', label: '已完成' },
             { key: 'cancelled', label: '已取消' }
           ].map(tab => (
@@ -155,7 +155,7 @@ export default function MyBookingsPage() {
           <div style={{ textAlign: 'center', padding: '3rem', backgroundColor: 'white', borderRadius: '1rem', boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)' }}>
             <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>📅</div>
             <h3 style={{ fontSize: '1.125rem', fontWeight: '600', color: '#111827', marginBottom: '0.5rem' }}>
-              {selectedTab === 'all' ? '暫無預訂記錄' : `暫無${selectedTab === 'pending' ? '待確認' : selectedTab === 'confirmed' ? '已確認' : selectedTab === 'completed' ? '已完成' : '已取消'}的預訂`}
+              {selectedTab === 'all' ? '暫無預訂記錄' : `暫無${selectedTab === 'PENDING' ? '待確認' : selectedTab === 'CONFIRMED' ? '已確認' : selectedTab === 'completed' ? '已完成' : '已取消'}的預訂`}
             </h3>
             <p style={{ color: '#6b7280', marginBottom: '1.5rem' }}>
               開始探索精彩的導覽服務吧！
@@ -271,7 +271,7 @@ export default function MyBookingsPage() {
 
                 {/* 操作按鈕 */}
                 <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
-                  {booking.status === 'confirmed' && (
+                  {booking.status === 'CONFIRMED' && (
                     <button
                       onClick={() => {
                         setCancelBookingId(booking.id);

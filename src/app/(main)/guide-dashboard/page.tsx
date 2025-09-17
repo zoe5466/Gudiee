@@ -50,7 +50,7 @@ export default function GuideDashboardPage() {
       
       setStats({
         totalBookings: guideBookings.length,
-        pendingBookings: guideBookings.filter(b => b.status === 'pending').length,
+        pendingBookings: guideBookings.filter(b => b.status === 'PENDING').length,
         totalEarnings,
         averageRating: 4.8, // 模擬數據
         totalReviews: 25, // 模擬數據
@@ -287,18 +287,18 @@ export default function GuideDashboardPage() {
                     </div>
                     <span style={{
                       padding: '0.25rem 0.5rem',
-                      backgroundColor: booking.status === 'confirmed' ? '#dcfce7' : '#fef3c7',
-                      color: booking.status === 'confirmed' ? '#166534' : '#92400e',
+                      backgroundColor: booking.status === 'CONFIRMED' ? '#dcfce7' : '#fef3c7',
+                      color: booking.status === 'CONFIRMED' ? '#166534' : '#92400e',
                       borderRadius: '9999px',
                       fontSize: '0.75rem',
                       fontWeight: '500'
                     }}>
-                      {booking.status === 'pending' ? '待確認' : booking.status === 'confirmed' ? '已確認' : '已完成'}
+                      {booking.status === 'PENDING' ? '待確認' : booking.status === 'CONFIRMED' ? '已確認' : '已完成'}
                     </span>
                   </div>
                 </div>
 
-                {booking.status === 'pending' && (
+                {booking.status === 'PENDING' && (
                   <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1rem' }}>
                     <button
                       style={{

@@ -338,7 +338,7 @@ export default function TravelerDashboard({ className = '' }: TravelerDashboardP
                     <div className="flex items-center space-x-4">
                       <div className="flex-shrink-0">
                         <Image
-                          src={booking.service.images[0]}
+                          src={booking.service.images[0] || '/images/placeholder.jpg'}
                           alt={booking.service.title}
                           width={80}
                           height={80}

@@ -387,7 +387,7 @@ export default function GuideDashboard({ className = '' }: GuideDashboardProps) 
                     <div className="flex items-center space-x-4">
                       <div className="flex-shrink-0">
                         <Image
-                          src={booking.service.images[0]}
+                          src={booking.service.images[0] || '/images/placeholder.jpg'}
                           alt={booking.service.title}
                           width={60}
                           height={60}
@@ -458,7 +458,7 @@ export default function GuideDashboard({ className = '' }: GuideDashboardProps) 
                     <div className="flex items-center space-x-4">
                       <div className="flex-shrink-0">
                         <Image
-                          src={service.images[0]}
+                          src={service.images[0] || '/images/placeholder.jpg'}
                           alt={service.title}
                           width={60}
                           height={60}
