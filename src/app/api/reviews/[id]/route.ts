@@ -194,7 +194,7 @@ export async function DELETE(
     }
 
     // 檢查權限（作者或管理員可以刪除）
-    if (review.reviewerId !== user.id && user.role !== 'admin') {
+    if (review.reviewerId !== user.id && user.role !== 'GUIDE') {
       return errorResponse('無權限刪除此評論', 403);
     }
 

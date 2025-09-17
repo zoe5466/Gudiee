@@ -8,7 +8,7 @@ let bookings: any[] = [
     serviceId: '1',
     guideId: 'guide-1',
     travelerId: '1',
-    status: 'confirmed',
+    status: 'CONFIRMED',
     details: {
       serviceId: '1',
       guideId: 'guide-1',

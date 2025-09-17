@@ -252,7 +252,7 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
             bookings: {
               where: {
                 status: {
-                  in: ['confirmed', 'pending']
+                  in: ['CONFIRMED', 'PENDING']
                 }
               }
             }

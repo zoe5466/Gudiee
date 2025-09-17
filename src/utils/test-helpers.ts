@@ -66,7 +66,7 @@ export const mockBookings = [
     serviceId: '1',
     guideId: 'guide-1',
     travelerId: '1',
-    status: 'confirmed' as const,
+    status: 'CONFIRMED' as const,
     details: {
       serviceId: '1',
       guideId: 'guide-1',

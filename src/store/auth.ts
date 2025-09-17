@@ -345,7 +345,7 @@ export const useAuth = create<AuthState>()(
         if (!user) return false; // 未登入用戶無權限
         
         // 管理員擁有所有權限
-        if (user.role === 'admin') return true;
+        if (user.role === 'GUIDE') return true;
         
         // 檢查用戶權限列表中是否包含指定權限
         return user.permissions?.includes(permission) || false;

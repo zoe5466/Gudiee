@@ -9,7 +9,7 @@ import { Review } from './Review';
 
 export enum OrderStatus {
   PENDING_CONFIRMATION = 'pending_confirmation',
-  CONFIRMED = 'confirmed',
+  CONFIRMED = 'CONFIRMED',
   PAID = 'paid',
   IN_PROGRESS = 'in_progress',
   COMPLETED = 'completed',
@@ -19,7 +19,7 @@ export enum OrderStatus {
 }
 
 export enum ProviderResponse {
-  PENDING = 'pending',
+  PENDING = 'PENDING',
   ACCEPTED = 'accepted',
   DECLINED = 'declined'
 }

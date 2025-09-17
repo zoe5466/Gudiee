@@ -22,7 +22,7 @@ export enum GenderType {
 }
 
 export enum KYCStatus {
-  PENDING = 'pending',
+  PENDING = 'PENDING',
   SUBMITTED = 'submitted',
   APPROVED = 'approved',
   REJECTED = 'rejected',

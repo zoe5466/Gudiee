@@ -27,7 +27,7 @@ export interface Review {
   tags?: string[]; // 標籤：'準時', '專業', '親切', '知識豐富' 等
   createdAt: string;
   updatedAt: string;
-  status: 'pending' | 'approved' | 'rejected' | 'hidden';
+  status: 'PENDING' | 'approved' | 'rejected' | 'hidden';
 }
 
 export interface ReviewStatistics {
@@ -223,7 +223,7 @@ export const useReviews = create<ReviewState>()(
             id: `review-${Date.now()}`,
             helpful: 0,
             reported: 0,
-            status: 'pending',
+            status: 'PENDING',
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString()
           };

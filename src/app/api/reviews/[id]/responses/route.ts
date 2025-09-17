@@ -52,7 +52,7 @@ export async function POST(
     // 檢查是否為嚮導回復自己服務的評論
     if (user.id === review.service.guide.id) {
       authorType = 'GUIDE';
-    } else if (user.role === 'admin') {
+    } else if (user.role === 'GUIDE') {
       authorType = 'ADMIN';
     } else {
       return errorResponse('只有嚮導或管理員可以回復評論', 403);

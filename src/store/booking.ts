@@ -22,7 +22,7 @@ export interface Booking {
   serviceId: string;
   guideId: string;
   travelerId: string;
-  status: 'pending' | 'confirmed' | 'completed' | 'cancelled' | 'refunded';
+  status: 'PENDING' | 'CONFIRMED' | 'completed' | 'cancelled' | 'refunded';
   details: BookingDetails;
   pricing: {
     basePrice: number;
@@ -32,7 +32,7 @@ export interface Booking {
   };
   payment: {
     method: string;
-    status: 'pending' | 'completed' | 'failed' | 'refunded';
+    status: 'PENDING' | 'completed' | 'failed' | 'refunded';
     transactionId?: string;
   };
   createdAt: string;
