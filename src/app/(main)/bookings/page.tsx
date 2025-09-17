@@ -68,23 +68,33 @@ export default function BookingsPage() {
   };
 
   const getStatusText = (status: Booking['status']) => {
-    const statusMap = {
+    const statusMap: Record<string, string> = {
       PENDING: '待確認',
-      CONFIRMED: '已確認',
+      CONFIRMED: '已確認', 
       COMPLETED: '已完成',
       CANCELLED: '已取消',
-      REFUNDED: '已退款'
+      REFUNDED: '已退款',
+      pending: '待確認',
+      confirmed: '已確認',
+      completed: '已完成',
+      cancelled: '已取消',
+      refunded: '已退款'
     };
     return statusMap[status] || status;
   };
 
   const getStatusColor = (status: Booking['status']) => {
-    const colorMap = {
+    const colorMap: Record<string, string> = {
       PENDING: 'bg-yellow-100 text-yellow-800',
       CONFIRMED: 'bg-blue-100 text-blue-800',
       COMPLETED: 'bg-green-100 text-green-800',
       CANCELLED: 'bg-red-100 text-red-800',
-      REFUNDED: 'bg-gray-100 text-gray-800'
+      REFUNDED: 'bg-gray-100 text-gray-800',
+      pending: 'bg-yellow-100 text-yellow-800',
+      confirmed: 'bg-blue-100 text-blue-800',
+      completed: 'bg-green-100 text-green-800',
+      cancelled: 'bg-red-100 text-red-800',
+      refunded: 'bg-gray-100 text-gray-800'
     };
     return colorMap[status] || 'bg-gray-100 text-gray-800';
   };

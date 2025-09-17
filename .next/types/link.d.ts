@@ -40,13 +40,13 @@ declare namespace __next_route_internal_types__ {
     | `/api/admin/services`
     | `/api/admin/users`
     | `/api/auth/admin/login`
+    | `/api/auth/login`
     | `/api/auth/logout`
     | `/api/auth/me`
     | `/api/auth/refresh`
     | `/api/auth/register`
-    | `/api/auth/login`
-    | `/api/bookings`
     | `/api/bookings/payment`
+    | `/api/bookings`
     | `/api/conversations`
     | `/api/guides`
     | `/api/health`
@@ -54,45 +54,45 @@ declare namespace __next_route_internal_types__ {
     | `/api/notifications/subscribe`
     | `/api/notifications/unsubscribe`
     | `/api/reviews`
-    | `/api/services/search`
     | `/api/services`
-    | `/api/users/profile`
+    | `/api/services/search`
     | `/api/services/suggestions`
+    | `/api/users/profile`
+    | `/auth/login`
     | `/about`
+    | `/booking/confirmation`
     | `/booking`
-    | `/bookings`
     | `/chat`
     | `/favorites`
-    | `/booking/confirmation`
-    | `/auth/login`
     | `/auth/register`
     | `/forgot-password`
+    | `/bookings`
     | `/guide-dashboard`
-    | `/guide/dashboard`
     | `/guide/account`
     | `/guide/messages`
+    | `/guide/dashboard`
     | `/history`
-    | `/my-bookings`
     | `/kyc`
-    | `/login`
     | `/messages`
-    | `/privacy`
+    | `/login`
+    | `/my-bookings`
     | `/profile`
-    | `/register`
+    | `/privacy`
     | `/tasks`
     | `/search`
+    | `/register`
     | `/terms`
-    | `/admin/chat`
     | `/admin/bookings`
-    | `/admin/guides`
     | `/admin/demo`
-    | `/admin`
-    | `/admin/services`
-    | `/admin/reviews`
-    | `/admin/simple`
-    | `/admin/test`
-    | `/admin/users`
     | `/admin/cms`
+    | `/admin/chat`
+    | `/admin/guides`
+    | `/admin/simple`
+    | `/admin/services`
+    | `/admin/test`
+    | `/admin`
+    | `/admin/users`
+    | `/admin/reviews`
     | `/guides`
     | `/guide/orders`
     | `/guide/tasks`
@@ -106,15 +106,15 @@ declare namespace __next_route_internal_types__ {
     | `/api/admin/chat/${SafeSlug<T>}`
     | `/api/admin/services/${SafeSlug<T>}`
     | `/api/admin/users/${SafeSlug<T>}`
-    | `/api/bookings/${SafeSlug<T>}/review`
-    | `/api/bookings/${SafeSlug<T>}/confirm`
     | `/api/bookings/${SafeSlug<T>}/cancel`
+    | `/api/bookings/${SafeSlug<T>}/confirm`
+    | `/api/bookings/${SafeSlug<T>}/review`
     | `/api/conversations/${SafeSlug<T>}/messages`
     | `/api/conversations/${SafeSlug<T>}`
     | `/api/guides/${SafeSlug<T>}`
-    | `/api/reviews/${SafeSlug<T>}`
-    | `/api/reviews/${SafeSlug<T>}/responses`
     | `/api/reviews/${SafeSlug<T>}/helpful`
+    | `/api/reviews/${SafeSlug<T>}/responses`
+    | `/api/reviews/${SafeSlug<T>}`
     | `/api/services/${SafeSlug<T>}`
     | `/bookings/${SafeSlug<T>}/review`
     | `/guides/${SafeSlug<T>}`
