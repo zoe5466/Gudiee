@@ -30,8 +30,8 @@ declare namespace __next_route_internal_types__ {
 
   type StaticRoutes = 
     | `/api/admin/activity`
-    | `/api/admin/bookings/seed`
     | `/api/admin/bookings`
+    | `/api/admin/bookings/seed`
     | `/api/admin/chat`
     | `/api/admin/chat/seed`
     | `/api/admin/dashboard`
@@ -40,62 +40,62 @@ declare namespace __next_route_internal_types__ {
     | `/api/admin/services`
     | `/api/admin/users`
     | `/api/auth/admin/login`
-    | `/api/auth/logout`
     | `/api/auth/login`
-    | `/api/auth/refresh`
+    | `/api/auth/logout`
     | `/api/auth/me`
+    | `/api/auth/refresh`
     | `/api/auth/register`
-    | `/api/bookings`
     | `/api/bookings/payment`
+    | `/api/bookings`
     | `/api/conversations`
     | `/api/guides`
     | `/api/health`
+    | `/api/notifications/send`
     | `/api/notifications/subscribe`
     | `/api/notifications/unsubscribe`
-    | `/api/notifications/send`
     | `/api/reviews`
     | `/api/services`
-    | `/api/users/profile`
-    | `/api/services/suggestions`
     | `/api/services/search`
+    | `/api/services/suggestions`
+    | `/api/users/profile`
     | `/about`
-    | `/auth/register`
     | `/auth/login`
-    | `/chat`
+    | `/booking/confirmation`
     | `/bookings`
+    | `/chat`
     | `/favorites`
-    | `/booking`
+    | `/forgot-password`
     | `/guide-dashboard`
     | `/guide/account`
-    | `/history`
-    | `/my-bookings`
-    | `/messages`
-    | `/forgot-password`
     | `/guide/dashboard`
-    | `/register`
-    | `/search`
-    | `/privacy`
-    | `/tasks`
-    | `/terms`
+    | `/guide/messages`
+    | `/history`
+    | `/auth/register`
+    | `/booking`
     | `/kyc`
     | `/login`
-    | `/booking/confirmation`
+    | `/messages`
     | `/profile`
+    | `/register`
+    | `/my-bookings`
+    | `/search`
+    | `/privacy`
+    | `/terms`
+    | `/tasks`
     | `/admin/chat`
-    | `/admin/demo`
-    | `/admin`
-    | `/admin/cms`
     | `/admin/guides`
-    | `/admin/services`
+    | `/admin/demo`
+    | `/admin/cms`
     | `/admin/reviews`
-    | `/admin/test`
-    | `/admin/simple`
-    | `/guide/messages`
-    | `/admin/users`
-    | `/guides`
-    | `/guide/orders`
+    | `/admin/services`
     | `/admin/bookings`
+    | `/admin/test`
+    | `/admin`
+    | `/admin/users`
+    | `/admin/simple`
+    | `/guides`
     | `/guide/tasks`
+    | `/guide/orders`
     | `/`
     | `/admin/login`
     | `/guide`
@@ -106,18 +106,18 @@ declare namespace __next_route_internal_types__ {
     | `/api/admin/chat/${SafeSlug<T>}`
     | `/api/admin/services/${SafeSlug<T>}`
     | `/api/admin/users/${SafeSlug<T>}`
-    | `/api/bookings/${SafeSlug<T>}/confirm`
     | `/api/bookings/${SafeSlug<T>}/cancel`
+    | `/api/bookings/${SafeSlug<T>}/confirm`
     | `/api/bookings/${SafeSlug<T>}/review`
-    | `/api/conversations/${SafeSlug<T>}`
     | `/api/conversations/${SafeSlug<T>}/messages`
+    | `/api/conversations/${SafeSlug<T>}`
     | `/api/guides/${SafeSlug<T>}`
     | `/api/reviews/${SafeSlug<T>}/helpful`
-    | `/api/reviews/${SafeSlug<T>}`
     | `/api/reviews/${SafeSlug<T>}/responses`
+    | `/api/reviews/${SafeSlug<T>}`
     | `/api/services/${SafeSlug<T>}`
-    | `/bookings/${SafeSlug<T>}/review`
     | `/guides/${SafeSlug<T>}`
+    | `/bookings/${SafeSlug<T>}/review`
     | `/services/${SafeSlug<T>}`
     | `/admin/users/${SafeSlug<T>}`
     | `/api/v1/${OptionalCatchAllSlug<T>}`

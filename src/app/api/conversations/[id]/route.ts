@@ -186,7 +186,7 @@ export async function DELETE(
     }
 
     // 檢查權限（參與者或管理員）
-    if (!conversation.participants.includes(user.id) && user.role !== 'admin') {
+    if (!conversation.participants.includes(user.id) && user.role !== 'GUIDE') {
       return errorResponse('無權限刪除此對話', 403);
     }
 
