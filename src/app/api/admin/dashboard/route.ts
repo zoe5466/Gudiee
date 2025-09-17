@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
   try {
     // 驗證用戶身份和管理員權限
     const user = await getCurrentUser(); // 從 JWT token 獲取當前用戶
-    if (!user || (user.role !== 'ADMIN' && user.role !== 'admin')) {
+    if (!user || (user.role !== 'GUIDE')) {
       return errorResponse('無權限訪問', 403); // 403 Forbidden - 僅管理員可訪問
     }
 

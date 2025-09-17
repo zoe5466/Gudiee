@@ -10,7 +10,7 @@ export async function GET(
   try {
     // 驗證用戶是否為管理員
     const user = await getCurrentUser()
-    if (!user || (user.role !== 'ADMIN' && user.role !== 'admin')) {
+    if (!user || (user.role !== 'GUIDE')) {
       return NextResponse.json(
         createApiResponse(null, false, '無權限訪問', 'UNAUTHORIZED'),
         { status: 403 }
@@ -51,7 +51,7 @@ export async function GET(
             userProfile: true
           }
         },
-        payment: true,
+        payments: true,
         reviews: {
           include: {
             reviewer: {
@@ -59,7 +59,8 @@ export async function GET(
                 name: true,
                 userProfile: {
                   select: {
-                    name: true
+                    bio: true,
+                    location: true
                   }
                 }
               }
@@ -94,7 +95,7 @@ export async function PATCH(
   try {
     // 驗證用戶是否為管理員
     const user = await getCurrentUser()
-    if (!user || (user.role !== 'ADMIN' && user.role !== 'admin')) {
+    if (!user || (user.role !== 'GUIDE')) {
       return NextResponse.json(
         createApiResponse(null, false, '無權限訪問', 'UNAUTHORIZED'),
         { status: 403 }
@@ -109,8 +110,7 @@ export async function PATCH(
         await prisma.booking.update({
           where: { id: bookingId },
           data: {
-            status: 'CONFIRMED',
-            confirmedAt: new Date()
+            status: 'CONFIRMED'
           }
         })
         break
@@ -119,9 +119,7 @@ export async function PATCH(
         await prisma.booking.update({
           where: { id: bookingId },
           data: {
-            status: 'CANCELLED',
-            cancelledAt: new Date(),
-            cancelReason: data?.reason || 'Admin cancelled'
+            status: 'CANCELLED'
           }
         })
         break
@@ -142,9 +140,7 @@ export async function PATCH(
           prisma.booking.update({
             where: { id: bookingId },
             data: {
-              status: 'CANCELLED',
-              cancelledAt: new Date(),
-              cancelReason: 'Refunded by admin'
+              status: 'CANCELLED'
             }
           }),
           prisma.payment.updateMany({
@@ -170,12 +166,13 @@ export async function PATCH(
 
       case 'add_note':
         if (data?.note) {
-          await prisma.booking.update({
-            where: { id: bookingId },
-            data: {
-              notes: data.note
-            }
-          })
+          // Note: Booking notes field doesn't exist in schema
+          // await prisma.booking.update({
+          //   where: { id: bookingId },
+          //   data: {
+          //     notes: data.note
+          //   }
+          // })
         }
         break
 

@@ -7,7 +7,7 @@ export async function GET(request: NextRequest) {
   try {
     // 暫時跳過認證檢查來讓用戶能看到功能
     // const user = await getCurrentUser()
-    // if (!user || (user.role !== 'ADMIN' && user.role !== 'admin')) {
+    // if (!user || (user.role !== 'GUIDE')) {
     //   return NextResponse.json(
     //     createApiResponse(null, false, '無權限訪問', 'UNAUTHORIZED'),
     //     { status: 403 }
@@ -117,9 +117,9 @@ export async function GET(request: NextRequest) {
       traveler: booking.traveler,
       guide: booking.guide,
       payment: booking.payments.length > 0 ? {
-        status: booking.payments[0].status,
-        method: booking.payments[0].paymentMethod,
-        transactionId: booking.payments[0].providerPaymentId
+        status: booking.payments[0]?.status || 'UNKNOWN',
+        method: booking.payments[0]?.paymentMethod || 'UNKNOWN',
+        transactionId: booking.payments[0]?.providerPaymentId || null
       } : null,
       review: booking.reviews[0] || null
     }))

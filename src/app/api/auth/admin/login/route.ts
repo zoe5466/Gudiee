@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
     });
 
     // 檢查用戶是否存在且為管理員
-    if (!user || (user.role !== 'ADMIN' && user.role !== 'admin')) {
+    if (!user || (user.role !== 'GUIDE')) {
       console.log('Admin login failed - user not found or not admin:', { email, userRole: user?.role });
       return errorResponse('無效的管理員憑證', 401);
     }

@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
     const tickets = await Promise.all([
       prisma.supportTicket.create({
         data: {
-          userId: users[0].id,
+          userId: users[0]?.id || '',
           message: '您好，我想詢問關於台北一日遊的服務，請問有什麼推薦的行程嗎？',
           category: 'GENERAL',
           priority: 'NORMAL',
@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
       }),
       prisma.supportTicket.create({
         data: {
-          userId: users[1] ? users[1].id : users[0].id,
+          userId: users[1]?.id || users[0]?.id || '',
           message: '我昨天預訂的服務還沒有收到確認，能幫我查看一下嗎？訂單編號是 #GD2025001',
           category: 'BOOKING',
           priority: 'HIGH',
@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
       }),
       prisma.supportTicket.create({
         data: {
-          userId: users[2] ? users[2].id : users[0].id,
+          userId: users[2]?.id || users[0]?.id || '',
           message: '我對昨天的服務不太滿意，地陪遲到了30分鐘，希望能得到合理的處理。',
           category: 'COMPLAINT',
           priority: 'URGENT',
@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
       }),
       prisma.supportTicket.create({
         data: {
-          userId: users[3] ? users[3].id : users[0].id,
+          userId: users[3]?.id || users[0]?.id || '',
           message: '付款後一直沒有收到收據，請幫我處理一下，謝謝！',
           category: 'PAYMENT',
           priority: 'HIGH',
@@ -58,7 +58,7 @@ export async function POST(request: NextRequest) {
       }),
       prisma.supportTicket.create({
         data: {
-          userId: users[4] ? users[4].id : users[0].id,
+          userId: users[4]?.id || users[0]?.id || '',
           message: '管理員您好，我想申請提高服務費用，因為最近油價上漲，希望能調整價格。',
           category: 'FEEDBACK',
           priority: 'NORMAL',

@@ -7,7 +7,7 @@ export async function GET(request: NextRequest) {
   try {
     // 暫時跳過認證檢查來讓用戶能看到功能
     // const user = await getCurrentUser()
-    // if (!user || (user.role !== 'ADMIN' && user.role !== 'admin')) {
+    // if (!user || (user.role !== 'GUIDE')) {
     //   return NextResponse.json(
     //     createApiResponse(null, false, '無權限訪問', 'UNAUTHORIZED'),
     //     { status: 403 }
@@ -40,7 +40,7 @@ export async function GET(request: NextRequest) {
       isEmailVerified: user.isEmailVerified,
       isKycVerified: user.isKycVerified,
       createdAt: user.createdAt,
-      lastLoginAt: user.lastLoginAt,
+      // lastLoginAt field doesn't exist in User schema
       userProfile: user.userProfile ? {
         name: user.userProfile.bio, // 使用 bio 作為顯示名稱
         bio: user.userProfile.bio,

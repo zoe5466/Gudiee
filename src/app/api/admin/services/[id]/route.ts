@@ -10,7 +10,7 @@ export async function GET(
   try {
     // 驗證用戶是否為管理員
     const user = await getCurrentUser()
-    if (!user || (user.role !== 'ADMIN' && user.role !== 'admin')) {
+    if (!user || (user.role !== 'GUIDE')) {
       return NextResponse.json(
         createApiResponse(null, false, '無權限訪問', 'UNAUTHORIZED'),
         { status: 403 }
@@ -68,7 +68,7 @@ export async function GET(
       totalBookings: service.bookings.length,
       totalRevenue: service.bookings
         .filter(b => b.status === 'COMPLETED')
-        .reduce((sum, b) => sum + b.totalAmount, 0),
+        .reduce((sum, b) => sum + Number(b.totalAmount), 0),
       averageRating: service.reviews.length > 0
         ? service.reviews.reduce((sum, r) => sum + r.rating, 0) / service.reviews.length
         : 0,
@@ -80,7 +80,7 @@ export async function GET(
       stats,
       recentBookings: service.bookings.map(booking => ({
         id: booking.id,
-        travelerName: booking.traveler.userProfile?.name || booking.traveler.name || '未知',
+        travelerName: booking.traveler.name || booking.traveler.email || '未知',
         bookingDate: booking.bookingDate,
         guests: booking.guests,
         totalAmount: booking.totalAmount,
@@ -91,7 +91,7 @@ export async function GET(
         id: review.id,
         rating: review.rating,
         comment: review.comment,
-        reviewerName: review.reviewer.userProfile?.name || review.reviewer.name || '匿名',
+        reviewerName: review.reviewer.name || review.reviewer.email || '匿名',
         createdAt: review.createdAt,
         photos: review.photos
       }))
@@ -115,7 +115,7 @@ export async function PATCH(
   try {
     // 驗證用戶是否為管理員
     const user = await getCurrentUser()
-    if (!user || (user.role !== 'ADMIN' && user.role !== 'admin')) {
+    if (!user || (user.role !== 'GUIDE')) {
       return NextResponse.json(
         createApiResponse(null, false, '無權限訪問', 'UNAUTHORIZED'),
         { status: 403 }

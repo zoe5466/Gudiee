@@ -54,8 +54,8 @@ export async function GET(
       id: chat.id,
       userId: chat.userId,
       userType: chat.user.role === 'GUIDE' ? 'GUIDE' : 'USER',
-      userName: chat.user.userProfile?.name || chat.user.email,
-      userAvatar: chat.user.userProfile?.avatar || null,
+      userName: chat.user.name || chat.user.email,
+      userAvatar: null, // UserProfile doesn't have avatar field
       message: chat.message,
       timestamp: chat.createdAt.toISOString(),
       status: chat.status === 'SENT' ? 'read' : chat.status,
@@ -64,7 +64,7 @@ export async function GET(
       replies: chat.replies.map(reply => ({
         id: reply.id,
         adminId: reply.adminId,
-        adminName: reply.admin.userProfile?.name || reply.admin.email,
+        adminName: reply.admin.name || reply.admin.email,
         message: reply.message,
         timestamp: reply.createdAt.toISOString()
       }))
@@ -146,7 +146,7 @@ export async function POST(
     const formattedReply = {
       id: reply.id,
       adminId: reply.adminId,
-      adminName: reply.admin.userProfile?.name || reply.admin.email,
+      adminName: reply.admin.name || reply.admin.email,
       message: reply.message,
       timestamp: reply.createdAt.toISOString()
     }

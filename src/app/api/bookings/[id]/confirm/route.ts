@@ -29,7 +29,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
             guide: true
           }
         },
-        customer: true
+        traveler: true
       }
     });
 
@@ -43,11 +43,11 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
     }
 
     // 檢查預訂狀態
-    if (booking.status === 'confirmed') {
+    if (booking.status === 'CONFIRMED') {
       return errorResponse('預訂已經確認', 400);
     }
 
-    if (booking.status !== 'pending') {
+    if (booking.status !== 'PENDING') {
       return errorResponse('只能確認待處理的預訂', 400);
     }
 
@@ -55,7 +55,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
     const confirmedBooking = await prisma.booking.update({
       where: { id: params.id },
       data: {
-        status: 'confirmed',
+        status: 'CONFIRMED',
         confirmedAt: new Date(),
         updatedAt: new Date()
       },

@@ -65,8 +65,8 @@ export async function GET(request: NextRequest) {
       id: chat.id,
       userId: chat.userId,
       userType: chat.user.role === 'GUIDE' ? 'GUIDE' : 'USER',
-      userName: chat.user.userProfile?.name || chat.user.email,
-      userAvatar: chat.user.userProfile?.avatar || null,
+      userName: chat.user.name || chat.user.email,
+      userAvatar: null, // UserProfile has no avatar field
       message: chat.message,
       timestamp: chat.createdAt.toISOString(),
       status: chat.status,
@@ -75,7 +75,7 @@ export async function GET(request: NextRequest) {
       replies: chat.replies.map(reply => ({
         id: reply.id,
         adminId: reply.adminId,
-        adminName: reply.admin.userProfile?.name || reply.admin.email,
+        adminName: reply.admin.name || reply.admin.email,
         message: reply.message,
         timestamp: reply.createdAt.toISOString()
       }))
@@ -156,8 +156,8 @@ export async function POST(request: NextRequest) {
       id: newChat.id,
       userId: newChat.userId,
       userType: newChat.user.role === 'GUIDE' ? 'GUIDE' : 'USER',
-      userName: newChat.user.userProfile?.name || newChat.user.email,
-      userAvatar: newChat.user.userProfile?.avatar || null,
+      userName: newChat.user.name || newChat.user.email,
+      userAvatar: null,
       message: newChat.message,
       timestamp: newChat.createdAt.toISOString(),
       status: newChat.status,
