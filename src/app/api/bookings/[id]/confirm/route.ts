@@ -56,7 +56,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
       where: { id: params.id },
       data: {
         status: 'CONFIRMED',
-        confirmedAt: new Date(),
+        // confirmedAt field doesn't exist in Booking schema
         updatedAt: new Date()
       },
       include: {
@@ -72,15 +72,15 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
             }
           }
         },
-        customer: {
+        traveler: {
           select: {
             id: true,
             name: true,
             email: true,
             avatar: true
           }
-        },
-        payment: true
+        }
+        // payment relation doesn't exist
       }
     });
 

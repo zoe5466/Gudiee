@@ -79,6 +79,8 @@ export async function POST(request: NextRequest) {
         amount: booking.totalAmount,
         currency: booking.currency,
         status: 'COMPLETED',
+        paymentMethod: paymentMethod,
+        paymentProvider: 'MOCK', // Required field
         metadata: {
           paymentMethod,
           transactionId,
