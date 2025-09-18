@@ -110,7 +110,7 @@ export async function POST(
     }
 
     // 檢查預訂狀態
-    if (booking.status !== 'completed') {
+    if (booking.status !== 'COMPLETED') {
       return NextResponse.json(
         { error: '只能評價已完成的預訂' },
         { status: 400 }

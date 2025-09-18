@@ -10,14 +10,14 @@ import Link from 'next/link'
 export default function HistoryPage() {
   const { bookings, isLoading } = useBooking()
   const [searchQuery, setSearchQuery] = useState('')
-  const [statusFilter, setStatusFilter] = useState<'all' | 'completed' | 'pending' | 'cancelled'>('all')
+  const [statusFilter, setStatusFilter] = useState<'all' | 'COMPLETED' | 'PENDING' | 'CANCELLED'>('all')
 
   // Mock booking history data - 在實際應用中從 API 獲取
   const mockBookings = [
     {
       id: 'booking-1',
       serviceTitle: '台北101 & 信義區深度導覽',
-      status: 'completed' as const,
+      status: 'COMPLETED' as const,
       date: '2024-01-15',
       time: '09:00',
       duration: 4,
@@ -36,7 +36,7 @@ export default function HistoryPage() {
     {
       id: 'booking-2',
       serviceTitle: '九份老街 & 金瓜石文化之旅',
-      status: 'pending' as const,
+      status: 'PENDING' as const,
       date: '2024-01-25',
       time: '10:00',
       duration: 8,
@@ -83,6 +83,11 @@ export default function HistoryPage() {
 
   const getStatusBadge = (status: string) => {
     const statusMap = {
+      COMPLETED: { text: '已完成', class: 'bg-green-100 text-green-800' },
+      PENDING: { text: '待確認', class: 'bg-yellow-100 text-yellow-800' },
+      CANCELLED: { text: '已取消', class: 'bg-red-100 text-red-800' },
+      CONFIRMED: { text: '已確認', class: 'bg-blue-100 text-blue-800' },
+      // Backwards compatibility
       completed: { text: '已完成', class: 'bg-green-100 text-green-800' },
       pending: { text: '待確認', class: 'bg-yellow-100 text-yellow-800' },
       cancelled: { text: '已取消', class: 'bg-red-100 text-red-800' },
@@ -136,9 +141,9 @@ export default function HistoryPage() {
                 className="input"
               >
                 <option value="all">所有狀態</option>
-                <option value="completed">已完成</option>
-                <option value="pending">待確認</option>
-                <option value="cancelled">已取消</option>
+                <option value="COMPLETED">已完成</option>
+                <option value="PENDING">待確認</option>
+                <option value="CANCELLED">已取消</option>
               </select>
               
               <button className="btn btn-secondary flex items-center gap-2">

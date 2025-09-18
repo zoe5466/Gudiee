@@ -329,7 +329,7 @@ export default function ChatInterface({ conversationId, className = '' }: ChatIn
               <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-200">
                 {conversation.participants.find(p => p.id !== user?.id)?.avatar ? (
                   <Image
-                    src={conversation.participants.find(p => p.id !== user?.id)!.avatar!}
+                    src={conversation.participants.find(p => p.id !== user?.id)?.avatar || '/images/default-avatar.png'}
                     alt={getConversationTitle()}
                     width={40}
                     height={40}

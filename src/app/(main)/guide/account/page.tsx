@@ -273,8 +273,8 @@ export default function GuideAccountPage() {
               <div className="text-center mb-6">
                 <div className="relative w-20 h-20 mx-auto mb-4">
                   <img
-                    src={profile?.avatar}
-                    alt={profile?.name}
+                    src={profile?.avatar || '/images/default-avatar.png'}
+                    alt={profile?.name || 'User avatar'}
                     className="w-full h-full rounded-full object-cover"
                   />
                   {profile?.isVerified && (
@@ -323,8 +323,8 @@ export default function GuideAccountPage() {
                   {/* 頭像上傳 */}
                   <div className="flex items-center space-x-4">
                     <img
-                      src={profile?.avatar}
-                      alt={profile?.name}
+                      src={profile?.avatar || '/images/default-avatar.png'}
+                      alt={profile?.name || 'User avatar'}
                       className="w-16 h-16 rounded-full object-cover"
                     />
                     <div>
