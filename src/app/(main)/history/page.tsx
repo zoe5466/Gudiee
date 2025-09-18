@@ -53,7 +53,7 @@ export default function HistoryPage() {
     {
       id: 'booking-3',
       serviceTitle: '淡水老街 & 漁人碼頭夕陽之旅',
-      status: 'cancelled' as const,
+      status: 'CANCELLED' as const,
       date: '2024-01-05',
       time: '15:00',
       duration: 3,
@@ -238,7 +238,7 @@ export default function HistoryPage() {
                     </div>
 
                     {/* Status-specific content */}
-                    {booking.status === 'completed' && booking.rating && (
+                    {booking.status === 'COMPLETED' && booking.rating && (
                       <div className="bg-green-50 border border-green-200 rounded-lg p-4">
                         <div className="flex items-center gap-2 mb-2">
                           <Star className="w-4 h-4 text-yellow-500" />
@@ -254,7 +254,7 @@ export default function HistoryPage() {
                       </div>
                     )}
 
-                    {booking.status === 'cancelled' && booking.cancelledReason && (
+                    {booking.status === 'CANCELLED' && booking.cancelledReason && (
                       <div className="bg-red-50 border border-red-200 rounded-lg p-4">
                         <div className="flex items-center gap-2 mb-2">
                           <RotateCcw className="w-4 h-4 text-red-500" />
@@ -264,7 +264,7 @@ export default function HistoryPage() {
                       </div>
                     )}
 
-                    {booking.status === 'pending' && (
+                    {booking.status === 'PENDING' && (
                       <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
                         <div className="flex items-center gap-2">
                           <Clock className="w-4 h-4 text-yellow-500" />
@@ -279,14 +279,14 @@ export default function HistoryPage() {
 
                   {/* Actions */}
                   <div className="flex lg:flex-col gap-3 lg:w-32">
-                    {booking.status === 'completed' && !booking.rating && (
+                    {booking.status === 'COMPLETED' && !booking.rating && (
                       <button className="btn btn-primary btn-sm flex items-center gap-2">
                         <Star className="w-4 h-4" />
                         評價
                       </button>
                     )}
                     
-                    {booking.status === 'pending' && (
+                    {booking.status === 'PENDING' && (
                       <button className="btn btn-secondary btn-sm">
                         取消預訂
                       </button>

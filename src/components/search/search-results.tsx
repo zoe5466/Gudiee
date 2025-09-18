@@ -183,7 +183,7 @@ export default function SearchResults({
               <div className="relative w-full md:w-80 h-48 md:h-64 flex-shrink-0 overflow-hidden">
                 {service.images.length > 0 ? (
                   <Image
-                    src={service.images[0]}
+                    src={service.images[0] || '/images/placeholder.jpg'}
                     alt={service.title}
                     fill
                     className="object-cover group-hover:scale-105 transition-transform duration-200"
