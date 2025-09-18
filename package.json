@@ -35,6 +35,8 @@
     "fix-modules": "rm -rf node_modules package-lock.json && npm cache clean --force && npm install",
     "fresh-start": "npm run fix-modules && npm run db:generate",
     "deploy": "node scripts/vercel-monitor.js smart-deploy",
+    "deploy:auto": "node scripts/auto-deploy-loop.js",
+    "deploy:loop": "node scripts/auto-deploy-loop.js",
     "deploy:diagnose": "node scripts/deployment-doctor.js diagnose",
     "deploy:monitor": "node scripts/vercel-monitor.js monitor",
     "deploy:doctor": "node scripts/deployment-doctor.js"
