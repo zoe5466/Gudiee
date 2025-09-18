@@ -17,7 +17,7 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
     "lint:fix": "next lint --fix",
@@ -31,6 +31,7 @@
     "db:seed": "npx tsx prisma/seed.ts",
     "db:studio": "npx prisma studio",
     "setup": "npm install && npx prisma generate",
+    "postinstall": "prisma generate",
     "fix-modules": "rm -rf node_modules package-lock.json && npm cache clean --force && npm install",
     "fresh-start": "npm run fix-modules && npm run db:generate"
   },
