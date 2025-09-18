@@ -36,7 +36,7 @@ const nextConfig = {
 
   // 實驗性功能 (修正配置)
   experimental: {
-    optimizeCss: true,   // CSS 優化
+    // optimizeCss: true,   // 暫時禁用 CSS 優化以避免 critters 問題
     typedRoutes: true,   // 類型安全的路由
     // serverActions: true 已移除，Next.js 14 預設啟用
   },
