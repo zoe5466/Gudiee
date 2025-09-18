@@ -1,6 +1,43 @@
-# Guidee 部署指南
+# Guidee 自動化部署系統 🚀
 
-## 重要提醒
+## 🎯 一鍵智能部署
+現在你只需要執行一個命令，系統就會自動處理所有部署問題：
+
+```bash
+npm run deploy
+```
+
+系統會自動：
+1. 🔍 診斷潛在問題
+2. 🔧 自動修復常見錯誤
+3. 📝 提交修復內容
+4. 🚀 觸發部署
+5. 📡 監控部署狀態
+
+---
+
+## 🏥 自動診斷系統
+
+### 可用命令
+```bash
+npm run deploy:diagnose    # 僅診斷問題
+npm run deploy:doctor      # 同上
+npm run deploy            # 完整智能部署
+npm run deploy:monitor     # 監控部署狀態
+```
+
+### 自動偵測和修復的問題
+- ✅ TypeScript 編譯錯誤 (枚舉不一致等)
+- ✅ Prisma Client 生成問題
+- ✅ Next.js 配置錯誤 (critters 模組等)
+- ✅ 依賴版本衝突
+- ✅ Build script 配置
+
+---
+
+## 部署平台推薦
+
+### 重要提醒
 ❌ **請勿使用 GitHub Pages** - Guidee 是 Next.js 全端應用，需要伺服器環境
 ✅ **推薦使用以下平台** - 支援 Node.js 和資料庫連接
 
