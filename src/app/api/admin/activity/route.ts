@@ -74,7 +74,7 @@ export async function GET(request: NextRequest) {
         id: `service-${service.id}`,
         type: 'service_created',
         title: '新服務提交',
-        description: `${service.title} 由 ${service.guide.name} 提交`,
+        description: `${service.title} 由 ${service.guide?.name || '未知用戶'} 提交`,
         time: service.createdAt,
         icon: 'service',
         color: 'green'
@@ -83,7 +83,7 @@ export async function GET(request: NextRequest) {
         id: `booking-${booking.id}`,
         type: 'booking_created',
         title: '新預訂確認',
-        description: `${booking.service.title} 被 ${booking.traveler.name} 預訂`,
+        description: `${booking.service?.title || '未知服務'} 被 ${booking.traveler?.name || '未知用戶'} 預訂`,
         time: booking.createdAt,
         icon: 'booking',
         color: 'purple'
