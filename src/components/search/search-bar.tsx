@@ -271,7 +271,6 @@ export default function SearchBar({
           </div>
         </div>
       )}
-    </div>
 
       {/* 搜尋建議 */}
       {showSuggestions && activeField === 'query' && (
