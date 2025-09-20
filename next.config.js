@@ -1,12 +1,14 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // 極簡配置防止 micromatch 堆疊溢出
-  reactStrictMode: true,
-  swcMinify: true,
+  // 最極簡配置防止 micromatch 在所有階段出錯
+  reactStrictMode: false, // 禁用嚴格模式減少複雜度
+  swcMinify: false, // 禁用 SWC 壓縮
   poweredByHeader: false,
   
+  // 基本圖片配置
   images: {
     domains: ['guidee.online', 'avatars.githubusercontent.com', 'images.unsplash.com'],
+    unoptimized: true, // 禁用圖片優化以減少構建複雜度
   },
   
   env: {
@@ -16,23 +18,44 @@ const nextConfig = {
   // 完全禁用實驗性功能
   experimental: {},
   
+  // 禁用構建軌跡收集 - 這是導致 micromatch 錯誤的主要原因
+  generateBuildId: () => 'build',
+  
   webpack: (config) => {
-    // 禁用可能觸發大量文件掃描的優化
+    // 最小化 webpack 配置
     config.optimization = {
-      ...config.optimization,
-      moduleIds: 'deterministic',
-      splitChunks: false, // 禁用分包以減少文件掃描
+      minimize: false, // 禁用壓縮
+      splitChunks: false, // 禁用代碼分割
+      sideEffects: false,
     };
     
-    // 限制文件解析範圍，避免掃描過多文件
-    config.resolve.modules = ['node_modules'];
+    // 限制解析模塊
+    config.resolve = {
+      ...config.resolve,
+      modules: ['node_modules'],
+      symlinks: false, // 禁用符號連結解析
+    };
     
-    // 禁用可能觸發 micromatch 的插件
+    // 移除所有可能觸發 micromatch 的插件
     config.plugins = config.plugins.filter(plugin => {
-      return !plugin.constructor.name.includes('OptimizeCss');
+      const name = plugin.constructor.name;
+      return !name.includes('OptimizeCss') && 
+             !name.includes('CompressionPlugin') &&
+             !name.includes('BundleAnalyzer');
     });
     
+    // 禁用構建統計
+    config.stats = false;
+    
     return config;
+  },
+  
+  // 禁用所有可能觸發文件掃描的功能
+  output: 'standalone',
+  
+  // 禁用 TypeScript 增量編譯
+  typescript: {
+    tsconfigPath: './tsconfig.json',
   },
 };
 

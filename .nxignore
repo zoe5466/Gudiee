@@ -1,0 +1,20 @@
+# Next.js ignore patterns to prevent micromatch overflow
+node_modules
+.next
+.git
+.vscode
+.idea
+*.log
+*.tmp
+*.temp
+*.backup
+coverage
+docs
+tests
+cypress
+.cache
+.turbo
+*.tsbuildinfo
+.DS_Store
+Thumbs.db
+*.map
