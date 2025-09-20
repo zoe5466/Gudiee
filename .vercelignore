@@ -1,0 +1,38 @@
+# Vercel deployment exclusions to prevent micromatch overflow
+
+# Development files
+*.backup
+*.tmp
+*.temp
+.vscode/
+.idea/
+
+# Large directories that could overwhelm micromatch
+coverage/
+docs/
+tests/
+cypress/
+
+# Log files
+*.log
+logs/
+
+# Cache directories
+.cache/
+.parcel-cache/
+
+# Source maps in production
+*.map
+
+# Development configuration
+.env.development
+.env.test
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Generated documentation
+typedoc/
+storybook-static/
