@@ -15,7 +15,7 @@ interface LanguageSwitcherProps {
 
 export function LanguageSwitcher({ 
   variant = 'dropdown',
-  showFlag = true,
+  showFlag = false,
   showNativeName = true,
   className = ''
 }: LanguageSwitcherProps) {
@@ -110,8 +110,13 @@ export function LanguageSwitcher({
             }}
             className="hover:border-blue-300"
           >
-            {showFlag && <span>{info.flag}</span>}
-            {showNativeName && <span>{info.nativeName}</span>}
+            {showNativeName && (
+              <span>
+                {localeKey === 'zh-TW' ? '中文（繁體）' : 
+                 localeKey === 'en' ? 'English' : 
+                 info.nativeName}
+              </span>
+            )}
             {locale === localeKey && <Check style={{ width: '0.875rem', height: '0.875rem' }} />}
           </button>
         ))}
@@ -142,8 +147,13 @@ export function LanguageSwitcher({
         className="hover:bg-gray-50 hover:border-gray-300"
       >
         <Globe style={{ width: '1rem', height: '1rem' }} />
-        {showFlag && <span>{currentLocaleInfo.flag}</span>}
-        {showNativeName && <span>{currentLocaleInfo.nativeName}</span>}
+        {showNativeName && (
+          <span>
+            {locale === 'zh-TW' ? '中文（繁體）' : 
+             locale === 'en' ? 'English' : 
+             currentLocaleInfo.nativeName}
+          </span>
+        )}
         <ChevronDown 
           style={{ 
             width: '0.875rem', 
@@ -190,13 +200,16 @@ export function LanguageSwitcher({
               }}
               className="hover:bg-gray-50"
             >
-              {showFlag && <span style={{ fontSize: '1.125rem' }}>{info.flag}</span>}
               <div style={{ flex: 1 }}>
                 <div style={{ fontWeight: '500' }}>
-                  {info.nativeName}
+                  {localeKey === 'zh-TW' ? '中文（繁體）' : 
+                   localeKey === 'en' ? 'English' : 
+                   info.nativeName}
                 </div>
                 <div style={{ fontSize: '0.75rem', color: '#9ca3af' }}>
-                  {info.name}
+                  {localeKey === 'zh-TW' ? 'Traditional Chinese' : 
+                   localeKey === 'en' ? 'English' : 
+                   info.name}
                 </div>
               </div>
               {locale === localeKey && (
@@ -230,6 +243,16 @@ export function LanguageToggle({ className = '' }: { className?: string }) {
     }
   };
 
+  // 獲取當前語言文字
+  const getLanguageText = (currentLocale: SupportedLocale) => {
+    return currentLocale === 'zh-TW' ? '中文（繁體）' : 'English';
+  };
+
+  // 獲取下一個語言文字
+  const getNextLanguageText = (currentLocale: SupportedLocale) => {
+    return currentLocale === 'zh-TW' ? 'English' : '中文（繁體）';
+  };
+
   // 服務器端渲染時顯示通用版本
   if (!isClient) {
     return (
@@ -238,23 +261,24 @@ export function LanguageToggle({ className = '' }: { className?: string }) {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          width: '2.5rem',
-          height: '2.5rem',
+          padding: '0.5rem 0.75rem',
           backgroundColor: 'white',
           border: '1px solid #e5e7eb',
-          borderRadius: '50%',
+          borderRadius: '0.5rem',
           cursor: 'pointer',
           transition: 'all 0.2s',
-          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)'
+          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+          fontSize: '0.875rem',
+          fontWeight: '500',
+          color: '#374151'
         }}
-        className={`hover:bg-gray-50 hover:scale-105 ${className}`}
+        className={`hover:bg-gray-50 ${className}`}
       >
-        <Globe className="w-4 h-4 text-gray-500" />
+        <Globe className="w-4 h-4 text-gray-500 mr-2" />
+        Loading...
       </button>
     );
   }
-
-  const currentFlag = localeInfo[locale].flag;
 
   return (
     <button
@@ -263,20 +287,22 @@ export function LanguageToggle({ className = '' }: { className?: string }) {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        width: '2.5rem',
-        height: '2.5rem',
+        padding: '0.5rem 0.75rem',
         backgroundColor: 'white',
         border: '1px solid #e5e7eb',
-        borderRadius: '50%',
-        fontSize: '1.125rem',
+        borderRadius: '0.5rem',
         cursor: 'pointer',
         transition: 'all 0.2s',
-        boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)'
+        boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+        fontSize: '0.875rem',
+        fontWeight: '500',
+        color: '#374151'
       }}
-      className={`hover:bg-gray-50 hover:scale-105 ${className}`}
-      title={`Switch to ${locale === 'zh-TW' ? 'English' : '繁體中文'}`}
+      className={`hover:bg-gray-50 ${className}`}
+      title={`切換到 ${getNextLanguageText(locale)}`}
     >
-      {currentFlag}
+      <Globe className="w-4 h-4 text-gray-500 mr-2" />
+      {getLanguageText(locale)}
     </button>
   );
 }
