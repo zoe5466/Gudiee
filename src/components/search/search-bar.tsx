@@ -54,6 +54,7 @@ export default function SearchBar({
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [loading, setLoading] = useState(false);
   const [activeField, setActiveField] = useState<string | null>(null);
+  const [showDetailedSearch, setShowDetailedSearch] = useState(false);
 
   // 防抖搜尋
   const debounceRef = useRef<NodeJS.Timeout>();
@@ -93,6 +94,7 @@ export default function SearchBar({
   const handleSearch = (e?: React.FormEvent) => {
     e?.preventDefault();
     setShowSuggestions(false);
+    setShowDetailedSearch(false);
 
     if (onSearch) {
       onSearch(searchParams);
@@ -124,11 +126,12 @@ export default function SearchBar({
     inputRef.current?.focus();
   };
 
-  // 點擊外部關閉建議
+  // 點擊外部關閉建議和詳細搜尋
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
         setShowSuggestions(false);
+        setShowDetailedSearch(false);
         setActiveField(null);
       }
     };
@@ -154,32 +157,33 @@ export default function SearchBar({
 
   return (
     <div ref={searchRef} className={`relative ${className}`}>
-      <form onSubmit={handleSearch} className="bg-white rounded-lg shadow-lg border border-gray-200">
-        <div className="flex items-center divide-x divide-gray-200">
-          {/* 搜尋關鍵字 */}
+      <form onSubmit={handleSearch} className="bg-white rounded-full shadow-lg border border-gray-200 px-2 py-2">
+        <div className="flex items-center">
+          {/* 主搜尋欄位 */}
           <div className="flex-1 min-w-0">
             <div className="relative">
               <input
                 ref={inputRef}
                 type="text"
-                placeholder="搜尋服務、地點或活動..."
+                placeholder="地點入住         旅客"
                 value={searchParams.query}
                 onChange={(e) => handleInputChange('query', e.target.value)}
                 onFocus={() => {
                   setActiveField('query');
-                  setShowSuggestions(true);
+                  setShowDetailedSearch(true);
                   if (searchParams.query) {
                     fetchSuggestions(searchParams.query);
+                    setShowSuggestions(true);
                   }
                 }}
-                className="w-full pl-10 pr-4 py-4 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-0 rounded-l-lg"
+                onClick={() => setShowDetailedSearch(true)}
+                className="w-full pl-6 pr-12 py-3 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-0 rounded-full text-lg font-medium"
               />
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
               {searchParams.query && (
                 <button
                   type="button"
                   onClick={clearSearch}
-                  className="absolute right-2 top-1/2 transform -translate-y-1/2 p-1 text-gray-400 hover:text-gray-600 rounded-full hover:bg-gray-100"
+                  className="absolute right-14 top-1/2 transform -translate-y-1/2 p-1 text-gray-400 hover:text-gray-600 rounded-full hover:bg-gray-100"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -187,26 +191,41 @@ export default function SearchBar({
             </div>
           </div>
 
-          {/* 地點 */}
-          {showFilters && (
-            <div className="flex-shrink-0">
+          {/* 搜尋按鈕 */}
+          <div className="flex-shrink-0">
+            <button
+              type="submit"
+              className="p-3 bg-red-500 text-white rounded-full hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors shadow-md"
+            >
+              <Search className="w-5 h-5" />
+            </button>
+          </div>
+        </div>
+      </form>
+
+      {/* 詳細搜尋欄位 (可展開) */}
+      {showDetailedSearch && (
+        <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-lg border border-gray-200 p-6 z-40">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* 地點 */}
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">地點</label>
               <div className="relative">
                 <input
                   type="text"
-                  placeholder="地點"
+                  placeholder="隨處任何一週新增旅客"
                   value={searchParams.location}
                   onChange={(e) => handleInputChange('location', e.target.value)}
                   onFocus={() => setActiveField('location')}
-                  className="w-32 md:w-40 pl-8 pr-4 py-4 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-0 focus:bg-gray-50"
+                  className="w-full pl-10 pr-4 py-3 text-gray-900 placeholder-gray-400 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
                 />
-                <MapPin className="absolute left-2 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
               </div>
             </div>
-          )}
 
-          {/* 日期 */}
-          {showFilters && (
-            <div className="flex-shrink-0">
+            {/* 日期 */}
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">入住日期</label>
               <div className="relative">
                 <input
                   type="date"
@@ -214,47 +233,45 @@ export default function SearchBar({
                   onChange={(e) => handleInputChange('date', e.target.value)}
                   onFocus={() => setActiveField('date')}
                   min={new Date().toISOString().split('T')[0]}
-                  className="w-32 md:w-40 pl-8 pr-4 py-4 text-gray-900 focus:outline-none focus:ring-0 focus:bg-gray-50"
+                  className="w-full pl-10 pr-4 py-3 text-gray-900 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
                 />
-                <Calendar className="absolute left-2 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
               </div>
             </div>
-          )}
 
-          {/* 人數 */}
-          {showFilters && (
-            <div className="flex-shrink-0">
+            {/* 旅客人數 */}
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">旅客</label>
               <div className="relative">
                 <select
                   value={searchParams.guests}
                   onChange={(e) => handleInputChange('guests', parseInt(e.target.value))}
                   onFocus={() => setActiveField('guests')}
-                  className="w-20 md:w-24 pl-8 pr-4 py-4 text-gray-900 focus:outline-none focus:ring-0 focus:bg-gray-50 appearance-none cursor-pointer"
+                  className="w-full pl-10 pr-4 py-3 text-gray-900 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent appearance-none cursor-pointer bg-white"
                 >
                   {[1, 2, 3, 4, 5, 6, 7, 8].map(num => (
                     <option key={num} value={num}>
-                      {num}人
+                      {num}位旅客
                     </option>
                   ))}
-                  <option value={9}>9+人</option>
+                  <option value={9}>9+位旅客</option>
                 </select>
-                <Users className="absolute left-2 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <Users className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
               </div>
             </div>
-          )}
-
-          {/* 搜尋按鈕 */}
-          <div className="flex-shrink-0">
+          </div>
+          
+          <div className="mt-6 flex justify-end">
             <button
               type="submit"
-              className="px-6 py-4 bg-blue-600 text-white rounded-r-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
+              className="px-8 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors font-medium"
             >
-              <span className="hidden sm:inline">搜尋</span>
-              <Search className="w-5 h-5 sm:hidden" />
+              搜尋
             </button>
           </div>
         </div>
-      </form>
+      )}
+    </div>
 
       {/* 搜尋建議 */}
       {showSuggestions && activeField === 'query' && (

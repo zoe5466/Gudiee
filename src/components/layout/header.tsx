@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { Search, Globe, Menu, User } from 'lucide-react'; // 圖標組件
 import { LanguageToggle } from '@/components/i18n/language-switcher'; // 語言切換組件
 import { UserMenu } from '@/components/ui/user-menu'; // 用戶選單組件
+import SearchBar from '@/components/search/search-bar'; // 搜尋欄組件
 
 /**
  * 網站主頭部組件
@@ -59,29 +60,7 @@ export function Header() {
 
             {/* 搜尋欄（大螢幕顯示） */}
             <div className="hidden lg:block">
-              <div className="flex items-center border border-gray-300 rounded-full shadow-sm hover:shadow-lg transition-all duration-200 bg-white">
-                {/* 地點選擇區域 */}
-                <div className="search-section border-r border-gray-200 rounded-l-full hover:bg-gray-50">
-                  <div className="search-label">地點</div>
-                  <div className="search-value">隨處</div>
-                </div>
-                {/* 日期選擇區域 */}
-                <div className="search-section border-r border-gray-200 hover:bg-gray-50">
-                  <div className="search-label">入住</div>
-                  <div className="search-value">任何一週</div>
-                </div>
-                {/* 人數選擇區域 */}
-                <div className="search-section hover:bg-gray-50 flex items-center">
-                  <div className="flex-1">
-                    <div className="search-label">旅客</div>
-                    <div className="search-value">新增旅客</div>
-                  </div>
-                  {/* 搜尋按鈕 */}
-                  <button className="btn btn-primary btn-sm rounded-full w-8 h-8 !p-0 ml-3">
-                    <Search className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
+              <SearchBar className="max-w-md" showFilters={false} />
             </div>
 
             {/* 右側功能區域 */}
@@ -144,18 +123,7 @@ export function Header() {
         {/* 使用 isMounted 防止服務端渲染問題 */}
         {isMounted && isScrolled && (
           <div className="lg:hidden px-6 py-3 border-t border-gray-200">
-            <div className="flex items-center bg-white border border-gray-300 rounded-full shadow-sm p-3">
-              <Search className="w-5 h-5 text-gray-400 mr-3" />
-              {/* 簡化版搜尋資訊顯示 */}
-              <div className="flex-1">
-                <div className="text-sm font-medium text-gray-900">隨處</div>
-                <div className="text-xs text-gray-500">任何一週 · 新增旅客</div>
-              </div>
-              {/* 搜尋指示器 */}
-              <div className="w-8 h-8 border border-gray-300 rounded-full flex items-center justify-center">
-                <div className="w-2 h-2 bg-gray-400 rounded-full"></div>
-              </div>
-            </div>
+            <SearchBar className="w-full" showFilters={false} />
           </div>
         )}
       </div>
