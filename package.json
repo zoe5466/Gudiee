@@ -17,7 +17,7 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "prisma generate && next build",
+    "build": "NEXT_TELEMETRY_DISABLED=1 DISABLE_FILE_TRACING=true prisma generate && NEXT_TELEMETRY_DISABLED=1 DISABLE_FILE_TRACING=true next build",
     "start": "next start",
     "lint": "next lint",
     "lint:fix": "next lint --fix",
