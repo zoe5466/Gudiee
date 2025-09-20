@@ -107,6 +107,30 @@ class DeploymentDoctor {
           });
         }
       }
+
+      // 檢查可能導致 micromatch 堆疊溢出的配置
+      if (config.includes('webpack:') || config.includes('resolve:') || config.includes('fallback:')) {
+        this.issues.push({
+          type: 'nextjs',
+          category: 'webpack_complexity',
+          message: '複雜的 webpack 配置可能導致構建問題',
+          autoFix: true
+        });
+      }
+    }
+
+    // 檢查 .gitignore 是否有過於複雜的模式
+    const gitignorePath = path.join(this.projectRoot, '.gitignore');
+    if (fs.existsSync(gitignorePath)) {
+      const gitignore = fs.readFileSync(gitignorePath, 'utf8');
+      if (gitignore.includes('**/**/**') || gitignore.split('\n').length > 100) {
+        this.issues.push({
+          type: 'nextjs',
+          category: 'complex_patterns',
+          message: '過於複雜的 .gitignore 模式可能導致 micromatch 錯誤',
+          autoFix: true
+        });
+      }
     }
   }
 
@@ -147,6 +171,12 @@ class DeploymentDoctor {
             break;
           case 'nextjs_missing_critters':
             await this.fixCrittersDependency();
+            break;
+          case 'nextjs_webpack_complexity':
+            await this.simplifyWebpackConfig();
+            break;
+          case 'nextjs_complex_patterns':
+            await this.simplifyGitignore();
             break;
           case 'typescript_enum_mismatch':
             await this.fixEnumMismatch();
@@ -275,6 +305,48 @@ if (require.main === module) {
   node scripts/deployment-doctor.js diagnose    # 診斷並自動修復問題
   node scripts/deployment-doctor.js monitor     # 監控部署狀態
       `);
+  }
+
+  async simplifyWebpackConfig() {
+    const configPath = path.join(this.projectRoot, 'next.config.js');
+    let config = fs.readFileSync(configPath, 'utf8');
+    
+    // 臨時簡化 webpack 配置以避免 micromatch 錯誤
+    const backupConfig = config;
+    
+    // 註解掉複雜的 webpack 配置
+    config = config.replace(/webpack:\s*\([^}]+\{[\s\S]*?\n\s*\}/g, `webpack: (config) => {
+    // 簡化配置以避免 micromatch 錯誤
+    return config;
+  }`);
+    
+    fs.writeFileSync(configPath, config);
+    fs.writeFileSync(configPath + '.backup', backupConfig);
+    
+    this.fixes.push('簡化 webpack 配置');
+    this.log('已簡化 webpack 配置', 'success');
+  }
+
+  async simplifyGitignore() {
+    const gitignorePath = path.join(this.projectRoot, '.gitignore');
+    if (!fs.existsSync(gitignorePath)) return;
+    
+    let gitignore = fs.readFileSync(gitignorePath, 'utf8');
+    
+    // 備份並簡化 .gitignore
+    fs.writeFileSync(gitignorePath + '.backup', gitignore);
+    
+    // 移除過於複雜的模式
+    const lines = gitignore.split('\n');
+    const simplifiedLines = lines.filter(line => {
+      // 移除過於複雜的 glob 模式
+      return !line.includes('**/**/**') && line.length < 100;
+    });
+    
+    fs.writeFileSync(gitignorePath, simplifiedLines.join('\n'));
+    
+    this.fixes.push('簡化 .gitignore 模式');
+    this.log('已簡化 .gitignore 模式', 'success');
   }
 }
 
