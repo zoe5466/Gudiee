@@ -984,7 +984,8 @@ export default function SearchPage() {
                               <div style={{
                                 display: 'flex',
                                 alignItems: 'center',
-                                justifyContent: 'space-between'
+                                justifyContent: 'space-between',
+                                marginBottom: '0.5rem'
                               }}>
                                 <div style={{
                                   display: 'flex',
@@ -1013,6 +1014,27 @@ export default function SearchPage() {
                                   NT$ {service.price.toLocaleString()}
                                 </div>
                               </div>
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  router.push(`/services/${service.id}`);
+                                }}
+                                style={{
+                                  width: '100%',
+                                  padding: '0.5rem',
+                                  backgroundColor: '#FF5A5F',
+                                  color: 'white',
+                                  border: 'none',
+                                  borderRadius: '0.375rem',
+                                  fontSize: '0.75rem',
+                                  fontWeight: '500',
+                                  cursor: 'pointer',
+                                  transition: 'background-color 0.2s'
+                                }}
+                                className="hover:bg-red-600"
+                              >
+                                查看詳情
+                              </button>
                             </div>
                           </div>
                         </div>
