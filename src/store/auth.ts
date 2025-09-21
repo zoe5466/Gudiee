@@ -143,34 +143,28 @@ export const useAuth = create<AuthState>()(
         set({ isLoading: true }); // 設置載入狀態
         
         try {
-          // TODO: 替換為實際的註冊 API 調用
-          await new Promise(resolve => setTimeout(resolve, 1500));
-          
-          // 模擬新用戶數據（生產環境應從後端 API 獲取）
-          const mockUser: User = {
-            id: Date.now().toString(),
-            email: data.email,
-            name: data.name,
-            role: (data.userType || 'customer') as 'customer' | 'guide' | 'admin',
-            isEmailVerified: false, // 新用戶需要驗證 Email
-            isKYCVerified: false, // 新用戶需要 KYC 驗證
-            createdAt: new Date().toISOString(),
-            // 根據用戶類型分配不同權限
-            permissions: data.userType === 'guide' 
-              ? ['user:read', 'guide:manage', 'booking:manage'] 
-              : ['user:read', 'booking:create'],
-            profile: {
-              phone: data.phone
-            }
-          };
-          
-          const mockToken = 'mock-jwt-token-' + Date.now();
-          
-          // 更新狀態為已註冊並登入
+          // 向後端發送註冊請求
+          const response = await fetch('/api/auth/register', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            credentials: 'include', // 包含 cookies
+            body: JSON.stringify(data),
+          });
+
+          const result = await response.json();
+
+          // 檢查請求是否成功
+          if (!response.ok || !result.success) {
+            throw new Error(result.error || result.message || '註冊失敗');
+          }
+
+          // 更新認證狀態
           set({
-            user: mockUser,
-            token: mockToken,
-            refreshToken: 'mock-refresh-token',
+            user: result.data.user,
+            token: result.data.token,
+            refreshToken: null,
             isAuthenticated: true,
             isLoading: false,
           });
@@ -187,7 +181,7 @@ export const useAuth = create<AuthState>()(
       logout: async () => {
         try {
           // 調用後端登出 API 清除 session
-          await fetch('/api/auth/logout', {
+          await fetch('/api/auth/me', {
             method: 'POST',
             credentials: 'include', // 包含 cookies
           });
@@ -210,34 +204,24 @@ export const useAuth = create<AuthState>()(
        * @param userData 要更新的用戶資料（部分）
        */
       updateUser: async (userData: Partial<User>) => {
-        const { user, token } = get();
+        const { user } = get();
         // 檢查用戶是否已登入
-        if (!user || !token) {
+        if (!user) {
           throw new Error('未登入');
         }
         
         set({ isLoading: true }); // 設置載入狀態
         
         try {
-          // 向後端發送更新請求
-          const response = await fetch('/api/users/profile', {
-            method: 'PUT',
-            headers: { 
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${token}` // JWT 認證
-            },
-            body: JSON.stringify(userData),
-          });
-
-          if (!response.ok) {
-            throw new Error('更新失敗');
-          }
-
-          const updatedUser = await response.json();
+          // 暫時使用本地更新（簡化版）
+          const updatedUser = { ...user, ...userData };
+          
+          // 模擬 API 延遲
+          await new Promise(resolve => setTimeout(resolve, 500));
           
           // 合併更新的用戶資料
           set({
-            user: { ...user, ...updatedUser },
+            user: updatedUser,
             isLoading: false,
           });
         } catch (error) {
@@ -294,16 +278,11 @@ export const useAuth = create<AuthState>()(
             const data = await response.json();
             
             if (data.success && data.data.user) {
-              // 轉換後端用戶資料為前端格式
+              // 直接使用後端返回的用戶資料
               const user: User = {
-                id: data.data.user.id,
-                email: data.data.user.email,
-                name: data.data.user.name,
-                avatar: data.data.user.avatar,
+                ...data.data.user,
                 role: data.data.user.role.toLowerCase() as 'customer' | 'guide' | 'admin',
-                isEmailVerified: data.data.user.isEmailVerified,
-                isKYCVerified: data.data.user.isKycVerified,
-                createdAt: data.data.user.createdAt,
+                isKYCVerified: data.data.user.isKycVerified || false,
                 permissions: data.data.user.permissions || [],
                 profile: {
                   phone: data.data.user.phone,

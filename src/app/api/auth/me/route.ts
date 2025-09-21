@@ -1,41 +1,132 @@
 import { NextRequest } from 'next/server';
-import { getCurrentUser } from '@/lib/auth';
-import { successResponse, errorResponse } from '@/lib/api-response';
+import { cookies } from 'next/headers';
+
+// 模擬用戶數據（與登入 API 保持一致）
+const mockUsers = [
+  {
+    id: 'guide-001',
+    email: 'guide1@guidee.com',
+    name: '張小美',
+    role: 'GUIDE',
+    isEmailVerified: true,
+    isKycVerified: true,
+    permissions: ['user:read', 'guide:manage', 'booking:manage'],
+    userProfile: {
+      bio: '專業台北導遊，擁有5年導覽經驗',
+      location: '台北市',
+      languages: ['中文', '英文'],
+      specialties: ['歷史文化', '美食導覽']
+    }
+  },
+  {
+    id: 'guide-002',
+    email: 'guide2@guidee.com',
+    name: '李大明',
+    role: 'GUIDE',
+    isEmailVerified: true,
+    isKycVerified: true,
+    permissions: ['user:read', 'guide:manage', 'booking:manage'],
+    userProfile: {
+      bio: '資深地陪導遊，專精自然生態導覽',
+      location: '台中市',
+      languages: ['中文', '英文', '日文'],
+      specialties: ['自然生態', '攝影指導']
+    }
+  },
+  {
+    id: 'admin-001',
+    email: 'admin@guidee.com',
+    name: '系統管理員',
+    role: 'ADMIN',
+    isEmailVerified: true,
+    isKycVerified: true,
+    permissions: ['admin:full', 'user:manage', 'service:manage', 'booking:manage']
+  }
+];
+
+// 簡化的獲取當前用戶函數
+function getCurrentUser() {
+  try {
+    const cookieStore = cookies();
+    const token = cookieStore.get('auth-token')?.value;
+    
+    if (!token) {
+      return null;
+    }
+
+    // 解析 token
+    const userData = JSON.parse(atob(token));
+    
+    // 檢查 token 是否過期
+    if (userData.exp && userData.exp < Date.now()) {
+      return null;
+    }
+
+    // 從模擬數據中找到用戶
+    const user = mockUsers.find(u => u.id === userData.id);
+    return user || null;
+
+  } catch (error) {
+    console.error('Parse token error:', error);
+    return null;
+  }
+}
 
 export async function GET(request: NextRequest) {
   try {
-    const user = await getCurrentUser();
+    console.log('Get current user API called');
+    
+    const user = getCurrentUser();
     
     if (!user) {
-      return errorResponse('未認證', 401);
+      console.log('User not authenticated');
+      return Response.json({
+        success: false,
+        error: '未認證'
+      }, { status: 401 });
     }
 
-    // 返回用戶資訊（不包含密碼）
-    const { passwordHash, ...userWithoutPassword } = user;
-    
-    return successResponse({
-      user: userWithoutPassword
+    console.log('Current user:', user.email);
+
+    return Response.json({
+      success: true,
+      data: {
+        user
+      }
     });
 
   } catch (error) {
     console.error('Get current user error:', error);
-    return errorResponse('獲取用戶資訊失敗', 500);
+    return Response.json({
+      success: false,
+      error: '獲取用戶資訊失敗'
+    }, { status: 500 });
   }
 }
 
 // 登出
 export async function POST(request: NextRequest) {
   try {
-    const { cookies } = await import('next/headers');
+    console.log('Logout API called');
+    
     const cookieStore = cookies();
     
     // 清除 auth token cookie
     cookieStore.delete('auth-token');
 
-    return successResponse(null, '登出成功');
+    console.log('Logout successful');
+
+    return Response.json({
+      success: true,
+      data: null,
+      message: '登出成功'
+    });
 
   } catch (error) {
     console.error('Logout error:', error);
-    return errorResponse('登出失敗', 500);
+    return Response.json({
+      success: false,
+      error: '登出失敗'
+    }, { status: 500 });
   }
 }
