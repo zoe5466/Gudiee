@@ -17,7 +17,7 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "NEXT_TELEMETRY_DISABLED=1 DISABLE_FILE_TRACING=true prisma generate && NEXT_TELEMETRY_DISABLED=1 DISABLE_FILE_TRACING=true next build",
+    "build": "cross-env NEXT_TELEMETRY_DISABLED=1 DISABLE_FILE_TRACING=true prisma generate && cross-env NEXT_TELEMETRY_DISABLED=1 DISABLE_FILE_TRACING=true next build",
     "start": "next start",
     "lint": "next lint",
     "lint:fix": "next lint --fix",
@@ -101,6 +101,7 @@
     "@typescript-eslint/eslint-plugin": "^6.13.1",
     "@typescript-eslint/parser": "^6.13.1",
     "critters": "^0.0.20",
+    "cross-env": "^10.0.0",
     "dotenv": "^16.3.1",
     "eslint": "^8",
     "eslint-config-next": "14.0.4",

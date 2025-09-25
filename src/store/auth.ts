@@ -213,13 +213,39 @@ export const useAuth = create<AuthState>()(
         set({ isLoading: true }); // 設置載入狀態
         
         try {
-          // 暫時使用本地更新（簡化版）
-          const updatedUser = { ...user, ...userData };
+          // 向後端發送更新請求
+          const response = await fetch('/api/user/profile', {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            credentials: 'include', // 包含 cookies
+            body: JSON.stringify(userData),
+          });
+
+          const result = await response.json();
+
+          // 檢查請求是否成功
+          if (!response.ok || !result.success) {
+            throw new Error(result.error || result.message || '更新個人資料失敗');
+          }
+
+          // 更新本地用戶資料
+          const updatedUser: User = {
+            ...result.data.user,
+            role: result.data.user.role.toLowerCase() as 'customer' | 'guide' | 'admin',
+            isKYCVerified: result.data.user.isKycVerified || false,
+            permissions: result.data.user.permissions || [],
+            profile: {
+              phone: result.data.user.userProfile?.phone,
+              bio: result.data.user.userProfile?.bio,
+              location: result.data.user.userProfile?.location,
+              languages: result.data.user.userProfile?.languages,
+              specialties: result.data.user.userProfile?.specialties,
+            }
+          };
           
-          // 模擬 API 延遲
-          await new Promise(resolve => setTimeout(resolve, 500));
-          
-          // 合併更新的用戶資料
+          // 更新狀態
           set({
             user: updatedUser,
             isLoading: false,
@@ -335,9 +361,8 @@ export const useAuth = create<AuthState>()(
       name: 'guidee-auth', // LocalStorage 鍵名
       partialize: (state) => ({ // 指定哪些狀態需要持久化
         user: state.user,
-        token: state.token,
-        refreshToken: state.refreshToken,
         isAuthenticated: state.isAuthenticated,
+        // 注意：token 由 cookie 管理，不需要持久化到 localStorage
         // 注意：不持久化 isLoading 狀態
       }),
     }

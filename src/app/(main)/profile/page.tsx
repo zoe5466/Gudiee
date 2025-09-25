@@ -33,6 +33,8 @@ export default function ProfilePage() {
   const { success, error } = useToast();
   const { isOpen: isEditModalOpen, openModal: openEditModal, closeModal: closeEditModal } = useModal();
   
+  const [isInitializing, setIsInitializing] = useState(true);
+  
   const [formData, setFormData] = useState<ProfileFormData>({
     name: '',
     phone: '',
@@ -46,13 +48,23 @@ export default function ProfilePage() {
   const [errors, setErrors] = useState<ProfileFormErrors>({});
   const [isSaving, setIsSaving] = useState(false);
 
+  // Wait for authentication initialization
+  useEffect(() => {
+    // Give some time for auth initialization
+    const timer = setTimeout(() => {
+      setIsInitializing(false);
+    }, 1000); // Wait 1 second for auth to initialize
+
+    return () => clearTimeout(timer);
+  }, []);
+
   // Check authentication and redirect if not logged in
   useEffect(() => {
-    if (!isAuthenticated) {
-      router.push('/login');
+    if (!isInitializing && !isAuthenticated) {
+      router.push('/auth/login?redirect=/profile');
       return;
     }
-  }, [isAuthenticated, router]);
+  }, [isInitializing, isAuthenticated, router]);
 
   // Initialize form data with user data
   useEffect(() => {
@@ -134,8 +146,8 @@ export default function ProfilePage() {
     handleInputChange('avatar', avatar);
   };
 
-  // Show loading while checking authentication or user data
-  if (!isAuthenticated || !user) {
+  // Show loading while initializing or checking authentication
+  if (isInitializing || !isAuthenticated || !user) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <Loading size="lg" />
@@ -309,15 +321,24 @@ export default function ProfilePage() {
                     <span style={{ color: '#2563eb', fontWeight: '500' }}>導遊控制台</span>
                   </button>
                 )}
-                <button className="w-full flex items-center gap-3 p-3 text-left hover:bg-gray-50 rounded-lg transition-colors">
+                <button 
+                  onClick={() => router.push('/my-favorites')}
+                  className="w-full flex items-center gap-3 p-3 text-left hover:bg-gray-50 rounded-lg transition-colors"
+                >
                   <Heart className="w-5 h-5 text-gray-400" />
                   <span>我的收藏</span>
                 </button>
-                <button className="w-full flex items-center gap-3 p-3 text-left hover:bg-gray-50 rounded-lg transition-colors">
+                <button 
+                  onClick={() => router.push('/my-reviews')}
+                  className="w-full flex items-center gap-3 p-3 text-left hover:bg-gray-50 rounded-lg transition-colors"
+                >
                   <Star className="w-5 h-5 text-gray-400" />
                   <span>我的評價</span>
                 </button>
-                <button className="w-full flex items-center gap-3 p-3 text-left hover:bg-gray-50 rounded-lg transition-colors">
+                <button 
+                  onClick={() => router.push('/payment-methods')}
+                  className="w-full flex items-center gap-3 p-3 text-left hover:bg-gray-50 rounded-lg transition-colors"
+                >
                   <CreditCard className="w-5 h-5 text-gray-400" />
                   <span>付款方式</span>
                 </button>
@@ -328,19 +349,31 @@ export default function ProfilePage() {
             <div style={{ backgroundColor: 'white', border: '1px solid #e5e7eb', borderRadius: '1rem', padding: '1.5rem', boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)' }}>
               <h3 className="heading-3 mb-4">設定</h3>
               <div className="space-y-3">
-                <button className="w-full flex items-center gap-3 p-3 text-left hover:bg-gray-50 rounded-lg transition-colors">
+                <button 
+                  onClick={() => router.push('/settings/notifications')}
+                  className="w-full flex items-center gap-3 p-3 text-left hover:bg-gray-50 rounded-lg transition-colors"
+                >
                   <Bell className="w-5 h-5 text-gray-400" />
                   <span>通知設定</span>
                 </button>
-                <button className="w-full flex items-center gap-3 p-3 text-left hover:bg-gray-50 rounded-lg transition-colors">
+                <button 
+                  onClick={() => router.push('/settings/privacy')}
+                  className="w-full flex items-center gap-3 p-3 text-left hover:bg-gray-50 rounded-lg transition-colors"
+                >
                   <Shield className="w-5 h-5 text-gray-400" />
                   <span>隱私設定</span>
                 </button>
-                <button className="w-full flex items-center gap-3 p-3 text-left hover:bg-gray-50 rounded-lg transition-colors">
+                <button 
+                  onClick={() => router.push('/settings/language')}
+                  className="w-full flex items-center gap-3 p-3 text-left hover:bg-gray-50 rounded-lg transition-colors"
+                >
                   <Globe className="w-5 h-5 text-gray-400" />
                   <span>語言設定</span>
                 </button>
-                <button className="w-full flex items-center gap-3 p-3 text-left hover:bg-gray-50 rounded-lg transition-colors">
+                <button 
+                  onClick={() => router.push('/settings/account')}
+                  className="w-full flex items-center gap-3 p-3 text-left hover:bg-gray-50 rounded-lg transition-colors"
+                >
                   <Settings className="w-5 h-5 text-gray-400" />
                   <span>帳戶設定</span>
                 </button>

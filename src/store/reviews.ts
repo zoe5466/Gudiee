@@ -1,110 +1,133 @@
+// 評論功能狀態管理 Store
+// 功能：管理服務評論、評論統計、篩選排序、用戶評論等功能
 'use client';
 
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { create } from 'zustand'; // 狀態管理庫
+import { persist } from 'zustand/middleware'; // 持久化中間件
 
+// 評論資料介面定義
 export interface Review {
-  id: string;
-  serviceId: string;
-  guideId: string;
-  userId: string;
-  bookingId: string;
-  rating: number; // 1-5
-  comment: string;
-  photos?: string[];
-  pros?: string[];
-  cons?: string[];
+  id: string; // 評論唯一識別碼
+  serviceId: string; // 服務 ID
+  guideId: string; // 導遊 ID
+  userId: string; // 評論者 ID
+  bookingId: string; // 預訂記錄 ID
+  rating: number; // 評分 1-5 星
+  comment: string; // 評論內容
+  photos?: string[]; // 評論照片（可選）
+  pros?: string[]; // 優點列表（可選）
+  cons?: string[]; // 缺點列表（可選）
   isVerified: boolean; // 是否已驗證預訂
-  isAnonymous: boolean;
+  isAnonymous: boolean; // 是否匿名評論
   helpful: number; // 有用評價數
   reported: number; // 檢舉數
-  response?: {
-    content: string;
-    authorId: string;
-    authorType: 'guide' | 'admin';
-    createdAt: string;
+  response?: { // 回覆內容（可選）
+    content: string; // 回覆內容
+    authorId: string; // 回覆者 ID
+    authorType: 'guide' | 'admin'; // 回覆者類型
+    createdAt: string; // 回覆時間
   };
   tags?: string[]; // 標籤：'準時', '專業', '親切', '知識豐富' 等
-  createdAt: string;
-  updatedAt: string;
-  status: 'PENDING' | 'approved' | 'rejected' | 'hidden';
+  createdAt: string; // 評論建立時間
+  updatedAt: string; // 評論更新時間
+  status: 'PENDING' | 'approved' | 'rejected' | 'hidden'; // 評論狀態
 }
 
+// 評論統計資料介面定義
 export interface ReviewStatistics {
-  averageRating: number;
-  totalReviews: number;
+  averageRating: number; // 平均評分
+  totalReviews: number; // 總評論數
   ratingDistribution: Record<number, number>; // 1-5星的數量分佈
-  totalHelpful: number;
-  verifiedReviewsCount: number;
-  responseRate: number; // 回覆率
+  totalHelpful: number; // 總有用評價數
+  verifiedReviewsCount: number; // 已驗證評論數
+  responseRate: number; // 回覆率百分比
   tags: Record<string, number>; // 標籤統計
 }
 
+// 評論篩選條件介面定義
 export interface ReviewFilters {
-  rating?: number[];
-  sortBy: 'newest' | 'oldest' | 'highest' | 'lowest' | 'helpful';
-  verified?: boolean;
-  withPhotos?: boolean;
-  withResponse?: boolean;
-  tags?: string[];
-  dateRange?: {
-    start: Date;
-    end: Date;
+  rating?: number[]; // 評分篩選（可選）
+  sortBy: 'newest' | 'oldest' | 'highest' | 'lowest' | 'helpful'; // 排序方式
+  verified?: boolean; // 只顯示已驗證評論（可選）
+  withPhotos?: boolean; // 只顯示有照片的評論（可選）
+  withResponse?: boolean; // 只顯示有回覆的評論（可選）
+  tags?: string[]; // 標籤篩選（可選）
+  dateRange?: { // 日期範圍篩選（可選）
+    start: Date; // 開始日期
+    end: Date; // 結束日期
   };
 }
 
+// 評論狀態管理介面定義
 interface ReviewState {
-  // Reviews data
-  reviews: Review[];
-  userReviews: Review[]; // 當前用戶的評論
-  statistics: Record<string, ReviewStatistics>; // 按服務或導遊ID分組
+  // 評論資料
+  reviews: Review[]; // 評論列表
+  userReviews: Review[]; // 當前用戶的評論列表
+  statistics: Record<string, ReviewStatistics>; // 按服務或導遊ID分組的統計資料
   
-  // UI state
-  isLoading: boolean;
-  isSubmitting: boolean;
-  error: string | null;
+  // UI 狀態
+  isLoading: boolean; // 是否正在載入
+  isSubmitting: boolean; // 是否正在提交
+  error: string | null; // 錯誤訊息
   
-  // Filters and pagination
-  filters: ReviewFilters;
-  currentPage: number;
-  totalPages: number;
-  pageSize: number;
+  // 篩選和分頁
+  filters: ReviewFilters; // 篩選條件
+  currentPage: number; // 當前頁碼
+  totalPages: number; // 總頁數
+  pageSize: number; // 每頁數量
   
-  // Actions
-  fetchReviews: (targetId: string, targetType: 'service' | 'guide') => Promise<void>;
-  fetchUserReviews: (userId: string) => Promise<void>;
-  submitReview: (review: Omit<Review, 'id' | 'createdAt' | 'updatedAt' | 'status'>) => Promise<void>;
-  updateReview: (reviewId: string, updates: Partial<Review>) => Promise<void>;
-  deleteReview: (reviewId: string) => Promise<void>;
-  reportReview: (reviewId: string, reason: string) => Promise<void>;
-  markHelpful: (reviewId: string) => Promise<void>;
-  respondToReview: (reviewId: string, response: string) => Promise<void>;
-  setFilters: (filters: Partial<ReviewFilters>) => void;
-  setPage: (page: number) => void;
-  resetFilters: () => void;
+  // 行為方法
+  fetchReviews: (targetId: string, targetType: 'service' | 'guide') => Promise<void>; // 載入評論
+  fetchUserReviews: (userId: string) => Promise<void>; // 載入用戶評論
+  submitReview: (review: Omit<Review, 'id' | 'createdAt' | 'updatedAt' | 'status'>) => Promise<void>; // 提交評論
+  updateReview: (reviewId: string, updates: Partial<Review>) => Promise<void>; // 更新評論
+  deleteReview: (reviewId: string) => Promise<void>; // 刪除評論
+  reportReview: (reviewId: string, reason: string) => Promise<void>; // 檢舉評論
+  markHelpful: (reviewId: string) => Promise<void>; // 標記有用
+  respondToReview: (reviewId: string, response: string) => Promise<void>; // 回覆評論
+  setFilters: (filters: Partial<ReviewFilters>) => void; // 設置篩選條件
+  setPage: (page: number) => void; // 設置頁碼
+  resetFilters: () => void; // 重置篩選條件
 }
 
+/**
+ * 評論功能 Store
+ * 
+ * 功能：
+ * - 載入和管理服務/導遊評論
+ * - 用戶評論提交、更新、刪除
+ * - 評論篩選和排序
+ * - 評論統計資料計算
+ * - 評論互動（有用、檢舉、回覆）
+ * - 持久化用戶評論和統計資料
+ */
 export const useReviews = create<ReviewState>()(
   persist(
     (set, get) => ({
-      reviews: [],
-      userReviews: [],
-      statistics: {},
-      isLoading: false,
-      isSubmitting: false,
-      error: null,
-      filters: {
-        sortBy: 'newest'
+      // 初始狀態
+      reviews: [], // 評論列表
+      userReviews: [], // 用戶評論
+      statistics: {}, // 統計資料
+      isLoading: false, // 載入狀態
+      isSubmitting: false, // 提交狀態
+      error: null, // 錯誤訊息
+      filters: { // 預設篩選條件
+        sortBy: 'newest' // 預設按最新排序
       },
-      currentPage: 1,
-      totalPages: 1,
-      pageSize: 10,
+      currentPage: 1, // 當前頁碼
+      totalPages: 1, // 總頁數
+      pageSize: 10, // 每頁數量
 
+      /**
+       * 載入指定服務或導遊的評論
+       * @param targetId 目標 ID（服務或導遊）
+       * @param targetType 目標類型
+       */
       fetchReviews: async (targetId: string, targetType: 'service' | 'guide') => {
-        set({ isLoading: true, error: null });
+        set({ isLoading: true, error: null }); // 設置載入狀態
         
         try {
-          // 模擬 API 調用
+          // 模擬 API 調用（實際應呼叫後端 API）
           await new Promise(resolve => setTimeout(resolve, 1000));
           
           // 生成模擬評論數據

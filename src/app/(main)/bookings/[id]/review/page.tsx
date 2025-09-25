@@ -1,62 +1,74 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { ArrowLeft, Star } from 'lucide-react';
-import ReviewForm from '@/components/reviews/review-form';
-import { ReviewsList } from '@/components/reviews/reviews-list';
 import { useAuth } from '@/store/auth';
-import { useBooking } from '@/store/booking';
+import { useOrder } from '@/store/order';
+import { useToast } from '@/components/ui/toast';
+import { Loading } from '@/components/ui/loading';
+import { cn } from '@/lib/utils';
 
-export default function BookingReviewPage() {
+export default function OrderReviewPage() {
   const router = useRouter();
   const params = useParams();
-  const { user } = useAuth();
-  const { bookings } = useBooking();
+  const { user, isAuthenticated } = useAuth();
+  const { orders, rateOrder, fetchOrder, isLoading } = useOrder();
+  const { success, error: showError } = useToast();
   
-  const bookingId = params.id as string;
-  const [showReviewForm, setShowReviewForm] = useState(true);
+  const orderId = params.id as string;
+  const [rating, setRating] = useState(5);
+  const [comment, setComment] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isInitializing, setIsInitializing] = useState(true);
   
-  // 在實際應用中，這應該從 booking store 或 API 獲取
-  const booking = bookings.find(b => b.id === bookingId) || {
-    id: bookingId,
-    serviceId: 'service-1',
-    guideId: 'guide-1',
-    status: 'completed' as const,
-    details: {
-      serviceId: 'service-1',
-      guideId: 'guide-1',
-      date: new Date('2024-01-15'),
-      time: '09:00',
-      guests: 2,
-      duration: 4,
-      contactInfo: {
-        name: '張小明',
-        email: 'ming@example.com',
-        phone: '0912345678'
-      }
-    },
-    pricing: {
-      basePrice: 2000,
-      serviceFee: 200,
-      total: 2200,
-      currency: 'TWD'
-    },
-    payment: {
-      method: 'credit_card',
-      status: 'completed' as const
-    },
-    createdAt: '2024-01-10T10:00:00Z',
-    updatedAt: '2024-01-15T14:00:00Z',
-    travelerId: user?.id || 'user-1'
+  // 等待認證初始化
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsInitializing(false);
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // 檢查用戶是否已登入並載入訂單
+  useEffect(() => {
+    if (!isInitializing && !isAuthenticated) {
+      router.push('/auth/login?redirect=/bookings/' + orderId + '/review');
+      return;
+    }
+    
+    if (!isInitializing && isAuthenticated && orderId) {
+      fetchOrder(orderId);
+    }
+  }, [isInitializing, isAuthenticated, orderId, router, fetchOrder]);
+
+  const order = orders.find(o => o.id === orderId);
+
+  const handleSubmitReview = async () => {
+    if (!order) return;
+    
+    setIsSubmitting(true);
+    try {
+      await rateOrder(order.id, rating, comment);
+      success('評價成功', '感謝您的評價！');
+      router.push('/my-bookings');
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : '提交評價失敗';
+      showError('評價失敗', errorMessage);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
-  const handleReviewSubmitted = () => {
-    setShowReviewForm(false);
-    // 可以添加成功提示或導航
-  };
+  if (isInitializing || isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loading size="lg" />
+      </div>
+    );
+  }
 
-  if (!user) {
+  if (!isAuthenticated || !user) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
@@ -72,6 +84,41 @@ export default function BookingReviewPage() {
     );
   }
 
+  if (!order) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">訂單不存在</h1>
+          <button
+            onClick={() => router.push('/my-bookings')}
+            className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+          >
+            返回我的訂單
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // 只有已完成且未評價的訂單才能評價
+  if (order.status !== 'COMPLETED' || order.rating) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">
+            {order.rating ? '您已評價過此訂單' : '此訂單無法評價'}
+          </h1>
+          <button
+            onClick={() => router.push('/my-bookings')}
+            className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+          >
+            返回我的訂單
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-4xl mx-auto px-4 py-8">
@@ -79,37 +126,37 @@ export default function BookingReviewPage() {
         <div className="flex items-center gap-4 mb-8">
           <button
             onClick={() => router.back()}
-            className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-full"
+            className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-full transition-colors"
           >
             <ArrowLeft className="w-5 h-5" />
           </button>
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">撰寫評論</h1>
+            <h1 className="text-2xl font-bold text-gray-900">撰寫評價</h1>
             <p className="text-gray-600">分享您的體驗，幫助其他旅客</p>
           </div>
         </div>
 
-        {/* 預訂資訊卡片 */}
-        <div className="bg-white rounded-lg border p-6 mb-8">
+        {/* 訂單資訊卡片 */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
           <div className="flex items-start gap-4">
-            <div className="w-20 h-20 bg-gray-200 rounded-lg flex items-center justify-center">
-              <span className="text-gray-500 text-sm">服務圖片</span>
+            <div className="w-20 h-20 bg-gray-100 rounded-lg flex items-center justify-center">
+              <span className="text-gray-500 text-sm">服務</span>
             </div>
             <div className="flex-1">
               <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                台北市區導覽服務
+                {order.booking.serviceName}
               </h3>
               <div className="space-y-1 text-sm text-gray-600">
-                <p>預訂編號：{booking.id}</p>
-                <p>服務日期：{booking.details.date.toLocaleDateString('zh-TW')}</p>
-                <p>服務時間：{booking.details.time}</p>
-                <p>參與人數：{booking.details.guests} 人</p>
-                <p>服務時長：{booking.details.duration} 小時</p>
+                <p>訂單編號：{order.orderNumber}</p>
+                <p>服務日期：{new Date(order.booking.date).toLocaleDateString('zh-TW')}</p>
+                <p>服務時間：{order.booking.startTime}</p>
+                <p>參與人數：{order.booking.participants} 人</p>
+                <p>導遊：{order.booking.guideName}</p>
               </div>
             </div>
             <div className="text-right">
               <div className="text-lg font-bold text-gray-900">
-                NT$ {booking.pricing.total.toLocaleString()}
+                NT$ {order.pricing.total.toLocaleString()}
               </div>
               <div className="text-sm text-green-600 flex items-center gap-1">
                 <div className="w-2 h-2 bg-green-500 rounded-full"></div>
@@ -119,65 +166,72 @@ export default function BookingReviewPage() {
           </div>
         </div>
 
-        {/* 評論表單 */}
-        {showReviewForm && (
-          <div className="mb-8">
-            <ReviewForm
-              serviceId={booking.serviceId}
-              guideId={booking.guideId}
-              bookingId={booking.id}
-              serviceName="服務"
-              guideName="導遊"
-              onSubmit={async (reviewData) => {
-                // TODO: 實作評論提交邏輯
-                console.log('提交評論:', reviewData);
-                handleReviewSubmitted();
-              }}
-              onCancel={handleReviewSubmitted}
-              onClose={handleReviewSubmitted}
-            />
-          </div>
-        )}
-
-        {/* 相關評論 */}
-        {!showReviewForm && (
-          <div className="bg-white rounded-lg border p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-6">其他用戶的評價</h2>
-            <ReviewsList
-              targetId={booking.serviceId}
-              targetType="service"
-              showTitle={false}
-              showStatistics={false}
-              maxItems={5}
-            />
-            
-            <div className="mt-6 pt-6 border-t text-center">
-              <button
-                onClick={() => router.push(`/services/${booking.serviceId}#reviews`)}
-                className="text-blue-600 hover:text-blue-800 font-medium"
-              >
-                查看所有評論
-              </button>
+        {/* 評價表單 */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-8 mb-8">
+          <h2 className="text-xl font-semibold text-gray-900 mb-6">您的評價</h2>
+          
+          {/* 評分 */}
+          <div className="mb-6">
+            <label className="block text-sm font-medium text-gray-700 mb-3">
+              服務評分 *
+            </label>
+            <div className="flex gap-2">
+              {[1, 2, 3, 4, 5].map(star => (
+                <button
+                  key={star}
+                  onClick={() => setRating(star)}
+                  className="p-1 hover:scale-110 transition-transform"
+                >
+                  <Star 
+                    className={cn(
+                      "w-8 h-8 transition-colors",
+                      star <= rating 
+                        ? "text-yellow-400 fill-yellow-400" 
+                        : "text-gray-300"
+                    )}
+                  />
+                </button>
+              ))}
             </div>
+            <p className="text-sm text-gray-500 mt-2">
+              {rating === 1 && '非常不滿意'}
+              {rating === 2 && '不滿意'}
+              {rating === 3 && '普通'}
+              {rating === 4 && '滿意'}
+              {rating === 5 && '非常滿意'}
+            </p>
           </div>
-        )}
 
-        {/* 操作按鈕 */}
-        <div className="flex gap-4 mt-8">
-          <button
-            onClick={() => router.push('/bookings')}
-            className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
-          >
-            返回預訂列表
-          </button>
-          {!showReviewForm && (
+          {/* 評論 */}
+          <div className="mb-6">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              詳細評論
+            </label>
+            <textarea
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+              rows={4}
+              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              placeholder="請分享您的服務體驗..."
+            />
+          </div>
+
+          {/* 提交按鈕 */}
+          <div className="flex justify-end gap-4">
             <button
-              onClick={() => setShowReviewForm(true)}
-              className="flex-1 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              onClick={() => router.back()}
+              className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
             >
-              重新撰寫評論
+              取消
             </button>
-          )}
+            <button
+              onClick={handleSubmitReview}
+              disabled={isSubmitting}
+              className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+              {isSubmitting ? '提交中...' : '提交評價'}
+            </button>
+          </div>
         </div>
       </div>
     </div>

@@ -3,6 +3,7 @@
 import * as React from 'react'
 import { Toaster } from '@/components/ui/toaster'
 import { I18nProvider } from '@/components/providers/i18n-provider'
+import { AuthProvider } from '@/components/providers/auth-provider'
 import { detectBrowserLocale } from '@/hooks/useI18n'
 
 export function Providers({ children }: { children: React.ReactNode }) {
@@ -15,8 +16,10 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <I18nProvider defaultLocale={defaultLocale}>
-      {children}
-      <Toaster />
+      <AuthProvider>
+        {children}
+        <Toaster />
+      </AuthProvider>
     </I18nProvider>
   )
 }

@@ -1,53 +1,63 @@
+// 搜尋結果頁面組件
+// 功能：顯示服務搜尋結果、提供篩選和排序、支援格子檢視和地圖檢視、智能推薦等
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { Search, MapPin, Filter, Star, Clock, Users, Heart, Loader2, SlidersHorizontal, Map, Grid3X3, Sparkles, TrendingUp } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Card, CardContent } from '@/components/ui/card';
-import { Footer } from '@/components/layout/footer';
-import { useToast } from '@/components/ui/toast';
-import { Loading } from '@/components/ui/loading';
-import { HomeButton } from '@/components/layout/page-navigation';
-import { ReviewsSummary } from '@/components/reviews/reviews-summary';
-import { InteractiveMap } from '@/components/map/interactive-map';
-import { AdvancedSearch } from '@/components/search/advanced-search';
+import { useState, useEffect, useCallback } from 'react'; // React Hooks
+import { useRouter, useSearchParams } from 'next/navigation'; // Next.js 路由和查詢參數
+import { Search, MapPin, Filter, Star, Clock, Users, Heart, Loader2, SlidersHorizontal, Map, Grid3X3, Sparkles, TrendingUp } from 'lucide-react'; // 圖標組件
+import { Button } from '@/components/ui/button'; // 按鈕組件
+import { Input } from '@/components/ui/input'; // 輸入框組件
+import { Card, CardContent } from '@/components/ui/card'; // 卡片組件
+import { Footer } from '@/components/layout/footer'; // 頁尾組件
+import { useToast } from '@/components/ui/toast'; // 提示訊息組件
+import { Loading } from '@/components/ui/loading'; // 載入組件
+import { HomeButton } from '@/components/layout/page-navigation'; // 首頁返回按鈕
+import { ReviewsSummary } from '@/components/reviews/reviews-summary'; // 評論摘要組件
+import { InteractiveMap } from '@/components/map/interactive-map'; // 互動地圖組件
+import { AdvancedSearch } from '@/components/search/advanced-search'; // 進階搜尋組件
 
+// 搜尋篩選條件介面定義
 interface SearchFilters {
-  query: string;
-  location: string;
-  date: string;
-  guests: number;
-  minPrice: number;
-  maxPrice: number;
-  minRating: number;
-  category: string;
-  sortBy: 'relevance' | 'price_low' | 'price_high' | 'rating' | 'newest';
+  query: string; // 搜尋關鍵字
+  location: string; // 地點篩選
+  date: string; // 日期篩選
+  guests: number; // 旅客人數
+  minPrice: number; // 最低價格
+  maxPrice: number; // 最高價格
+  minRating: number; // 最低評分
+  category: string; // 服務分類
+  sortBy: 'relevance' | 'price_low' | 'price_high' | 'rating' | 'newest'; // 排序方式
 }
 
+// 搜尋結果介面定義
 interface SearchResult {
-  total: number;
-  services: ServiceCardProps[];
-  hasMore: boolean;
+  total: number; // 結果總數
+  services: ServiceCardProps[]; // 服務列表
+  hasMore: boolean; // 是否有更多結果
 }
 
+// 服務卡片屬性介面定義
 interface ServiceCardProps {
-  id: string
-  title: string
-  location: string
-  price: number
-  rating: number
-  reviewCount: number
-  duration: string
-  maxGuests: number
-  image: string
-  guideName: string
-  guideAvatar: string
-  isLiked?: boolean
-  selectedLocationId?: string | null
+  id: string; // 服務 ID
+  title: string; // 服務標題
+  location: string; // 服務地點
+  price: number; // 服務價格
+  rating: number; // 服務評分
+  reviewCount: number; // 評論數量
+  duration: string; // 服務時長
+  maxGuests: number; // 最大旅客數
+  image: string; // 服務圖片
+  guideName: string; // 導遊姓名
+  guideAvatar: string; // 導遊頭像
+  isLiked?: boolean; // 是否收藏（可選）
+  selectedLocationId?: string | null; // 選中的地點 ID（用於地圖檢視）
 }
 
+/**
+ * 服務卡片組件
+ * 顯示單個服務的詳細資訊，包含圖片、標題、評分、價格、導遊資訊等
+ * 支援收藏功能和點擊查看詳情
+ */
 const ServiceCard: React.FC<ServiceCardProps> = ({
   id,
   title,
@@ -64,15 +74,18 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
   selectedLocationId = null
 }) => {
   const router = useRouter();
-  const [liked, setLiked] = useState(isLiked);
+  const [liked, setLiked] = useState(isLiked); // 本地收藏狀態
 
+  // 處理卡片點擊事件，導航到服務詳情頁
   const handleCardClick = () => {
     router.push(`/services/${id}`);
   };
 
+  // 處理收藏按鈕點擊事件
   const handleLikeClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
+    e.stopPropagation(); // 防止觸發卡片點擊事件
     setLiked(!liked);
+    // TODO: 實際的收藏/取消收藏 API 呼叫
   };
 
   return (
@@ -191,11 +204,23 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
   )
 }
 
+/**
+ * 搜尋結果頁面主組件
+ * 
+ * 功能：
+ * - 顯示搜尋結果列表或地圖檢視
+ * - 提供篩選和排序功能
+ * - 支援進階搜尋
+ * - 智能推薦系統
+ * - 分頁載入更多結果
+ * - URL 參數管理
+ */
 export default function SearchPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const { error } = useToast();
+  const searchParams = useSearchParams(); // 從 URL 獲取查詢參數
+  const { error } = useToast(); // 錯誤提示功能
   
+  // 篩選條件狀態，從 URL 參數初始化
   const [filters, setFilters] = useState<SearchFilters>({
     query: searchParams.get('q') || '',
     location: searchParams.get('location') || '',
@@ -208,27 +233,32 @@ export default function SearchPage() {
     sortBy: (searchParams.get('sortBy') as SearchFilters['sortBy']) || 'relevance'
   });
   
+  // 搜尋結果狀態
   const [searchResult, setSearchResult] = useState<SearchResult>({
     total: 0,
     services: [],
     hasMore: false
   });
   
-  const [isLoading, setIsLoading] = useState(false);
-  const [showFilters, setShowFilters] = useState(false);
-  const [page, setPage] = useState(1);
-  const [isLoadingMore, setIsLoadingMore] = useState(false);
-  const [viewMode, setViewMode] = useState<'grid' | 'map'>('grid');
-  const [selectedLocationId, setSelectedLocationId] = useState<string | null>(null);
-  const [showAdvancedSearch, setShowAdvancedSearch] = useState(false);
-  const [recommendations, setRecommendations] = useState<ServiceCardProps[]>([]);
+  // UI 狀態
+  const [isLoading, setIsLoading] = useState(false); // 主要載入狀態
+  const [showFilters, setShowFilters] = useState(false); // 是否顯示篩選面板
+  const [page, setPage] = useState(1); // 目前頁碼
+  const [isLoadingMore, setIsLoadingMore] = useState(false); // 載入更多狀態
+  const [viewMode, setViewMode] = useState<'grid' | 'map'>('grid'); // 檢視模式
+  const [selectedLocationId, setSelectedLocationId] = useState<string | null>(null); // 地圖檢視中選中的地點
+  const [showAdvancedSearch, setShowAdvancedSearch] = useState(false); // 是否顯示進階搜尋
+  const [recommendations, setRecommendations] = useState<ServiceCardProps[]>([]); // 智能推薦結果
 
-  // Convert search results to map locations
+  /**
+   * 將搜尋結果轉換為地圖位置資料
+   * 用於在互動地圖上顯示服務位置
+   */
   const getMapLocations = useCallback(() => {
     return searchResult.services.map((service, index) => ({
       id: service.id,
       name: service.title,
-      latitude: 25.0330 + (Math.random() - 0.5) * 0.1, // Mock coordinates around Taipei
+      latitude: 25.0330 + (Math.random() - 0.5) * 0.1, // 模擬台北附近的座標
       longitude: 121.5654 + (Math.random() - 0.5) * 0.1,
       type: 'service' as const,
       description: `${service.guideName} • ${service.duration} • ${service.maxGuests} 人`,
@@ -239,9 +269,13 @@ export default function SearchPage() {
     }));
   }, [searchResult.services]);
 
+  /**
+   * 處理地圖上位置選擇事件
+   * 在格子檢視模式下會滾動到對應的服務卡片
+   */
   const handleLocationSelect = useCallback((location: any) => {
     setSelectedLocationId(location.id);
-    // Scroll to the service card in grid view
+    // 在格子檢視模式下滾動到對應的服務卡片
     if (viewMode === 'grid') {
       const element = document.getElementById(`service-${location.id}`);
       if (element) {
@@ -332,11 +366,14 @@ export default function SearchPage() {
     }
   ];
 
-  // 智能推薦算法
+  /**
+   * 智能推薦算法
+   * 基於用戶搜尋條件和偏好生成個人化推薦
+   */
   const generateRecommendations = useCallback((currentFilters: SearchFilters): ServiceCardProps[] => {
     // 基於用戶搜索歷史和偏好的推薦邏輯
     const recommendations = mockSearchResults.filter(service => {
-      // 推薦高評分服務
+      // 推薦高評分服務（4.8星以上）
       if (service.rating >= 4.8) return true;
       
       // 推薦相似地點的服務
@@ -348,16 +385,20 @@ export default function SearchPage() {
       return false;
     });
     
-    // 按評分和受歡迎程度排序
+    // 按評分和受歡迎程度排序，取前3個
     return recommendations
       .sort((a, b) => b.rating - a.rating)
       .slice(0, 3);
   }, []);
 
-  // 更新 URL 查詢參數
+  /**
+   * 更新 URL 查詢參數
+   * 保持搜尋狀態與 URL 同步，支援書籤和分享
+   */
   const updateURLParams = useCallback((newFilters: SearchFilters) => {
     const params = new URLSearchParams();
     
+    // 將非空值加入查詢參數
     Object.entries(newFilters).forEach(([key, value]) => {
       if (value && value !== '' && value !== 0) {
         params.set(key, value.toString());
@@ -365,11 +406,15 @@ export default function SearchPage() {
     });
     
     const newURL = `/search${params.toString() ? '?' + params.toString() : ''}`;
-    router.replace(newURL, { scroll: false });
+    router.replace(newURL, { scroll: false }); // 不滾動頁面
   }, [router]);
 
-  // 執行搜尋
+  /**
+   * 執行搜尋操作
+   * 支援新搜尋和分頁載入更多
+   */
   const performSearch = useCallback(async (newFilters: SearchFilters, pageNum: number = 1, append: boolean = false) => {
+    // 設置載入狀態
     if (pageNum === 1) {
       setIsLoading(true);
     } else {
@@ -377,7 +422,7 @@ export default function SearchPage() {
     }
     
     try {
-      // 目前使用模擬資料
+      // TODO: 實際 API 調用，目前使用模擬資料
       const mockResult = {
         total: mockSearchResults.length,
         services: filterMockResults(newFilters),
@@ -385,11 +430,13 @@ export default function SearchPage() {
       };
       
       if (append && pageNum > 1) {
+        // 追加結果到現有列表（分頁載入）
         setSearchResult(prev => ({
           ...mockResult,
           services: [...prev.services, ...mockResult.services]
         }));
       } else {
+        // 新的搜尋結果
         setSearchResult(mockResult);
         // 生成智能推薦
         setRecommendations(generateRecommendations(newFilters));

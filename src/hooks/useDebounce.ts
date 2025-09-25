@@ -1,4 +1,6 @@
-import { useState, useEffect } from 'react';
+// 防抖功能 React Hook
+// 功能：提供值防抖和回調函數防抖功能，用於優化搜尋、輸入等高頻操作的性能
+import { useState, useEffect } from 'react'; // React Hooks
 
 /**
  * 防抖 hook - 延遲執行值的更新

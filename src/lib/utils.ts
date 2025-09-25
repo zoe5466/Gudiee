@@ -1,6 +1,14 @@
-import { type ClassValue, clsx } from "clsx"
-import { twMerge } from "tailwind-merge"
+// 通用工具函數庫
+// 功能：提供應用程式中常用的工具函數，包含樣式合併、格式化、驗證、數據處理等
+import { type ClassValue, clsx } from "clsx" // 條件式 class 名稱處理
+import { twMerge } from "tailwind-merge" // Tailwind CSS 類別合併
 
+/**
+ * 合併 CSS 類別名稱
+ * 結合 clsx 和 tailwind-merge 的功能，處理條件式類別和 Tailwind 衝突
+ * @param inputs CSS 類別名稱
+ * @returns 合併後的類別名稱字串
+ */
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }

@@ -1,4 +1,3 @@
-import React from 'react';
 import GuidesList from '@/components/guides/guides-list';
 
 export const metadata = {

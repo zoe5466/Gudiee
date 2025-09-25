@@ -2,319 +2,250 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Calendar, Clock, Users, MapPin, Star, MessageCircle, X, Check, AlertCircle } from 'lucide-react';
+import { Calendar, Clock, Users, MapPin, Star, MessageCircle, X, Eye } from 'lucide-react';
+import { cn } from '@/lib/utils';
 import { useAuth } from '@/store/auth';
-import { useBooking } from '@/store/booking';
+import { useOrder } from '@/store/order';
 import { FullNavigation } from '@/components/layout/page-navigation';
 import { Loading } from '@/components/ui/loading';
+import { useToast } from '@/components/ui/toast';
+import { OrderStatusBadge } from '@/components/ui/order-status-badge';
+import { OrderStatus } from '@/types/order';
 
 export default function MyBookingsPage() {
   const router = useRouter();
   const { isAuthenticated, user } = useAuth();
-  const { bookings, fetchBookings, cancelBooking, submitReview, isLoading } = useBooking();
+  const { orders, fetchOrders, cancelOrder, rateOrder, isLoading, error } = useOrder();
+  const { success, error: showError } = useToast();
   
-  const [selectedTab, setSelectedTab] = useState<'all' | 'PENDING' | 'CONFIRMED' | 'completed' | 'cancelled'>('all');
+  const [selectedTab, setSelectedTab] = useState<'all' | OrderStatus>('all');
   const [showReviewModal, setShowReviewModal] = useState(false);
-  const [reviewBookingId, setReviewBookingId] = useState<string | null>(null);
+  const [reviewOrderId, setReviewOrderId] = useState<string | null>(null);
   const [reviewRating, setReviewRating] = useState(5);
   const [reviewComment, setReviewComment] = useState('');
   const [showCancelModal, setShowCancelModal] = useState(false);
-  const [cancelBookingId, setCancelBookingId] = useState<string | null>(null);
-  const [cancelReason, setCancelReason] = useState('');
+  const [cancelOrderId, setCancelOrderId] = useState<string | null>(null);
+  const [cancelReason, setCancelReason] = useState('USER_REQUEST');
+  const [cancelDescription, setCancelDescription] = useState('');
+  const [isInitializing, setIsInitializing] = useState(true);
+
+  // Wait for authentication initialization
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsInitializing(false);
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, []);
 
   // 檢查用戶是否已登入
   useEffect(() => {
-    if (!isAuthenticated) {
-      router.push('/login?redirect=/my-bookings');
+    if (!isInitializing && !isAuthenticated) {
+      router.push('/auth/login?redirect=/my-bookings');
       return;
     }
     
-    // 載入預訂資料
-    fetchBookings();
-  }, [isAuthenticated, router, fetchBookings]);
+    // 載入訂單資料
+    if (!isInitializing && isAuthenticated) {
+      fetchOrders();
+    }
+  }, [isInitializing, isAuthenticated, router, fetchOrders]);
 
-  const getStatusBadge = (status: string) => {
-    const badges = {
-      pending: { text: '待確認', color: 'bg-yellow-100 text-yellow-800', icon: AlertCircle },
-      confirmed: { text: '已確認', color: 'bg-blue-100 text-blue-800', icon: Check },
-      completed: { text: '已完成', color: 'bg-green-100 text-green-800', icon: Check },
-      cancelled: { text: '已取消', color: 'bg-red-100 text-red-800', icon: X },
-      refunded: { text: '已退款', color: 'bg-gray-100 text-gray-800', icon: X }
-    };
-    
-    const badge = badges[status as keyof typeof badges] || badges.pending;
-    const Icon = badge.icon;
-    
-    return (
-      <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem', padding: '0.25rem 0.5rem', borderRadius: '9999px', fontSize: '0.75rem', fontWeight: '500' }} className={badge.color}>
-        <Icon style={{ width: '0.75rem', height: '0.75rem' }} />
-        {badge.text}
-      </span>
-    );
-  };
 
-  const filteredBookings = bookings.filter(booking => {
+  const filteredOrders = orders.filter(order => {
     if (selectedTab === 'all') return true;
-    return booking.status === selectedTab;
+    return order.status === selectedTab;
   });
 
-  const handleCancelBooking = async () => {
-    if (!cancelBookingId) return;
+  const handleCancelOrder = async () => {
+    if (!cancelOrderId) return;
     
     try {
-      await cancelBooking(cancelBookingId, cancelReason);
+      await cancelOrder(cancelOrderId, cancelReason as any, cancelDescription);
+      success('取消成功', '訂單已成功取消');
       setShowCancelModal(false);
-      setCancelBookingId(null);
-      setCancelReason('');
+      setCancelOrderId(null);
+      setCancelReason('USER_REQUEST');
+      setCancelDescription('');
     } catch (error) {
-      console.error('取消預訂失敗:', error);
+      const errorMessage = error instanceof Error ? error.message : '取消訂單失敗';
+      showError('取消失敗', errorMessage);
     }
   };
 
   const handleSubmitReview = async () => {
-    if (!reviewBookingId) return;
+    if (!reviewOrderId) return;
     
     try {
-      await submitReview(reviewBookingId, reviewRating, reviewComment);
+      await rateOrder(reviewOrderId, reviewRating, reviewComment);
+      success('評價成功', '感謝您的評價！');
       setShowReviewModal(false);
-      setReviewBookingId(null);
+      setReviewOrderId(null);
       setReviewRating(5);
       setReviewComment('');
     } catch (error) {
-      console.error('提交評價失敗:', error);
+      const errorMessage = error instanceof Error ? error.message : '提交評價失敗';
+      showError('評價失敗', errorMessage);
     }
   };
 
-  if (!isAuthenticated) {
+  if (isInitializing || !isAuthenticated) {
     return <Loading />;
   }
 
   return (
-    <div 
-      style={{
-        minHeight: '100vh',
-        background: 'linear-gradient(to bottom right, #dbeafe, #ffffff, #e0e7ff)',
-        paddingTop: '2rem',
-        paddingBottom: '2rem'
-      }}
-    >
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 pt-8 pb-8">
       <FullNavigation />
       
-      <div style={{ maxWidth: '64rem', margin: '0 auto', padding: '0 1rem' }}>
+      <div className="max-w-5xl mx-auto px-4">
         {/* 頁面標題 */}
-        <div style={{ marginBottom: '2rem' }}>
-          <h1 style={{ fontSize: '2rem', fontWeight: '700', color: '#111827', marginBottom: '0.5rem' }}>
-            我的預訂
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            我的訂單
           </h1>
-          <p style={{ color: '#6b7280' }}>
-            管理您的所有導覽預訂
+          <p className="text-gray-600">
+            管理您的所有導覽服務訂單
           </p>
         </div>
 
         {/* 分類標籤 */}
-        <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '2rem', flexWrap: 'wrap' }}>
+        <div className="flex gap-2 mb-8 flex-wrap">
           {[
             { key: 'all', label: '全部' },
+            { key: 'DRAFT', label: '草稿' },
             { key: 'PENDING', label: '待確認' },
             { key: 'CONFIRMED', label: '已確認' },
-            { key: 'completed', label: '已完成' },
-            { key: 'cancelled', label: '已取消' }
+            { key: 'PAID', label: '已付款' },
+            { key: 'IN_PROGRESS', label: '進行中' },
+            { key: 'COMPLETED', label: '已完成' },
+            { key: 'CANCELLED', label: '已取消' }
           ].map(tab => (
             <button
               key={tab.key}
               onClick={() => setSelectedTab(tab.key as any)}
-              style={{
-                padding: '0.5rem 1rem',
-                borderRadius: '0.5rem',
-                fontSize: '0.875rem',
-                fontWeight: '500',
-                border: '1px solid',
-                cursor: 'pointer',
-                transition: 'all 0.2s',
-                ...(selectedTab === tab.key ? {
-                  backgroundColor: '#2563eb',
-                  borderColor: '#2563eb',
-                  color: 'white'
-                } : {
-                  backgroundColor: 'white',
-                  borderColor: '#e5e7eb',
-                  color: '#374151'
-                })
-              }}
-              className={selectedTab !== tab.key ? 'hover:bg-gray-50' : ''}
+              className={cn(
+                "px-4 py-2 rounded-lg text-sm font-medium border transition-colors",
+                selectedTab === tab.key
+                  ? "bg-blue-600 border-blue-600 text-white"
+                  : "bg-white border-gray-200 text-gray-700 hover:bg-gray-50"
+              )}
             >
               {tab.label}
             </button>
           ))}
         </div>
 
-        {/* 預訂列表 */}
+        {/* 訂單列表 */}
         {isLoading ? (
           <Loading />
-        ) : filteredBookings.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: '3rem', backgroundColor: 'white', borderRadius: '1rem', boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)' }}>
-            <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>📅</div>
-            <h3 style={{ fontSize: '1.125rem', fontWeight: '600', color: '#111827', marginBottom: '0.5rem' }}>
-              {selectedTab === 'all' ? '暫無預訂記錄' : `暫無${selectedTab === 'PENDING' ? '待確認' : selectedTab === 'CONFIRMED' ? '已確認' : selectedTab === 'completed' ? '已完成' : '已取消'}的預訂`}
+        ) : filteredOrders.length === 0 ? (
+          <div className="text-center p-12 bg-white rounded-xl shadow-sm">
+            <div className="text-5xl mb-4">📋</div>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              {selectedTab === 'all' ? '暫無訂單記錄' : '暫無相關訂單'}
             </h3>
-            <p style={{ color: '#6b7280', marginBottom: '1.5rem' }}>
+            <p className="text-gray-600 mb-6">
               開始探索精彩的導覽服務吧！
             </p>
             <button
               onClick={() => router.push('/search')}
-              style={{
-                padding: '0.75rem 1.5rem',
-                background: 'linear-gradient(to right, #2563eb, #4f46e5)',
-                color: 'white',
-                border: 'none',
-                borderRadius: '0.5rem',
-                fontSize: '0.875rem',
-                fontWeight: '500',
-                cursor: 'pointer',
-                transition: 'all 0.2s'
-              }}
-              className="hover:shadow-lg"
+              className="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg text-sm font-medium hover:shadow-lg transition-all duration-200"
             >
               瀏覽服務
             </button>
           </div>
         ) : (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-            {filteredBookings.map(booking => (
+          <div className="space-y-6">
+            {filteredOrders.map(order => (
               <div
-                key={booking.id}
-                style={{
-                  backgroundColor: 'white',
-                  borderRadius: '1rem',
-                  padding: '1.5rem',
-                  boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
-                  border: '1px solid #f3f4f6'
-                }}
+                key={order.id}
+                className="bg-white rounded-xl p-6 shadow-sm border border-gray-200"
               >
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
-                      <h3 style={{ fontSize: '1.125rem', fontWeight: '600', color: '#111827' }}>
-                        預訂 #{booking.id}
+                <div className="flex justify-between items-start mb-4">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-2">
+                      <h3 className="text-lg font-semibold text-gray-900">
+                        {order.booking.serviceName}
                       </h3>
-                      {getStatusBadge(booking.status)}
+                      <OrderStatusBadge status={order.status} />
                     </div>
+                    <p className="text-sm text-gray-600 mb-2">
+                      訂單編號：{order.orderNumber}
+                    </p>
+                    <p className="text-sm text-gray-600">
+                      導遊：{order.booking.guideName}
+                    </p>
                   </div>
-                  <div style={{ textAlign: 'right' }}>
-                    <div style={{ fontSize: '1.25rem', fontWeight: '700', color: '#111827' }}>
-                      NT$ {booking.pricing.total.toLocaleString()}
-                    </div>
-                    <div style={{ fontSize: '0.875rem', color: '#6b7280' }}>
-                      {booking.pricing.currency}
-                    </div>
+                  <div className="text-right">
+                    <p className="text-xl font-semibold text-gray-900 mb-1">
+                      NT$ {order.pricing.total.toLocaleString()}
+                    </p>
+                    <p className="text-xs text-gray-600">
+                      {order.pricing.participants} 位旅客
+                    </p>
                   </div>
                 </div>
 
-                {/* 預訂詳情 */}
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', marginBottom: '1rem' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                    <Calendar style={{ width: '1rem', height: '1rem', color: '#6b7280' }} />
-                    <span style={{ fontSize: '0.875rem', color: '#374151' }}>
-                      {new Date(booking.details.date).toLocaleDateString('zh-TW')}
+                {/* 訂單詳情 */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6 p-4 bg-gray-50 rounded-lg">
+                  <div className="flex items-center gap-2">
+                    <Calendar className="w-4 h-4 text-gray-400" />
+                    <span className="text-sm text-gray-700">
+                      {new Date(order.booking.date).toLocaleDateString('zh-TW')}
                     </span>
                   </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                    <Clock style={{ width: '1rem', height: '1rem', color: '#6b7280' }} />
-                    <span style={{ fontSize: '0.875rem', color: '#374151' }}>
-                      {booking.details.time} ({booking.details.duration}小時)
+                  <div className="flex items-center gap-2">
+                    <Clock className="w-4 h-4 text-gray-400" />
+                    <span className="text-sm text-gray-700">
+                      {order.booking.startTime} ({order.booking.duration}小時)
                     </span>
                   </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                    <Users style={{ width: '1rem', height: '1rem', color: '#6b7280' }} />
-                    <span style={{ fontSize: '0.875rem', color: '#374151' }}>
-                      {booking.details.guests} 人
+                  <div className="flex items-center gap-2">
+                    <MapPin className="w-4 h-4 text-gray-400" />
+                    <span className="text-sm text-gray-700">
+                      {order.booking.location.name}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Users className="w-4 h-4 text-gray-400" />
+                    <span className="text-sm text-gray-700">
+                      {order.booking.participants} 位旅客
                     </span>
                   </div>
                 </div>
-
-                {/* 聯絡資訊 */}
-                <div style={{ marginBottom: '1rem', padding: '0.75rem', backgroundColor: '#f9fafb', borderRadius: '0.5rem' }}>
-                  <div style={{ fontSize: '0.875rem', fontWeight: '500', color: '#374151', marginBottom: '0.25rem' }}>
-                    聯絡資訊
-                  </div>
-                  <div style={{ fontSize: '0.875rem', color: '#6b7280' }}>
-                    {booking.details.contactInfo.name} • {booking.details.contactInfo.email} • {booking.details.contactInfo.phone}
-                  </div>
-                </div>
-
-                {/* 特殊要求 */}
-                {booking.details.specialRequests && (
-                  <div style={{ marginBottom: '1rem', padding: '0.75rem', backgroundColor: '#fef3c7', borderRadius: '0.5rem' }}>
-                    <div style={{ fontSize: '0.875rem', fontWeight: '500', color: '#92400e', marginBottom: '0.25rem' }}>
-                      特殊要求
-                    </div>
-                    <div style={{ fontSize: '0.875rem', color: '#92400e' }}>
-                      {booking.details.specialRequests}
-                    </div>
-                  </div>
-                )}
-
-                {/* 評價 */}
-                {booking.review && (
-                  <div style={{ marginBottom: '1rem', padding: '0.75rem', backgroundColor: '#ecfdf5', borderRadius: '0.5rem' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
-                      <Star style={{ width: '1rem', height: '1rem', color: '#f59e0b', fill: '#f59e0b' }} />
-                      <span style={{ fontSize: '0.875rem', fontWeight: '500', color: '#065f46' }}>
-                        您的評價: {booking.review.rating}/5
-                      </span>
-                    </div>
-                    <div style={{ fontSize: '0.875rem', color: '#065f46' }}>
-                      {booking.review.comment}
-                    </div>
-                  </div>
-                )}
 
                 {/* 操作按鈕 */}
-                <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
-                  {booking.status === 'CONFIRMED' && (
+                <div className="flex flex-wrap gap-3 justify-end">
+                  <button
+                    onClick={() => router.push(`/orders/${order.id}`)}
+                    className="flex items-center gap-1 px-4 py-2 bg-gray-100 text-gray-700 rounded-md text-sm font-medium hover:bg-gray-200 transition-colors"
+                  >
+                    <Eye className="w-3.5 h-3.5" />
+                    查看詳情
+                  </button>
+
+                  {order.status === 'COMPLETED' && !order.rating && (
                     <button
                       onClick={() => {
-                        setCancelBookingId(booking.id);
-                        setShowCancelModal(true);
-                      }}
-                      style={{
-                        padding: '0.5rem 1rem',
-                        border: '1px solid #dc2626',
-                        borderRadius: '0.375rem',
-                        color: '#dc2626',
-                        backgroundColor: 'white',
-                        fontSize: '0.875rem',
-                        fontWeight: '500',
-                        cursor: 'pointer',
-                        transition: 'all 0.2s'
-                      }}
-                      className="hover:bg-red-50"
-                    >
-                      取消預訂
-                    </button>
-                  )}
-                  
-                  {booking.status === 'completed' && !booking.review && (
-                    <button
-                      onClick={() => {
-                        setReviewBookingId(booking.id);
+                        setReviewOrderId(order.id);
                         setShowReviewModal(true);
                       }}
-                      style={{
-                        padding: '0.5rem 1rem',
-                        background: 'linear-gradient(to right, #2563eb, #4f46e5)',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '0.375rem',
-                        fontSize: '0.875rem',
-                        fontWeight: '500',
-                        cursor: 'pointer',
-                        transition: 'all 0.2s'
-                      }}
-                      className="hover:shadow-md"
+                      className="flex items-center gap-1 px-4 py-2 bg-yellow-400 text-white rounded-md text-sm font-medium hover:bg-yellow-500 transition-colors"
                     >
-                      <Star style={{ width: '0.875rem', height: '0.875rem', marginRight: '0.25rem', display: 'inline' }} />
-                      撰寫評價
+                      <Star className="w-3.5 h-3.5" />
+                      評價
+                    </button>
+                  )}
+
+                  {['DRAFT', 'PENDING', 'CONFIRMED', 'PAID'].includes(order.status) && (
+                    <button
+                      onClick={() => {
+                        setCancelOrderId(order.id);
+                        setShowCancelModal(true);
+                      }}
+                      className="flex items-center gap-1 px-4 py-2 bg-red-500 text-white rounded-md text-sm font-medium hover:bg-red-600 transition-colors"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                      取消
                     </button>
                   )}
                 </div>
@@ -324,73 +255,52 @@ export default function MyBookingsPage() {
         )}
       </div>
 
-      {/* 取消預訂模態框 */}
+      {/* 取消訂單 Modal */}
       {showCancelModal && (
-        <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0, 0, 0, 0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem', zIndex: 50 }}>
-          <div style={{ backgroundColor: 'white', borderRadius: '1rem', padding: '1.5rem', maxWidth: '28rem', width: '100%' }}>
-            <h3 style={{ fontSize: '1.125rem', fontWeight: '600', color: '#111827', marginBottom: '1rem' }}>
-              取消預訂
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl p-8 max-w-md w-full mx-4 max-h-screen overflow-y-auto">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              取消訂單
             </h3>
-            <p style={{ color: '#6b7280', marginBottom: '1rem' }}>
-              您確定要取消這個預訂嗎？此操作無法撤銷。
-            </p>
-            <div style={{ marginBottom: '1.5rem' }}>
-              <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#374151', marginBottom: '0.5rem' }}>
-                取消原因 (選填)
+            
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                取消原因 *
               </label>
-              <textarea
+              <select
                 value={cancelReason}
                 onChange={(e) => setCancelReason(e.target.value)}
-                placeholder="請簡述取消原因..."
-                style={{
-                  width: '100%',
-                  padding: '0.75rem',
-                  border: '1px solid #e5e7eb',
-                  borderRadius: '0.5rem',
-                  fontSize: '0.875rem',
-                  outline: 'none',
-                  resize: 'vertical',
-                  minHeight: '4rem'
-                }}
-                className="focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+                className="w-full p-3 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              >
+                <option value="USER_REQUEST">個人因素</option>
+                <option value="SCHEDULE_CONFLICT">時間衝突</option>
+                <option value="WEATHER">天氣因素</option>
+                <option value="OTHER">其他原因</option>
+              </select>
+            </div>
+
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                詳細說明
+              </label>
+              <textarea
+                value={cancelDescription}
+                onChange={(e) => setCancelDescription(e.target.value)}
+                className="w-full p-3 border border-gray-300 rounded-lg text-sm min-h-20 resize-y focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                placeholder="請說明取消原因..."
               />
             </div>
-            <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'flex-end' }}>
+
+            <div className="flex justify-end gap-3">
               <button
-                onClick={() => {
-                  setShowCancelModal(false);
-                  setCancelBookingId(null);
-                  setCancelReason('');
-                }}
-                style={{
-                  padding: '0.5rem 1rem',
-                  border: '1px solid #e5e7eb',
-                  borderRadius: '0.375rem',
-                  color: '#374151',
-                  backgroundColor: 'white',
-                  fontSize: '0.875rem',
-                  fontWeight: '500',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s'
-                }}
-                className="hover:bg-gray-50"
+                onClick={() => setShowCancelModal(false)}
+                className="px-6 py-3 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors"
               >
                 取消
               </button>
               <button
-                onClick={handleCancelBooking}
-                style={{
-                  padding: '0.5rem 1rem',
-                  backgroundColor: '#dc2626',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '0.375rem',
-                  fontSize: '0.875rem',
-                  fontWeight: '500',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s'
-                }}
-                className="hover:bg-red-700"
+                onClick={handleCancelOrder}
+                className="px-6 py-3 bg-red-500 text-white rounded-lg text-sm font-medium hover:bg-red-600 transition-colors"
               >
                 確認取消
               </button>
@@ -399,103 +309,60 @@ export default function MyBookingsPage() {
         </div>
       )}
 
-      {/* 評價模態框 */}
+      {/* 評價 Modal */}
       {showReviewModal && (
-        <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0, 0, 0, 0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem', zIndex: 50 }}>
-          <div style={{ backgroundColor: 'white', borderRadius: '1rem', padding: '1.5rem', maxWidth: '28rem', width: '100%' }}>
-            <h3 style={{ fontSize: '1.125rem', fontWeight: '600', color: '#111827', marginBottom: '1rem' }}>
-              撰寫評價
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl p-8 max-w-md w-full mx-4 max-h-screen overflow-y-auto">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              服務評價
             </h3>
             
-            <div style={{ marginBottom: '1rem' }}>
-              <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#374151', marginBottom: '0.5rem' }}>
-                評分
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                評分 *
               </label>
-              <div style={{ display: 'flex', gap: '0.25rem' }}>
-                {[1, 2, 3, 4, 5].map(rating => (
+              <div className="flex gap-1">
+                {[1, 2, 3, 4, 5].map(star => (
                   <button
-                    key={rating}
-                    onClick={() => setReviewRating(rating)}
-                    style={{
-                      padding: '0.5rem',
-                      border: 'none',
-                      backgroundColor: 'transparent',
-                      cursor: 'pointer'
-                    }}
+                    key={star}
+                    onClick={() => setReviewRating(star)}
+                    className="p-1 border-none bg-transparent cursor-pointer hover:scale-110 transition-transform"
                   >
                     <Star 
-                      style={{ 
-                        width: '1.5rem', 
-                        height: '1.5rem', 
-                        color: rating <= reviewRating ? '#f59e0b' : '#e5e7eb',
-                        fill: rating <= reviewRating ? '#f59e0b' : 'none'
-                      }} 
+                      className={cn(
+                        "w-6 h-6 transition-colors",
+                        star <= reviewRating 
+                          ? "text-yellow-400 fill-yellow-400" 
+                          : "text-gray-300"
+                      )}
                     />
                   </button>
                 ))}
               </div>
             </div>
 
-            <div style={{ marginBottom: '1.5rem' }}>
-              <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#374151', marginBottom: '0.5rem' }}>
-                評價內容
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                評論
               </label>
               <textarea
                 value={reviewComment}
                 onChange={(e) => setReviewComment(e.target.value)}
-                placeholder="分享您的體驗..."
-                style={{
-                  width: '100%',
-                  padding: '0.75rem',
-                  border: '1px solid #e5e7eb',
-                  borderRadius: '0.5rem',
-                  fontSize: '0.875rem',
-                  outline: 'none',
-                  resize: 'vertical',
-                  minHeight: '6rem'
-                }}
-                className="focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+                className="w-full p-3 border border-gray-300 rounded-lg text-sm min-h-24 resize-y focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                placeholder="分享您的服務體驗..."
               />
             </div>
 
-            <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'flex-end' }}>
+            <div className="flex justify-end gap-3">
               <button
-                onClick={() => {
-                  setShowReviewModal(false);
-                  setReviewBookingId(null);
-                  setReviewRating(5);
-                  setReviewComment('');
-                }}
-                style={{
-                  padding: '0.5rem 1rem',
-                  border: '1px solid #e5e7eb',
-                  borderRadius: '0.375rem',
-                  color: '#374151',
-                  backgroundColor: 'white',
-                  fontSize: '0.875rem',
-                  fontWeight: '500',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s'
-                }}
-                className="hover:bg-gray-50"
+                onClick={() => setShowReviewModal(false)}
+                className="px-6 py-3 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors"
               >
                 取消
               </button>
               <button
                 onClick={handleSubmitReview}
-                disabled={!reviewComment.trim()}
-                style={{
-                  padding: '0.5rem 1rem',
-                  background: reviewComment.trim() ? 'linear-gradient(to right, #2563eb, #4f46e5)' : '#9ca3af',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '0.375rem',
-                  fontSize: '0.875rem',
-                  fontWeight: '500',
-                  cursor: reviewComment.trim() ? 'pointer' : 'not-allowed',
-                  transition: 'all 0.2s'
-                }}
-                className={reviewComment.trim() ? 'hover:shadow-md' : ''}
+                className="px-6 py-3 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
               >
                 提交評價
               </button>

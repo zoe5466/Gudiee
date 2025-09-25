@@ -1,4 +1,3 @@
-import React from 'react';
 import GuideProfile from '@/components/guides/guide-profile';
 
 interface GuidePageProps {
