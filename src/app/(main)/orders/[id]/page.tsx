@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { 
   ArrowLeft, Calendar, Clock, Users, MapPin, Star, Phone, Mail, 
-  CreditCard, Receipt, MessageCircle, CheckCircle,
+  CreditCard, Receipt, MessageCircle, CheckCircle, AlertCircle,
   Download, Eye
 } from 'lucide-react';
 import { useAuth } from '@/store/auth';
