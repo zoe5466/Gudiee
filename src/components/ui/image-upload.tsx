@@ -85,6 +85,8 @@ export function AvatarUpload({
     if (!files || files.length === 0 || disabled) return;
 
     const file = files[0];
+    if (!file) return; // 額外的安全檢查
+    
     const errors = validateFile(file, 5); // 5MB 限制
     
     if (errors.length > 0) {
