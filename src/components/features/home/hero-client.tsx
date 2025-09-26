@@ -145,7 +145,7 @@ export function HeroClient() {
               }}
             >
               <button
-                onClick={() => router.push('/login')}
+                onClick={() => router.push('/auth/login')}
                 style={{
                   display: 'flex',
                   alignItems: 'center',
@@ -167,7 +167,7 @@ export function HeroClient() {
               </button>
               
               <button
-                onClick={() => router.push('/register')}
+                onClick={() => router.push('/auth/register')}
                 style={{
                   display: 'flex',
                   alignItems: 'center',

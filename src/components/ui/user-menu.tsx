@@ -53,9 +53,9 @@ export function UserMenu() {
     {
       icon: <BookOpen className="w-4 h-4" />,
       label: '我的預訂',
-      href: '/my-bookings',
+      href: '/orders',
       onClick: () => {
-        router.push('/my-bookings');
+        router.push('/orders');
         setIsOpen(false);
       }
     },
@@ -83,13 +83,13 @@ export function UserMenu() {
     return (
       <div className="flex items-center space-x-2">
         <button
-          onClick={() => router.push('/login')}
+          onClick={() => router.push('/auth/login')}
           className="text-sm font-medium text-gray-900 hover:bg-gray-100 px-3 py-2 rounded-full transition-colors"
         >
           登入
         </button>
         <button
-          onClick={() => router.push('/register')}
+          onClick={() => router.push('/auth/register')}
           className="text-sm font-medium bg-[#FF5A5F] text-white hover:bg-[#E1464A] px-4 py-2 rounded-full transition-colors"
         >
           註冊
