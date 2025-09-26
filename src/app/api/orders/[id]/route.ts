@@ -173,6 +173,14 @@ export async function PUT(
 
     const order = mockOrders[orderIndex];
 
+    // 額外的安全檢查
+    if (!order) {
+      return Response.json({
+        success: false,
+        error: '訂單不存在'
+      }, { status: 404 });
+    }
+
     // 檢查存取權限
     if (!hasOrderAccess(order, user)) {
       return Response.json({
@@ -284,6 +292,14 @@ export async function DELETE(
     }
 
     const order = mockOrders[orderIndex];
+
+    // 額外的安全檢查
+    if (!order) {
+      return Response.json({
+        success: false,
+        error: '訂單不存在'
+      }, { status: 404 });
+    }
 
     // 檢查存取權限
     if (!hasOrderAccess(order, user)) {
