@@ -3,69 +3,9 @@
 import { NextRequest } from 'next/server';
 import { cookies } from 'next/headers';
 import { Order, OrderResponse, OrderStatus, PaymentStatus, CancellationReason } from '@/types/order';
-
-// 模擬訂單資料（實際應該從資料庫讀取）
-// 這應該與 /api/orders/route.ts 共用同一個資料源
-let mockOrders: Order[] = [
-  {
-    id: 'order-001',
-    orderNumber: 'GD240001',
-    userId: 'guide-001',
-    status: 'CONFIRMED',
-    booking: {
-      serviceId: 'service-001',
-      serviceName: '台北101 & 信義區深度導覽',
-      serviceImage: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop',
-      guideId: 'guide-001',
-      guideName: '張小美',
-      guideAvatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face',
-      date: '2024-02-15',
-      startTime: '09:00',
-      endTime: '13:00',
-      duration: 4,
-      participants: 2,
-      location: {
-        name: '台北101購物中心正門',
-        address: '台北市信義區市府路45號',
-        coordinates: { lat: 25.0339, lng: 121.5645 }
-      },
-      specialRequests: '希望能多介紹建築歷史'
-    },
-    customer: {
-      name: '王小明',
-      email: 'wang@example.com',
-      phone: '0912345678',
-      nationality: '台灣',
-      emergencyContact: {
-        name: '王太太',
-        phone: '0987654321',
-        relationship: '配偶'
-      }
-    },
-    pricing: {
-      basePrice: 800,
-      participants: 2,
-      subtotal: 1600,
-      serviceFee: 160,
-      tax: 88,
-      total: 1848,
-      currency: 'TWD'
-    },
-    payment: {
-      method: 'CREDIT_CARD',
-      status: 'COMPLETED',
-      transactionId: 'txn_123456789',
-      paidAt: '2024-01-20T10:30:00Z',
-      paymentDetails: {
-        cardLast4: '1234',
-        cardBrand: 'VISA'
-      }
-    },
-    createdAt: '2024-01-20T09:15:00Z',
-    updatedAt: '2024-01-20T10:30:00Z',
-    confirmedAt: '2024-01-20T10:30:00Z'
-  }
-];
+import { orderStorage } from '@/lib/mock-orders';
+import { errorHandler, OrderErrorCode, withErrorHandler } from '@/lib/error-handler';
+import { notificationService } from '@/lib/notification-service';
 
 // 獲取當前用戶函數
 function getCurrentUser() {
@@ -95,37 +35,27 @@ function hasOrderAccess(order: Order, user: any): boolean {
 }
 
 // GET - 查詢特定訂單
-export async function GET(
+export const GET = withErrorHandler(async (
   request: NextRequest,
   { params }: { params: { id: string } }
-) {
-  try {
-    console.log('Get single order API called:', params.id);
-    
-    const user = getCurrentUser();
-    if (!user) {
-      return Response.json({
-        success: false,
-        error: '未認證'
-      }, { status: 401 });
-    }
+) => {
+  console.log('Get single order API called:', params.id);
+  
+  const user = getCurrentUser();
+  if (!user) {
+    throw errorHandler.createOrderError(OrderErrorCode.INSUFFICIENT_PERMISSIONS);
+  }
 
-    const order = mockOrders.find(o => o.id === params.id);
-    
-    if (!order) {
-      return Response.json({
-        success: false,
-        error: '訂單不存在'
-      }, { status: 404 });
-    }
+  const order = orderStorage.getById(params.id);
+  
+  if (!order) {
+    throw errorHandler.createOrderError(OrderErrorCode.ORDER_NOT_FOUND);
+  }
 
-    // 檢查存取權限
-    if (!hasOrderAccess(order, user)) {
-      return Response.json({
-        success: false,
-        error: '無權限存取此訂單'
-      }, { status: 403 });
-    }
+  // 檢查存取權限
+  if (!hasOrderAccess(order, user)) {
+    throw errorHandler.createOrderError(OrderErrorCode.INSUFFICIENT_PERMISSIONS);
+  }
 
     const response: OrderResponse = {
       success: true,
@@ -133,80 +63,41 @@ export async function GET(
     };
 
     return Response.json(response);
-
-  } catch (error) {
-    console.error('Get order error:', error);
-    return Response.json({
-      success: false,
-      error: '查詢訂單失敗'
-    }, { status: 500 });
-  }
-}
+});
 
 // PUT - 更新訂單狀態
-export async function PUT(
+export const PUT = withErrorHandler(async (
   request: NextRequest,
   { params }: { params: { id: string } }
-) {
-  try {
-    console.log('Update order API called:', params.id);
-    
-    const user = getCurrentUser();
-    if (!user) {
-      return Response.json({
-        success: false,
-        error: '未認證'
-      }, { status: 401 });
-    }
+) => {
+  console.log('Update order API called:', params.id);
+  
+  const user = getCurrentUser();
+  if (!user) {
+    throw errorHandler.createOrderError(OrderErrorCode.INSUFFICIENT_PERMISSIONS);
+  }
 
-    const body = await request.json();
-    const { status, paymentStatus, notes } = body;
+  const body = await request.json();
+  const { status, paymentStatus, notes } = body;
 
-    const orderIndex = mockOrders.findIndex(o => o.id === params.id);
-    
-    if (orderIndex === -1) {
-      return Response.json({
-        success: false,
-        error: '訂單不存在'
-      }, { status: 404 });
-    }
+  const order = orderStorage.getById(params.id);
+  
+  if (!order) {
+    throw errorHandler.createOrderError(OrderErrorCode.ORDER_NOT_FOUND);
+  }
 
-    const order = mockOrders[orderIndex];
-
-    // 額外的安全檢查
-    if (!order) {
-      return Response.json({
-        success: false,
-        error: '訂單不存在'
-      }, { status: 404 });
-    }
-
-    // 檢查存取權限
-    if (!hasOrderAccess(order, user)) {
-      return Response.json({
-        success: false,
-        error: '無權限修改此訂單'
-      }, { status: 403 });
-    }
+  // 檢查存取權限
+  if (!hasOrderAccess(order, user)) {
+    throw errorHandler.createOrderError(OrderErrorCode.INSUFFICIENT_PERMISSIONS);
+  }
 
     // 驗證狀態轉換邏輯
-    const allowedTransitions: { [key in OrderStatus]?: OrderStatus[] } = {
-      'DRAFT': ['PENDING', 'CANCELLED'],
-      'PENDING': ['CONFIRMED', 'CANCELLED'],
-      'CONFIRMED': ['PAID', 'CANCELLED'],
-      'PAID': ['IN_PROGRESS', 'CANCELLED'],
-      'IN_PROGRESS': ['COMPLETED'],
-      'COMPLETED': [], // 完成後不能修改
-      'CANCELLED': ['REFUNDED'],
-      'REFUNDED': [] // 退款後不能修改
-    };
-
-    if (status && allowedTransitions[order.status] && 
-        !allowedTransitions[order.status]!.includes(status)) {
-      return Response.json({
-        success: false,
-        error: `無法從 ${order.status} 狀態轉換到 ${status}`
-      }, { status: 400 });
+    if (status) {
+      try {
+        errorHandler.validateStatusTransition(order.status, status);
+      } catch (validationError) {
+        throw validationError;
+      }
     }
 
     // 更新訂單
@@ -232,91 +123,66 @@ export async function PUT(
       })
     };
 
-    mockOrders[orderIndex] = updatedOrder;
+    const savedOrder = orderStorage.update(params.id, updatedOrder);
+    
+    if (!savedOrder) {
+      throw new Error('Failed to update order in storage');
+    }
 
-    console.log('Order updated successfully:', updatedOrder.orderNumber);
+    console.log('Order updated successfully:', savedOrder.orderNumber);
+
+    // 發送訂單確認通知（當狀態變為 CONFIRMED 時）
+    if (status === 'CONFIRMED' && order.status !== 'CONFIRMED') {
+      await notificationService.sendOrderConfirmedNotifications(savedOrder);
+    }
 
     const response: OrderResponse = {
       success: true,
-      data: updatedOrder,
+      data: savedOrder,
       message: '訂單更新成功'
     };
 
     return Response.json(response);
-
-  } catch (error) {
-    console.error('Update order error:', error);
-    return Response.json({
-      success: false,
-      error: '更新訂單失敗'
-    }, { status: 500 });
-  }
-}
+});
 
 // DELETE - 取消訂單
-export async function DELETE(
+export const DELETE = withErrorHandler(async (
   request: NextRequest,
   { params }: { params: { id: string } }
-) {
-  try {
-    console.log('Cancel order API called:', params.id);
-    
-    const user = getCurrentUser();
-    if (!user) {
-      return Response.json({
-        success: false,
-        error: '未認證'
-      }, { status: 401 });
-    }
+) => {
+  console.log('Cancel order API called:', params.id);
+  
+  const user = getCurrentUser();
+  if (!user) {
+    throw errorHandler.createOrderError(OrderErrorCode.INSUFFICIENT_PERMISSIONS);
+  }
 
-    const body = await request.json();
-    const { reason, description }: { 
-      reason: CancellationReason; 
-      description?: string;
-    } = body;
+  const body = await request.json();
+  const { reason, description }: { 
+    reason: CancellationReason; 
+    description?: string;
+  } = body;
 
-    if (!reason) {
-      return Response.json({
-        success: false,
-        error: '必須提供取消原因'
-      }, { status: 400 });
-    }
+  if (!reason) {
+    throw errorHandler.createOrderError(OrderErrorCode.INVALID_REQUEST_DATA, 'Cancellation reason is required');
+  }
 
-    const orderIndex = mockOrders.findIndex(o => o.id === params.id);
-    
-    if (orderIndex === -1) {
-      return Response.json({
-        success: false,
-        error: '訂單不存在'
-      }, { status: 404 });
-    }
+  const order = orderStorage.getById(params.id);
+  
+  if (!order) {
+    throw errorHandler.createOrderError(OrderErrorCode.ORDER_NOT_FOUND);
+  }
 
-    const order = mockOrders[orderIndex];
+  // 檢查存取權限
+  if (!hasOrderAccess(order, user)) {
+    throw errorHandler.createOrderError(OrderErrorCode.INSUFFICIENT_PERMISSIONS);
+  }
 
-    // 額外的安全檢查
-    if (!order) {
-      return Response.json({
-        success: false,
-        error: '訂單不存在'
-      }, { status: 404 });
-    }
-
-    // 檢查存取權限
-    if (!hasOrderAccess(order, user)) {
-      return Response.json({
-        success: false,
-        error: '無權限取消此訂單'
-      }, { status: 403 });
-    }
-
-    // 檢查是否可以取消
-    const cancellableStatuses: OrderStatus[] = ['DRAFT', 'PENDING', 'CONFIRMED', 'PAID'];
-    if (!cancellableStatuses.includes(order.status)) {
-      return Response.json({
-        success: false,
-        error: '此狀態的訂單無法取消'
-      }, { status: 400 });
-    }
+  // 檢查是否可以取消
+  const cancellableStatuses: OrderStatus[] = ['DRAFT', 'PENDING', 'CONFIRMED', 'PAID'];
+  if (!cancellableStatuses.includes(order.status)) {
+    throw errorHandler.createOrderError(OrderErrorCode.CANCELLATION_NOT_ALLOWED);
+  }
 
     // 計算退款政策
     const now = new Date();
@@ -355,23 +221,22 @@ export async function DELETE(
       updatedAt: new Date().toISOString()
     };
 
-    mockOrders[orderIndex] = cancelledOrder;
+    const savedOrder = orderStorage.update(params.id, cancelledOrder);
+    
+    if (!savedOrder) {
+      throw new Error('Failed to cancel order in storage');
+    }
 
-    console.log('Order cancelled successfully:', cancelledOrder.orderNumber);
+    console.log('Order cancelled successfully:', savedOrder.orderNumber);
+
+    // 發送訂單取消通知
+    await notificationService.sendOrderCancelledNotifications(savedOrder);
 
     const response: OrderResponse = {
       success: true,
-      data: cancelledOrder,
+      data: savedOrder,
       message: '訂單取消成功'
     };
 
     return Response.json(response);
-
-  } catch (error) {
-    console.error('Cancel order error:', error);
-    return Response.json({
-      success: false,
-      error: '取消訂單失敗'
-    }, { status: 500 });
-  }
-}
+});

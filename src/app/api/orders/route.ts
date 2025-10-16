@@ -3,71 +3,9 @@
 import { NextRequest } from 'next/server';
 import { cookies } from 'next/headers';
 import { Order, CreateOrderRequest, OrderListParams, OrderResponse, OrderListResponse, OrderStatus } from '@/types/order';
-
-// 模擬訂單資料（實際應該從資料庫讀取）
-let mockOrders: Order[] = [
-  {
-    id: 'order-001',
-    orderNumber: 'GD240001',
-    userId: 'guide-001',
-    status: 'CONFIRMED',
-    booking: {
-      serviceId: 'service-001',
-      serviceName: '台北101 & 信義區深度導覽',
-      serviceImage: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop',
-      guideId: 'guide-001',
-      guideName: '張小美',
-      guideAvatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face',
-      date: '2024-02-15',
-      startTime: '09:00',
-      endTime: '13:00',
-      duration: 4,
-      participants: 2,
-      location: {
-        name: '台北101購物中心正門',
-        address: '台北市信義區市府路45號',
-        coordinates: {
-          lat: 25.0339,
-          lng: 121.5645
-        }
-      },
-      specialRequests: '希望能多介紹建築歷史'
-    },
-    customer: {
-      name: '王小明',
-      email: 'wang@example.com',
-      phone: '0912345678',
-      nationality: '台灣',
-      emergencyContact: {
-        name: '王太太',
-        phone: '0987654321',
-        relationship: '配偶'
-      }
-    },
-    pricing: {
-      basePrice: 800,
-      participants: 2,
-      subtotal: 1600,
-      serviceFee: 160,
-      tax: 88,
-      total: 1848,
-      currency: 'TWD'
-    },
-    payment: {
-      method: 'CREDIT_CARD',
-      status: 'COMPLETED',
-      transactionId: 'txn_123456789',
-      paidAt: '2024-01-20T10:30:00Z',
-      paymentDetails: {
-        cardLast4: '1234',
-        cardBrand: 'VISA'
-      }
-    },
-    createdAt: '2024-01-20T09:15:00Z',
-    updatedAt: '2024-01-20T10:30:00Z',
-    confirmedAt: '2024-01-20T10:30:00Z'
-  }
-];
+import { orderStorage } from '@/lib/mock-orders';
+import { errorHandler, OrderErrorCode, withErrorHandler } from '@/lib/error-handler';
+import { notificationService } from '@/lib/notification-service';
 
 // 獲取當前用戶函數（與認證 API 保持一致）
 function getCurrentUser() {
@@ -152,17 +90,13 @@ function calculatePricing(basePrice: number, participants: number, discountCode?
 }
 
 // GET - 查詢訂單列表
-export async function GET(request: NextRequest) {
-  try {
-    console.log('Get orders API called');
-    
-    const user = getCurrentUser();
-    if (!user) {
-      return Response.json({
-        success: false,
-        error: '未認證'
-      }, { status: 401 });
-    }
+export const GET = withErrorHandler(async (request: NextRequest) => {
+  console.log('Get orders API called');
+  
+  const user = getCurrentUser();
+  if (!user) {
+    throw errorHandler.createOrderError(OrderErrorCode.INSUFFICIENT_PERMISSIONS);
+  }
 
     const { searchParams } = new URL(request.url);
     const params: OrderListParams = {
@@ -177,7 +111,7 @@ export async function GET(request: NextRequest) {
       sortOrder: (searchParams.get('sortOrder') as any) || 'desc'
     };
 
-    let filteredOrders = mockOrders;
+    let filteredOrders = orderStorage.getAll();
 
     // 根據用戶角色篩選
     if (user.role !== 'admin') {
@@ -260,64 +194,52 @@ export async function GET(request: NextRequest) {
     };
 
     return Response.json(response);
-
-  } catch (error) {
-    console.error('Get orders error:', error);
-    return Response.json({
-      success: false,
-      error: '查詢訂單失敗'
-    }, { status: 500 });
-  }
-}
+});
 
 // POST - 建立新訂單
-export async function POST(request: NextRequest) {
-  try {
-    console.log('Create order API called');
-    
-    const user = getCurrentUser();
-    if (!user) {
-      return Response.json({
-        success: false,
-        error: '未認證'
-      }, { status: 401 });
+export const POST = withErrorHandler(async (request: NextRequest) => {
+  console.log('Create order API called');
+  
+  const user = getCurrentUser();
+  if (!user) {
+    throw errorHandler.createOrderError(OrderErrorCode.INSUFFICIENT_PERMISSIONS);
+  }
+
+  const body: CreateOrderRequest = await request.json();
+  const { serviceId, date, startTime, participants, customer, specialRequests } = body;
+
+  // 驗證必填欄位
+  if (!serviceId || !date || !startTime || !participants || !customer) {
+    throw errorHandler.createOrderError(OrderErrorCode.INVALID_REQUEST_DATA, 'Missing required fields');
+  }
+
+  // 驗證參與人數
+  if (participants < 1 || participants > 20) {
+    throw errorHandler.createOrderError(OrderErrorCode.PARTICIPANT_LIMIT_EXCEEDED, 'Participants must be between 1-20');
+  }
+
+    // 查詢服務資料和導遊資訊
+    let mockService;
+    try {
+      // 這裡應該查詢實際的服務資料，暫時使用模擬資料
+      mockService = {
+        id: serviceId,
+        name: '台北101 & 信義區深度導覽',
+        image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop',
+        basePrice: 800,
+        duration: 4,
+        guideId: 'guide-001',
+        guideName: '張小美',
+        guideAvatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face',
+        location: {
+          name: '台北101購物中心正門',
+          address: '台北市信義區市府路45號',
+          coordinates: { lat: 25.0339, lng: 121.5645 }
+        }
+      };
+    } catch (error) {
+      throw errorHandler.createOrderError(OrderErrorCode.SERVICE_NOT_AVAILABLE);
     }
-
-    const body: CreateOrderRequest = await request.json();
-    const { serviceId, date, startTime, participants, customer, specialRequests } = body;
-
-    // 驗證必填欄位
-    if (!serviceId || !date || !startTime || !participants || !customer) {
-      return Response.json({
-        success: false,
-        error: '缺少必填欄位'
-      }, { status: 400 });
-    }
-
-    // 驗證參與人數
-    if (participants < 1 || participants > 20) {
-      return Response.json({
-        success: false,
-        error: '參與人數必須在 1-20 人之間'
-      }, { status: 400 });
-    }
-
-    // 模擬服務資料查詢（實際應該從資料庫查詢）
-    const mockService = {
-      id: serviceId,
-      name: '台北101 & 信義區深度導覽',
-      image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop',
-      basePrice: 800,
-      duration: 4,
-      guideId: 'guide-001',
-      guideName: '張小美',
-      guideAvatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face',
-      location: {
-        name: '台北101購物中心正門',
-        address: '台北市信義區市府路45號',
-        coordinates: { lat: 25.0339, lng: 121.5645 }
-      }
-    };
 
     // 計算結束時間
     const startDateTime = new Date(`${date}T${startTime}:00`);
@@ -359,23 +281,24 @@ export async function POST(request: NextRequest) {
     };
 
     // 儲存訂單（實際應該存入資料庫）
-    mockOrders.push(newOrder);
+    orderStorage.add(newOrder);
 
     console.log('Order created successfully:', newOrder.orderNumber);
+
+    // 發送訂單創建通知
+    await notificationService.sendOrderCreatedNotifications(newOrder);
+
+    // 如果是信用卡支付，生成支付連結
+    if (newOrder.payment.method === 'CREDIT_CARD') {
+      // 這裡應該整合 Stripe 或其他支付服務
+      newOrder.payment.paymentUrl = `/payment/${newOrder.id}`;
+    }
 
     const response: OrderResponse = {
       success: true,
       data: newOrder,
-      message: '訂單建立成功'
+      message: '訂單建立成功，請完成付款'
     };
 
     return Response.json(response);
-
-  } catch (error) {
-    console.error('Create order error:', error);
-    return Response.json({
-      success: false,
-      error: '建立訂單失敗'
-    }, { status: 500 });
-  }
-}
+});

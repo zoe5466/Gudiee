@@ -39,6 +39,8 @@ export default function BookingModal({ service, onClose }: BookingModalProps) {
   const [paymentMethod, setPaymentMethod] = useState('credit_card');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [step, setStep] = useState(1); // 1: 日期選擇, 2: 詳細資料, 3: 付款, 4: 確認
+  const [error, setError] = useState('');
+  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('zh-TW', {
@@ -63,31 +65,35 @@ export default function BookingModal({ service, onClose }: BookingModalProps) {
 
   const handleSubmit = async () => {
     if (!user) {
-      alert('請先登入才能預訂服務');
+      setError('請先登入才能預訂服務');
       return;
     }
 
     if (!selectedDate || !contactInfo.name || !contactInfo.email || !contactInfo.phone) {
-      alert('請填寫所有必要資訊');
+      setError('請填寫所有必要資訊');
       return;
     }
 
+    setError('');
     setIsSubmitting(true);
     
     try {
-      const response = await fetch('/api/bookings', {
+      const response = await fetch('/api/orders', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           serviceId: service.id,
-          bookingDate: selectedDate,
-          numberOfGuests,
-          specialRequests,
-          contactInfo,
-          paymentMethod,
-          totalAmount: finalTotal
+          date: selectedDate,
+          startTime: '09:00',
+          participants: numberOfGuests,
+          customer: {
+            name: contactInfo.name,
+            email: contactInfo.email,
+            phone: contactInfo.phone
+          },
+          specialRequests: specialRequests || undefined
         }),
       });
 
@@ -95,15 +101,56 @@ export default function BookingModal({ service, onClose }: BookingModalProps) {
         throw new Error('預訂失敗');
       }
 
-      const booking = await response.json();
-      alert('預訂成功！我們將盡快與您聯繫確認詳細資訊。');
-      onClose();
+      const result = await response.json();
+      if (result.success) {
+        const order = result.data;
+        
+        // 如果是信用卡支付，進行支付處理
+        if (paymentMethod === 'credit_card') {
+          setIsProcessingPayment(true);
+          
+          try {
+            const paymentResponse = await fetch(`/api/orders/${order.id}/payment`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                paymentMethod: 'CREDIT_CARD',
+                paymentToken: 'mock_token_' + Date.now() // 模擬支付令牌
+              }),
+            });
+
+            const paymentResult = await paymentResponse.json();
+            
+            if (paymentResult.success) {
+              alert(`預訂和支付成功！\n訂單編號：${order.orderNumber}\n交易編號：${paymentResult.data.payment.transactionId}\n\n我們將盡快與您聯繫確認詳細資訊。`);
+              onClose();
+            } else {
+              setError(`支付失敗：${paymentResult.error || '請稍後重試'}`);
+              setIsProcessingPayment(false);
+              // 不關閉對話框，讓用戶重試
+            }
+          } catch (paymentError) {
+            console.error('Payment error:', paymentError);
+            setError('支付處理失敗，請檢查網路連接後重試');
+            setIsProcessingPayment(false);
+          }
+        } else {
+          alert(`預訂成功！\n訂單編號：${order.orderNumber}\n\n我們將盡快與您聯繫確認詳細資訊。`);
+          onClose();
+        }
+      } else {
+        throw new Error(result.error || '預訂失敗');
+      }
       
     } catch (error) {
       console.error('Booking error:', error);
-      alert('預訂失敗，請稍後再試');
+      const errorMessage = error instanceof Error ? error.message : '預訂失敗，請稍後再試';
+      setError(errorMessage);
     } finally {
       setIsSubmitting(false);
+      setIsProcessingPayment(false);
     }
   };
 
@@ -464,6 +511,26 @@ export default function BookingModal({ service, onClose }: BookingModalProps) {
 
           {/* Content */}
           <div className="p-6">
+            {/* 錯誤提示 */}
+            {error && (
+              <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+                <div className="flex items-start space-x-2">
+                  <AlertCircle className="w-4 h-4 text-red-600 mt-0.5 flex-shrink-0" />
+                  <p className="text-sm text-red-800">{error}</p>
+                </div>
+              </div>
+            )}
+
+            {/* 支付處理狀態 */}
+            {isProcessingPayment && (
+              <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                <div className="flex items-center space-x-2">
+                  <div className="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+                  <p className="text-sm text-blue-800">正在處理支付，請稍候...</p>
+                </div>
+              </div>
+            )}
+
             {renderStepContent()}
           </div>
 
@@ -479,15 +546,23 @@ export default function BookingModal({ service, onClose }: BookingModalProps) {
             <button
               onClick={() => {
                 if (step < 4) {
+                  setError(''); // 清除錯誤
                   setStep(step + 1);
                 } else {
                   handleSubmit();
                 }
               }}
-              disabled={!canProceedToNextStep() || isSubmitting}
+              disabled={!canProceedToNextStep() || isSubmitting || isProcessingPayment}
               className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
-              {isSubmitting ? '處理中...' : step === 4 ? '確認預訂' : '下一步'}
+              {isProcessingPayment 
+                ? '處理支付中...' 
+                : isSubmitting 
+                  ? '處理中...' 
+                  : step === 4 
+                    ? '確認預訂' 
+                    : '下一步'
+              }
             </button>
           </div>
         </div>
