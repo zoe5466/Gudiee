@@ -7,7 +7,7 @@ export async function GET(request: NextRequest) {
     console.log('Services API called');
     
     const { searchParams } = new URL(request.url);
-    const query = searchParams.get('q') || searchParams.get('query');
+    const query = searchParams.get('q') || searchParams.get('query') || undefined;
     const category = searchParams.get('category');
     const location = searchParams.get('location');
     const priceMin = searchParams.get('priceMin') ? parseFloat(searchParams.get('priceMin')!) : undefined;
