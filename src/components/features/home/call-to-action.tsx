@@ -1,8 +1,10 @@
 'use client'
 
 import { ArrowRight, MapPin, Users, Calendar, Star } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 export function CallToAction() {
+  const router = useRouter();
   const benefits = [
     {
       icon: MapPin,
@@ -195,6 +197,7 @@ export function CallToAction() {
             className="sm:flex-row"
           >
             <button
+              onClick={() => router.push('/search')}
               className="hover:scale-105 hover:shadow-2xl"
               style={{
                 backgroundColor: 'white',
@@ -217,6 +220,7 @@ export function CallToAction() {
             </button>
             
             <button
+              onClick={() => router.push('/register')}
               className="hover:bg-white hover:text-sky-600 hover:scale-105"
               style={{
                 border: '2px solid white',

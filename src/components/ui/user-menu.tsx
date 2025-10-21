@@ -53,9 +53,9 @@ export function UserMenu() {
     {
       icon: <BookOpen className="w-4 h-4" />,
       label: '我的預訂',
-      href: '/my-bookings',
+      href: '/bookings',
       onClick: () => {
-        router.push('/my-bookings');
+        router.push('/bookings');
         setIsOpen(false);
       }
     },

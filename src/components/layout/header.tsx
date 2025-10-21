@@ -94,17 +94,18 @@ export function Header() {
             <div className="flex items-center space-x-8 py-4 overflow-x-auto">
               {/* 預定義的服務分類列表 */}
               {[
-                { name: '文化', icon: '🏛️' },
-                { name: '美食', icon: '🍜' },
-                { name: '自然', icon: '🏔️' },
-                { name: '城市', icon: '🏙️' },
-                { name: '夜生活', icon: '🌃' },
-                { name: '購物', icon: '🛍️' },
-                { name: '歷史', icon: '🏯' },
-                { name: '海岸', icon: '🏖️' },
+                { name: '文化', icon: '🏛️', category: 'culture' },
+                { name: '美食', icon: '🍜', category: 'food' },
+                { name: '自然', icon: '🏔️', category: 'nature' },
+                { name: '城市', icon: '🏙️', category: 'city' },
+                { name: '夜生活', icon: '🌃', category: 'nightlife' },
+                { name: '購物', icon: '🛍️', category: 'shopping' },
+                { name: '歷史', icon: '🏯', category: 'history' },
+                { name: '海岸', icon: '🏖️', category: 'beach' },
               ].map((category, index) => (
                 <button
                   key={index}
+                  onClick={() => router.push(`/search?category=${category.category}`)}
                   className={`flex flex-col items-center min-w-max px-4 py-3 text-xs font-medium transition-colors hover:text-gray-900 ${
                     index === 0 
                       ? 'text-gray-900 border-b-2 border-gray-900' // 第一個分類為預設選中
