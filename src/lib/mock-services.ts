@@ -409,7 +409,7 @@ class ServiceStorage {
   }
 
   // 更新服務
-  update(id: string, updates: Partial<MockService>): MockService | null {
+  update(id: string, updates: Partial<Omit<MockService, 'id'>>): MockService | null {
     const index = this.services.findIndex(service => service.id === id);
     if (index === -1) return null;
 
