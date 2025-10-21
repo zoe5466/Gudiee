@@ -413,11 +413,33 @@ class ServiceStorage {
     const index = this.services.findIndex(service => service.id === id);
     if (index === -1) return null;
 
-    this.services[index] = {
-      ...this.services[index],
-      ...updates,
+    const currentService = this.services[index]!; // Non-null assertion since we just checked index exists
+    const updatedService: MockService = {
+      id, // Explicitly preserve the id to maintain type safety
+      title: updates.title ?? currentService.title,
+      description: updates.description ?? currentService.description,
+      shortDescription: updates.shortDescription ?? currentService.shortDescription,
+      price: updates.price ?? currentService.price,
+      location: updates.location ?? currentService.location,
+      duration: updates.duration ?? currentService.duration,
+      maxGuests: updates.maxGuests ?? currentService.maxGuests,
+      minGuests: updates.minGuests ?? currentService.minGuests,
+      images: updates.images ?? currentService.images,
+      highlights: updates.highlights ?? currentService.highlights,
+      included: updates.included ?? currentService.included,
+      excluded: updates.excluded ?? currentService.excluded,
+      cancellationPolicy: updates.cancellationPolicy ?? currentService.cancellationPolicy,
+      category: updates.category ?? currentService.category,
+      status: updates.status ?? currentService.status,
+      stats: updates.stats ?? currentService.stats,
+      availability: updates.availability ?? currentService.availability,
+      guide: updates.guide ?? currentService.guide,
+      reviews: updates.reviews ?? currentService.reviews,
+      createdAt: updates.createdAt ?? currentService.createdAt,
       updatedAt: new Date().toISOString()
     };
+
+    this.services[index] = updatedService;
     return this.services[index];
   }
 
