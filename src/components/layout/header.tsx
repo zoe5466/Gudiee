@@ -3,7 +3,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { Search, Globe, Menu, User } from 'lucide-react'; // 圖標組件
 import { LanguageToggle } from '@/components/i18n/language-switcher'; // 語言切換組件
@@ -22,8 +22,12 @@ import SearchBar from '@/components/search/search-bar'; // 搜尋欄組件
  */
 export function Header() {
   const router = useRouter();
+  const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false); // 頁面是否已滾動
   const [isMounted, setIsMounted] = useState(false); // 組件是否已掛載（防止 SSR 問題）
+
+  // 檢查是否為搜尋頁面
+  const isSearchPage = pathname === '/search';
 
   // 監聽頁面滾動事件，用於調整頭部樣式
   useEffect(() => {
@@ -58,10 +62,12 @@ export function Header() {
               </div>
             </div>
 
-            {/* 搜尋欄（大螢幕顯示） */}
-            <div className="hidden lg:block">
-              <SearchBar className="max-w-md" showFilters={false} />
-            </div>
+            {/* 搜尋欄（僅在搜尋頁面顯示） */}
+            {isSearchPage && (
+              <div className="hidden lg:block">
+                <SearchBar className="max-w-md" showFilters={false} />
+              </div>
+            )}
 
             {/* 右側功能區域 */}
             <div className="flex items-center space-x-4">
@@ -80,10 +86,12 @@ export function Header() {
               {/* 用戶選單 */}
               <UserMenu />
 
-              {/* 移動設備搜尋按鈕 */}
-              <button className="lg:hidden p-2 text-gray-600">
-                <Search className="w-5 h-5" />
-              </button>
+              {/* 移動設備搜尋按鈕（僅在搜尋頁面顯示） */}
+              {isSearchPage && (
+                <button className="lg:hidden p-2 text-gray-600">
+                  <Search className="w-5 h-5" />
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -120,9 +128,9 @@ export function Header() {
           </div>
         </div>
 
-        {/* 移動設備搜尋欄（滾動時顯示） */}
+        {/* 移動設備搜尋欄（僅在搜尋頁面且滾動時顯示） */}
         {/* 使用 isMounted 防止服務端渲染問題 */}
-        {isMounted && isScrolled && (
+        {isMounted && isScrolled && isSearchPage && (
           <div className="lg:hidden px-6 py-3 border-t border-gray-200">
             <SearchBar className="w-full" showFilters={false} />
           </div>
