@@ -87,9 +87,9 @@ export async function POST(request: NextRequest) {
       minGuests: parseInt(data.minGuests) || 1,
       category: data.category ? { id: data.category, name: data.category } : null,
       status: 'ACTIVE' as const,
-      highlights: Array.isArray(data.highlights) ? data.highlights.filter(h => h.trim()) : [],
-      included: Array.isArray(data.included) ? data.included.filter(i => i.trim()) : [],
-      excluded: Array.isArray(data.excluded) ? data.excluded.filter(e => e.trim()) : [],
+      highlights: Array.isArray(data.highlights) ? data.highlights.filter((h: string) => h.trim()) : [],
+      included: Array.isArray(data.included) ? data.included.filter((i: string) => i.trim()) : [],
+      excluded: Array.isArray(data.excluded) ? data.excluded.filter((e: string) => e.trim()) : [],
       images: data.images || [
         'https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=800&h=600&fit=crop',
         'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop'
