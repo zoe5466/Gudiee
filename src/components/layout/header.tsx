@@ -96,37 +96,39 @@ export function Header() {
           </div>
         </div>
 
-        {/* 服務分類導航（大螢幕顯示） */}
-        <div className="hidden lg:block border-t border-gray-200">
-          <div className="px-6 lg:px-10 xl:px-20">
-            <div className="flex items-center space-x-8 py-4 overflow-x-auto">
-              {/* 預定義的服務分類列表 */}
-              {[
-                { name: '文化', icon: '🏛️', category: 'culture' },
-                { name: '美食', icon: '🍜', category: 'food' },
-                { name: '自然', icon: '🏔️', category: 'nature' },
-                { name: '城市', icon: '🏙️', category: 'city' },
-                { name: '夜生活', icon: '🌃', category: 'nightlife' },
-                { name: '購物', icon: '🛍️', category: 'shopping' },
-                { name: '歷史', icon: '🏯', category: 'history' },
-                { name: '海岸', icon: '🏖️', category: 'beach' },
-              ].map((category, index) => (
-                <button
-                  key={index}
-                  onClick={() => router.push(`/search?category=${category.category}`)}
-                  className={`flex flex-col items-center min-w-max px-4 py-3 text-xs font-medium transition-colors hover:text-gray-900 ${
-                    index === 0 
-                      ? 'text-gray-900 border-b-2 border-gray-900' // 第一個分類為預設選中
-                      : 'text-gray-500 hover:border-b-2 hover:border-gray-300'
-                  }`}
-                >
-                  <span className="text-2xl mb-2">{category.icon}</span>
-                  <span>{category.name}</span>
-                </button>
-              ))}
+        {/* 服務分類導航（僅在搜尋頁面顯示） */}
+        {isSearchPage && (
+          <div className="hidden lg:block border-t border-gray-200">
+            <div className="px-6 lg:px-10 xl:px-20">
+              <div className="flex items-center space-x-8 py-4 overflow-x-auto">
+                {/* 預定義的服務分類列表 */}
+                {[
+                  { name: '文化', icon: '🏛️', category: 'culture' },
+                  { name: '美食', icon: '🍜', category: 'food' },
+                  { name: '自然', icon: '🏔️', category: 'nature' },
+                  { name: '城市', icon: '🏙️', category: 'city' },
+                  { name: '夜生活', icon: '🌃', category: 'nightlife' },
+                  { name: '購物', icon: '🛍️', category: 'shopping' },
+                  { name: '歷史', icon: '🏯', category: 'history' },
+                  { name: '海岸', icon: '🏖️', category: 'beach' },
+                ].map((category, index) => (
+                  <button
+                    key={index}
+                    onClick={() => router.push(`/search?category=${category.category}`)}
+                    className={`flex flex-col items-center min-w-max px-4 py-3 text-xs font-medium transition-colors hover:text-gray-900 ${
+                      index === 0 
+                        ? 'text-gray-900 border-b-2 border-gray-900' // 第一個分類為預設選中
+                        : 'text-gray-500 hover:border-b-2 hover:border-gray-300'
+                    }`}
+                  >
+                    <span className="text-2xl mb-2">{category.icon}</span>
+                    <span>{category.name}</span>
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
         {/* 移動設備搜尋欄（僅在搜尋頁面且滾動時顯示） */}
         {/* 使用 isMounted 防止服務端渲染問題 */}
