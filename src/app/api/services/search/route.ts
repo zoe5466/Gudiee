@@ -66,8 +66,8 @@ export async function GET(request: NextRequest) {
     // 計算篩選器統計資料
     const allActiveServices = serviceStorage.getAll();
     const prices = allActiveServices.map(s => s.price);
-    const locations = [...new Set(allActiveServices.map(s => s.location))];
-    const categories = [...new Set(allActiveServices.map(s => s.category?.name).filter(Boolean))];
+    const locations = Array.from(new Set(allActiveServices.map(s => s.location)));
+    const categories = Array.from(new Set(allActiveServices.map(s => s.category?.name).filter(Boolean)));
 
     return Response.json({
       success: true,
