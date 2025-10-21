@@ -8,8 +8,8 @@ export async function GET(request: NextRequest) {
     
     const { searchParams } = new URL(request.url);
     const query = searchParams.get('q') || searchParams.get('query') || undefined;
-    const category = searchParams.get('category');
-    const location = searchParams.get('location');
+    const category = searchParams.get('category') || undefined;
+    const location = searchParams.get('location') || undefined;
     const priceMin = searchParams.get('priceMin') ? parseFloat(searchParams.get('priceMin')!) : undefined;
     const priceMax = searchParams.get('priceMax') ? parseFloat(searchParams.get('priceMax')!) : undefined;
     const minRating = searchParams.get('rating') ? parseFloat(searchParams.get('rating')!) : undefined;
