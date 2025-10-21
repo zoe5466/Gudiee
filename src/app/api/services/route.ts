@@ -76,16 +76,15 @@ export async function POST(request: NextRequest) {
 
     // 創建新服務數據
     const newService = {
-      id: `service-${Date.now()}`,
-      title: data.title,
-      description: data.description,
-      shortDescription: data.shortDescription || data.title,
+      title: data.title as string,
+      description: data.description as string,
+      shortDescription: (data.shortDescription || data.title) as string,
       price: parseFloat(data.price),
-      location: data.location,
+      location: data.location as string,
       duration: parseInt(data.duration) || 4,
       maxGuests: parseInt(data.maxGuests) || 6,
       minGuests: parseInt(data.minGuests) || 1,
-      category: data.category ? { id: data.category, name: data.category } : null,
+      category: data.category ? { id: data.category as string, name: data.category as string } : undefined,
       status: 'ACTIVE' as const,
       highlights: Array.isArray(data.highlights) ? data.highlights.filter((h: string) => h.trim()) : [],
       included: Array.isArray(data.included) ? data.included.filter((i: string) => i.trim()) : [],
@@ -100,7 +99,7 @@ export async function POST(request: NextRequest) {
         name: '專業導遊',
         avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face',
         bio: '專業認證導遊，擁有豐富的在地經驗',
-        location: data.location,
+        location: data.location as string,
         languages: ['中文', '英文'],
         specialties: [data.category || '觀光導覽'],
         experienceYears: 5
@@ -115,9 +114,7 @@ export async function POST(request: NextRequest) {
         availableDates: [],
         bookedDates: []
       },
-      reviews: [],
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
+      reviews: []
     };
 
     // 使用 serviceStorage 添加服務
