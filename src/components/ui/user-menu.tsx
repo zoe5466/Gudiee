@@ -83,14 +83,22 @@ export function UserMenu() {
     return (
       <div className="flex items-center space-x-2">
         <button
-          onClick={() => router.push('/auth/login')}
-          className="text-sm font-medium text-gray-900 hover:bg-gray-100 px-3 py-2 rounded-full transition-colors"
+          onClick={() => {
+            console.log('Login button clicked'); // 調試日誌
+            router.push('/auth/login');
+          }}
+          className="text-sm font-medium text-gray-900 hover:bg-gray-100 px-3 py-2 rounded-full transition-colors cursor-pointer"
+          style={{ pointerEvents: 'auto', zIndex: 10 }}
         >
           登入
         </button>
         <button
-          onClick={() => router.push('/auth/register')}
-          className="text-sm font-medium bg-[#FF5A5F] text-white hover:bg-[#E1464A] px-4 py-2 rounded-full transition-colors"
+          onClick={() => {
+            console.log('Register button clicked'); // 調試日誌
+            router.push('/auth/register');
+          }}
+          className="text-sm font-medium bg-[#FF5A5F] text-white hover:bg-[#E1464A] px-4 py-2 rounded-full transition-colors cursor-pointer"
+          style={{ pointerEvents: 'auto', zIndex: 10 }}
         >
           註冊
         </button>
