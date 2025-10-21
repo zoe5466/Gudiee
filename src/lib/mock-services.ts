@@ -56,12 +56,15 @@ export interface MockService {
 
 // 生成可用日期
 function generateAvailableDates(): string[] {
-  const dates = [];
+  const dates: string[] = [];
   const today = new Date();
   for (let i = 1; i <= 30; i++) {
     const date = new Date(today);
     date.setDate(today.getDate() + i);
-    dates.push(date.toISOString().split('T')[0]);
+    const dateString = date.toISOString().split('T')[0];
+    if (dateString) {
+      dates.push(dateString);
+    }
   }
   return dates;
 }
