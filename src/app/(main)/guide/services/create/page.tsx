@@ -28,26 +28,26 @@ export default function CreateServicePage() {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  const handleArrayChange = (field: string, index: number, value: string) => {
+  const handleArrayChange = (field: 'highlights' | 'included' | 'excluded', index: number, value: string) => {
     setFormData(prev => ({
       ...prev,
-      [field]: prev[field as keyof typeof prev].map((item: string, i: number) => 
+      [field]: prev[field].map((item: string, i: number) => 
         i === index ? value : item
       )
     }));
   };
 
-  const addArrayItem = (field: string) => {
+  const addArrayItem = (field: 'highlights' | 'included' | 'excluded') => {
     setFormData(prev => ({
       ...prev,
-      [field]: [...prev[field as keyof typeof prev], '']
+      [field]: [...prev[field], '']
     }));
   };
 
-  const removeArrayItem = (field: string, index: number) => {
+  const removeArrayItem = (field: 'highlights' | 'included' | 'excluded', index: number) => {
     setFormData(prev => ({
       ...prev,
-      [field]: prev[field as keyof typeof prev].filter((_: string, i: number) => i !== index)
+      [field]: prev[field].filter((_: string, i: number) => i !== index)
     }));
   };
 
