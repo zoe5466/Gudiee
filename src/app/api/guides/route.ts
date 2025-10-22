@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import { prisma } from '@/lib/prisma';
+import { guideStorage } from '@/lib/mock-guides';
 import { successResponse, errorResponse } from '@/lib/api-response';
 
 // GET /api/guides - 取得嚮導列表
@@ -13,218 +13,112 @@ export async function GET(request: NextRequest) {
     const language = searchParams.get('language') || '';
     const specialty = searchParams.get('specialty') || '';
     const minRating = searchParams.get('minRating');
-    const minExperience = searchParams.get('minExperience');
     const sortBy = searchParams.get('sortBy') || 'rating';
-    const sortOrder = searchParams.get('sortOrder') || 'desc';
     const page = parseInt(searchParams.get('page') || '1');
     const limit = parseInt(searchParams.get('limit') || '20');
+
+    // 建立篩選條件
+    const filters: {
+      query?: string;
+      location?: string;
+      languages?: string[];
+      specialties?: string[];
+      minRating?: number;
+      sortBy?: 'newest' | 'rating' | 'experience' | 'price';
+    } = {};
+
+    if (query) filters.query = query;
+    if (location) filters.location = location;
+    if (language) filters.languages = [language];
+    if (specialty) filters.specialties = [specialty];
+    if (minRating) filters.minRating = parseFloat(minRating);
+    if (sortBy) filters.sortBy = sortBy as any;
+
+    // 從模擬資料中搜尋導遊
+    const allGuides = guideStorage.search(filters);
+    
+    // 轉換為 GuidesList 組件期待的格式
+    const transformedGuides = allGuides.map(guide => ({
+      id: guide.id,
+      name: guide.name,
+      avatar: guide.avatar,
+      userProfile: {
+        bio: guide.bio,
+        location: guide.location,
+        languages: guide.languages,
+        specialties: guide.specialties,
+        experienceYears: guide.experienceYears
+      },
+      stats: guide.stats,
+      guidedServices: guide.services.map(service => ({
+        id: service.id,
+        title: service.title,
+        price: service.price,
+        location: service.location,
+        images: service.images
+      }))
+    }));
+    
+    // 分頁處理
     const skip = (page - 1) * limit;
+    const paginatedGuides = transformedGuides.slice(skip, skip + limit);
+    const total = transformedGuides.length;
 
-    // 構建查詢條件
-    const where: any = {
-      role: 'GUIDE',
-      isEmailVerified: true,
-      guidedServices: {
-        some: {
-          status: 'ACTIVE'
-        }
-      }
-    };
+    // 生成篩選統計（基於所有導遊數據）
+    const allGuidesData = guideStorage.getAll();
+    
+    // 地點統計
+    const locationStats = allGuidesData.reduce((acc, guide) => {
+      const location = guide.location;
+      acc[location] = (acc[location] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>);
+    
+    const locationStatsArray = Object.entries(locationStats)
+      .map(([location, count]) => ({ location, _count: { location: count } }))
+      .sort((a, b) => b._count.location - a._count.location)
+      .slice(0, 10);
 
-    // 文字搜尋 - 搜尋姓名或個人檔案
-    if (query) {
-      where.OR = [
-        { name: { contains: query, mode: 'insensitive' } },
-        { userProfile: { bio: { contains: query, mode: 'insensitive' } } }
-      ];
-    }
+    // 語言統計
+    const languageStats = allGuidesData.reduce((acc, guide) => {
+      guide.languages.forEach(lang => {
+        acc[lang] = (acc[lang] || 0) + 1;
+      });
+      return acc;
+    }, {} as Record<string, number>);
+    
+    const languageStatsArray = Object.entries(languageStats)
+      .map(([language, count]) => ({ language, count }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 10);
 
-    // 地點篩選
-    if (location) {
-      where.userProfile = {
-        ...where.userProfile,
-        location: { contains: location, mode: 'insensitive' }
-      };
-    }
-
-    // 語言篩選
-    if (language) {
-      where.userProfile = {
-        ...where.userProfile,
-        languages: { has: language }
-      };
-    }
-
-    // 專業領域篩選
-    if (specialty) {
-      where.userProfile = {
-        ...where.userProfile,
-        specialties: { has: specialty }
-      };
-    }
-
-    // 最低經驗年數
-    if (minExperience) {
-      where.userProfile = {
-        ...where.userProfile,
-        experienceYears: { gte: parseInt(minExperience) }
-      };
-    }
-
-    // 排序設定
-    let orderBy: any = {};
-    switch (sortBy) {
-      case 'name':
-        orderBy = { name: sortOrder };
-        break;
-      case 'experience':
-        orderBy = { userProfile: { experienceYears: sortOrder } };
-        break;
-      case 'services':
-        // 按服務數量排序，需要在後續處理
-        orderBy = { createdAt: 'desc' };
-        break;
-      case 'rating':
-      default:
-        // 按評分排序，需要在後續處理
-        orderBy = { createdAt: 'desc' };
-        break;
-    }
-
-    // 查詢嚮導列表
-    const [guides, total] = await Promise.all([
-      prisma.user.findMany({
-        where,
-        include: {
-          userProfile: true,
-          guidedServices: {
-            where: { status: 'ACTIVE' },
-            select: {
-              id: true,
-              title: true,
-              price: true,
-              location: true,
-              images: true,
-              _count: {
-                select: {
-                  bookings: true,
-                  reviews: true
-                }
-              }
-            },
-            take: 3,
-            orderBy: { createdAt: 'desc' }
-          },
-          reviewsAsGuide: {
-            select: {
-              rating: true
-            }
-          },
-          _count: {
-            select: {
-              guidedServices: true,
-              reviewsAsGuide: true,
-              bookingsAsGuide: true
-            }
-          }
-        },
-        orderBy,
-        skip,
-        take: limit
-      }),
-      prisma.user.count({ where })
-    ]);
-
-    // 計算每個嚮導的統計資料
-    const guidesWithStats = guides.map(guide => {
-      const ratings = guide.reviewsAsGuide.map(r => r.rating);
-      const averageRating = ratings.length > 0 
-        ? ratings.reduce((sum, rating) => sum + rating, 0) / ratings.length 
-        : 0;
-
-      // 計算總預訂數
-      const totalBookings = guide.guidedServices.reduce((sum, service) => 
-        sum + (service._count?.bookings || 0), 0
-      );
-
-      // 計算總評論數
-      const totalReviews = guide.guidedServices.reduce((sum, service) => 
-        sum + (service._count?.reviews || 0), 0
-      );
-
-      // 移除 reviewsAsGuide 避免返回過多資料
-      const { reviewsAsGuide, ...guideData } = guide;
-
-      return {
-        ...guideData,
-        stats: {
-          averageRating: Number(averageRating.toFixed(1)),
-          totalReviews,
-          totalBookings,
-          activeServices: guide._count.guidedServices,
-          responseRate: 95 + Math.floor(Math.random() * 5) // 模擬回覆率
-        }
-      };
-    });
-
-    // 如果按評分或服務數排序，重新排序
-    if (sortBy === 'rating') {
-      guidesWithStats.sort((a, b) => 
-        sortOrder === 'desc' 
-          ? b.stats.averageRating - a.stats.averageRating
-          : a.stats.averageRating - b.stats.averageRating
-      );
-    } else if (sortBy === 'services') {
-      guidesWithStats.sort((a, b) => 
-        sortOrder === 'desc' 
-          ? b.stats.activeServices - a.stats.activeServices
-          : a.stats.activeServices - b.stats.activeServices
-      );
-    }
-
-    // 應用最低評分篩選
-    let filteredGuides = guidesWithStats;
-    if (minRating) {
-      filteredGuides = guidesWithStats.filter(guide => 
-        guide.stats.averageRating >= parseFloat(minRating)
-      );
-    }
-
-    // 取得篩選統計
-    const [locationStats, languageStats, specialtyStats] = await Promise.all([
-      // 地點統計
-      prisma.userProfile.groupBy({
-        by: ['location'],
-        where: {
-          user: { role: 'GUIDE', isEmailVerified: true },
-          location: { not: null }
-        },
-        _count: { location: true },
-        orderBy: { _count: { location: 'desc' } },
-        take: 10
-      }),
-      
-      // 語言統計 (這需要自訂查詢，暫時跳過)
-      Promise.resolve([]),
-      
-      // 專業領域統計 (這需要自訂查詢，暫時跳過)
-      Promise.resolve([])
-    ]);
+    // 專業領域統計
+    const specialtyStats = allGuidesData.reduce((acc, guide) => {
+      guide.specialties.forEach(specialty => {
+        acc[specialty] = (acc[specialty] || 0) + 1;
+      });
+      return acc;
+    }, {} as Record<string, number>);
+    
+    const specialtyStatsArray = Object.entries(specialtyStats)
+      .map(([specialty, count]) => ({ specialty, count }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 10);
 
     return successResponse({
-      guides: filteredGuides,
+      guides: paginatedGuides,
       pagination: {
         page,
         limit,
-        total: filteredGuides.length,
-        pages: Math.ceil(filteredGuides.length / limit),
-        hasNext: page < Math.ceil(filteredGuides.length / limit),
+        total,
+        pages: Math.ceil(total / limit),
+        hasNext: page < Math.ceil(total / limit),
         hasPrev: page > 1
       },
       filters: {
-        locations: locationStats,
-        languages: languageStats,
-        specialties: specialtyStats
+        locations: locationStatsArray,
+        languages: languageStatsArray.map(item => item.language),
+        specialties: specialtyStatsArray.map(item => item.specialty)
       },
       searchParams: {
         query,
@@ -232,9 +126,7 @@ export async function GET(request: NextRequest) {
         language,
         specialty,
         minRating,
-        minExperience,
-        sortBy,
-        sortOrder
+        sortBy
       }
     });
 
