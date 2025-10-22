@@ -1,14 +1,18 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { Menu, X, User, MessageCircle, CheckSquare, Heart } from 'lucide-react';
 import { useAuth } from '@/store/auth';
 
 export function HomeSidebar() {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
+  const pathname = usePathname();
   const { isAuthenticated } = useAuth();
+  
+  // 檢查是否為首頁
+  const isHomePage = pathname === '/';
 
   const menuItems = [
     {
@@ -51,7 +55,9 @@ export function HomeSidebar() {
       {/* 觸發按鈕 */}
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed top-4 left-4 z-40 p-3 bg-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 border border-gray-200 hover:bg-gray-50"
+        className={`fixed z-40 p-3 bg-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 border border-gray-200 hover:bg-gray-50 ${
+          isHomePage ? 'top-1/2 left-4 transform -translate-y-1/2' : 'top-24 left-4'
+        }`}
         aria-label="打開選單"
       >
         <Menu className="w-5 h-5 text-gray-700" />

@@ -5,6 +5,7 @@ import { useUserMode } from '@/store/user-mode';
 import { GuideSidebar } from './guide-sidebar';
 import { TravelerBottomNav } from './traveler-bottom-nav';
 import { Header } from './header';
+import { HomeSidebar } from './home-sidebar';
 import { CustomerSupportChat } from '@/components/chat/customer-support-chat';
 import { NotificationManager } from '@/components/notifications/notification-manager';
 import { cn } from '@/lib/utils';
@@ -29,6 +30,7 @@ export function DualLayout({ children }: DualLayoutProps) {
             {children}
           </div>
         </main>
+        <HomeSidebar />
         <CustomerSupportChat />
         <NotificationManager />
       </div>
@@ -37,7 +39,12 @@ export function DualLayout({ children }: DualLayoutProps) {
 
   // 首頁完全繞過系統佈局
   if (isHomePage) {
-    return <>{children}</>;
+    return (
+      <>
+        {children}
+        <HomeSidebar />
+      </>
+    );
   }
 
   // 其他頁面使用標準布局
@@ -51,6 +58,7 @@ export function DualLayout({ children }: DualLayoutProps) {
         {children}
       </main>
       <TravelerBottomNav />
+      <HomeSidebar />
       <CustomerSupportChat />
       <NotificationManager />
     </div>
