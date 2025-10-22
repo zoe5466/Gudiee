@@ -377,7 +377,7 @@ export default function ProfileSettingsPage() {
           </div>
 
           {/* 專業資訊 */}
-          {user?.role === 'GUIDE' && (
+          {user?.role === 'guide' && (
             <div className="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
               <h2 className="text-xl font-semibold text-gray-900 mb-6">專業資訊</h2>
               

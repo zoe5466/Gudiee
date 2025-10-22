@@ -186,7 +186,7 @@ export default function SettingsPage() {
                     </span>
                   )}
                   <span className="ml-2 text-xs text-gray-500">
-                    {user?.role === 'GUIDE' ? '導遊' : '用戶'}
+                    {user?.role === 'guide' ? '導遊' : user?.role === 'admin' ? '管理員' : '用戶'}
                   </span>
                 </div>
               </div>
