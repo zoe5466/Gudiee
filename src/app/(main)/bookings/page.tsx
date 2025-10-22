@@ -1,23 +1,8 @@
-// 重定向到統一的我的訂單頁面
 'use client';
 
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { redirect } from 'next/navigation';
 
-export default function BookingsRedirectPage() {
-  const router = useRouter();
-
-  useEffect(() => {
-    // 重定向到統一的我的訂單頁面
-    router.replace('/my-bookings');
-  }, [router]);
-
-  return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="text-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-        <p className="text-gray-600">正在跳轉...</p>
-      </div>
-    </div>
-  );
+export default function BookingsPage() {
+  // 直接重定向到 my-bookings
+  redirect('/my-bookings');
 }

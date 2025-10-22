@@ -313,7 +313,45 @@ const mockServices: MockService[] = [
 
 // 服務存儲類
 class ServiceStorage {
-  private services: MockService[] = [...mockServices];
+  private services: MockService[] = [];
+  private storageKey = 'guidee_mock_services';
+
+  constructor() {
+    this.loadServices();
+  }
+
+  // 從localStorage載入服務
+  private loadServices() {
+    if (typeof window !== 'undefined') {
+      try {
+        const stored = localStorage.getItem(this.storageKey);
+        if (stored) {
+          this.services = JSON.parse(stored);
+        } else {
+          // 首次載入使用預設數據
+          this.services = [...mockServices];
+          this.saveServices();
+        }
+      } catch (error) {
+        console.error('載入服務數據失敗:', error);
+        this.services = [...mockServices];
+      }
+    } else {
+      // 服務端渲染時使用預設數據
+      this.services = [...mockServices];
+    }
+  }
+
+  // 保存服務到localStorage
+  private saveServices() {
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.setItem(this.storageKey, JSON.stringify(this.services));
+      } catch (error) {
+        console.error('保存服務數據失敗:', error);
+      }
+    }
+  }
 
   // 獲取所有服務
   getAll(): MockService[] {
@@ -405,6 +443,7 @@ class ServiceStorage {
       updatedAt: new Date().toISOString()
     };
     this.services.push(newService);
+    this.saveServices(); // 保存到localStorage
     return newService;
   }
 
@@ -440,6 +479,7 @@ class ServiceStorage {
     };
 
     this.services[index] = updatedService;
+    this.saveServices(); // 保存到localStorage
     return this.services[index];
   }
 
@@ -449,6 +489,7 @@ class ServiceStorage {
     if (index === -1) return false;
 
     this.services.splice(index, 1);
+    this.saveServices(); // 保存到localStorage
     return true;
   }
 }
