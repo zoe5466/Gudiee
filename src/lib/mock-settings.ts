@@ -315,7 +315,7 @@ class SettingsStorage {
       methods.forEach(m => m.isDefault = false);
     }
 
-    methods[methodIndex] = { ...methods[methodIndex], ...updates };
+    methods[methodIndex] = { ...methods[methodIndex], ...updates } as PaymentMethod;
     this.savePaymentMethods(userId, methods);
     
     return methods[methodIndex];
@@ -329,7 +329,7 @@ class SettingsStorage {
     if (methodIndex === -1) return false;
 
     // 不能刪除預設付款方式
-    if (methods[methodIndex].isDefault && methods.length > 1) {
+    if (methods[methodIndex]?.isDefault && methods.length > 1) {
       return false;
     }
 

@@ -507,7 +507,7 @@ class GuideStorage {
     const index = this.guides.findIndex(guide => guide.id === id);
     if (index === -1) return null;
 
-    this.guides[index] = { ...this.guides[index], ...updates };
+    this.guides[index] = { ...this.guides[index], ...updates } as MockGuide;
     this.saveGuides();
     return this.guides[index];
   }
