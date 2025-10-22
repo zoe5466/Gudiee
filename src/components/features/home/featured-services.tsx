@@ -132,8 +132,9 @@ export function FeaturedServices() {
         style={{
           maxWidth: '1200px',
           margin: '0 auto',
-          padding: '0 1.5rem'
+          padding: '0 1rem'
         }}
+        className="sm:px-6"
       >
         {/* Section Header */}
         <div 
@@ -177,7 +178,9 @@ export function FeaturedServices() {
                 fontWeight: '600',
                 cursor: 'pointer',
                 transition: 'all 0.2s',
-                fontSize: '1rem'
+                fontSize: '1rem',
+                touchAction: 'manipulation',
+                minHeight: '44px'
               }}
               className="hover:bg-blue-600 hover:text-white"
             >
@@ -192,8 +195,9 @@ export function FeaturedServices() {
           style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-            gap: '2rem'
+            gap: '1rem'
           }}
+          className="sm:gap-8"
         >
           {featuredServices.map((service) => (
             <div
@@ -206,7 +210,8 @@ export function FeaturedServices() {
                 overflow: 'hidden',
                 cursor: 'pointer',
                 transition: 'all 0.3s',
-                border: '1px solid #f3f4f6'
+                border: '1px solid #f3f4f6',
+                touchAction: 'manipulation'
               }}
               className="hover:shadow-2xl hover:-translate-y-2"
             >
@@ -214,9 +219,10 @@ export function FeaturedServices() {
               <div 
                 style={{
                   position: 'relative',
-                  height: '14rem',
+                  height: '12rem',
                   overflow: 'hidden'
                 }}
+                className="sm:h-56"
               >
                 <img 
                   src={service.image} 
@@ -259,8 +265,8 @@ export function FeaturedServices() {
                     position: 'absolute',
                     top: '0.75rem',
                     right: '0.75rem',
-                    width: '2.5rem',
-                    height: '2.5rem',
+                    width: '2.75rem',
+                    height: '2.75rem',
                     backgroundColor: 'rgba(255, 255, 255, 0.9)',
                     backdropFilter: 'blur(4px)',
                     borderRadius: '50%',
@@ -269,7 +275,8 @@ export function FeaturedServices() {
                     justifyContent: 'center',
                     border: 'none',
                     cursor: 'pointer',
-                    transition: 'all 0.2s'
+                    transition: 'all 0.2s',
+                    touchAction: 'manipulation'
                   }}
                   className="hover:bg-white"
                 >
@@ -318,7 +325,7 @@ export function FeaturedServices() {
               </div>
 
               {/* Content */}
-              <div style={{ padding: '1.5rem' }}>
+              <div style={{ padding: '1rem' }} className="sm:p-6">
                 {/* Rating & Reviews */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.75rem' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
@@ -344,7 +351,7 @@ export function FeaturedServices() {
                     <MapPin style={{ width: '1rem', height: '1rem' }} />
                     <span>{service.location}</span>
                   </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', fontSize: '0.875rem', color: '#6b7280' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem', color: '#6b7280', flexWrap: 'wrap' }} className="sm:gap-4">
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
                       <Clock style={{ width: '1rem', height: '1rem' }} />
                       <span>{service.duration}</span>
@@ -418,7 +425,9 @@ export function FeaturedServices() {
               border: 'none',
               cursor: 'pointer',
               transition: 'all 0.2s',
-              boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)'
+              boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+              touchAction: 'manipulation',
+              minHeight: '48px'
             }}
             className="hover:-translate-y-1 hover:shadow-2xl"
           >

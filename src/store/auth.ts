@@ -174,9 +174,33 @@ export const useAuth = create<AuthState>()(
             throw new Error(result.error || result.message || '註冊失敗');
           }
 
+          // 轉換後端用戶資料為前端格式（與登入相同的處理邏輯）
+          const user: User = {
+            id: result.data.user.id,
+            email: result.data.user.email,
+            name: result.data.user.name,
+            avatar: result.data.user.avatar,
+            role: result.data.user.role.toLowerCase() as 'customer' | 'guide' | 'admin',
+            isEmailVerified: result.data.user.isEmailVerified || false,
+            isKYCVerified: result.data.user.isKycVerified || false,
+            createdAt: result.data.user.createdAt,
+            permissions: result.data.user.permissions || [],
+            profile: {
+              phone: result.data.user.phone || data.phone,
+              bio: result.data.user.userProfile?.bio,
+              location: result.data.user.userProfile?.location,
+              birthDate: result.data.user.userProfile?.birthDate,
+              languages: result.data.user.userProfile?.languages,
+              specialties: result.data.user.userProfile?.specialties,
+              experienceYears: result.data.user.userProfile?.experienceYears,
+              certifications: result.data.user.userProfile?.certifications,
+              socialLinks: result.data.user.userProfile?.socialLinks,
+            }
+          };
+
           // 更新認證狀態
           set({
-            user: result.data.user,
+            user,
             token: result.data.token,
             refreshToken: null,
             isAuthenticated: true,

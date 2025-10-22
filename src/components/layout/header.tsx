@@ -48,8 +48,8 @@ export function Header() {
     }`}> {/* 固定在頂部，根據滾動狀態調整陰影 */}
       <div className="relative">
         {/* 主要頭部區域 */}
-        <div className="px-6 lg:px-10 xl:px-20">
-          <div className="flex items-center justify-between h-20">
+        <div className="px-4 sm:px-6 lg:px-10 xl:px-20">
+          <div className="flex items-center justify-between h-16 sm:h-20">
             {/* 品牌 Logo 區域 */}
             <div className="flex items-center">
               <div className="flex items-center">
@@ -58,7 +58,7 @@ export function Header() {
                   <span className="text-white font-bold text-sm">R</span>
                 </div>
                 {/* 品牌名稱（在小螢幕隱藏） */}
-                <span className="ml-2 text-2xl font-bold text-[#FF5A5F] hidden sm:block">guidee</span>
+                <span className="ml-2 text-xl sm:text-2xl font-bold text-[#FF5A5F] hidden xs:block">guidee</span>
               </div>
             </div>
 
@@ -70,14 +70,15 @@ export function Header() {
             )}
 
             {/* 右側功能區域 */}
-            <div className="flex items-center space-x-4">
-              {/* 成為地陪連結（大螢幕顯示） */}
+            <div className="flex items-center space-x-2 sm:space-x-4">
+              {/* 成為地陪連結（中等螢幕以上顯示） */}
               <Link
                 href="/auth/register"
-                className="hidden lg:block text-sm font-medium text-gray-900 hover:bg-gray-100 px-3 py-2 rounded-full transition-colors cursor-pointer"
+                className="hidden md:block text-sm font-medium text-gray-900 hover:bg-gray-100 px-3 py-2 rounded-full transition-colors cursor-pointer"
                 style={{ textDecoration: 'none' }}
               >
-                成為地陪
+                <span className="hidden lg:inline">成為地陪</span>
+                <span className="lg:hidden">加入</span>
               </Link>
 
               {/* 語言切換器 */}
@@ -88,7 +89,7 @@ export function Header() {
 
               {/* 移動設備搜尋按鈕（僅在搜尋頁面顯示） */}
               {isSearchPage && (
-                <button className="lg:hidden p-2 text-gray-600">
+                <button className="lg:hidden p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors touch-manipulation" style={{ minWidth: '44px', minHeight: '44px' }}>
                   <Search className="w-5 h-5" />
                 </button>
               )}
@@ -133,8 +134,8 @@ export function Header() {
         {/* 移動設備搜尋欄（僅在搜尋頁面且滾動時顯示） */}
         {/* 使用 isMounted 防止服務端渲染問題 */}
         {isMounted && isScrolled && isSearchPage && (
-          <div className="lg:hidden px-6 py-3 border-t border-gray-200">
-            <SearchBar className="w-full" showFilters={false} />
+          <div className="lg:hidden px-4 py-3 border-t border-gray-200">
+            <SearchBar className="w-full text-sm" showFilters={false} />
           </div>
         )}
       </div>

@@ -172,11 +172,12 @@ export default function BookingModal({ service, onClose }: BookingModalProps) {
                   <button
                     key={date}
                     onClick={() => setSelectedDate(date)}
-                    className={`p-3 text-left border rounded-lg transition-colors ${
+                    className={`p-3 text-left border rounded-lg transition-colors touch-manipulation ${
                       selectedDate === date
                         ? 'border-blue-500 bg-blue-50 text-blue-700'
                         : 'border-gray-200 hover:border-gray-300 text-gray-700'
                     }`}
+                    style={{minHeight: '44px'}}
                   >
                     <div className="text-sm">
                       {new Date(date).toLocaleDateString('zh-TW', { 
@@ -199,7 +200,8 @@ export default function BookingModal({ service, onClose }: BookingModalProps) {
               <select
                 value={numberOfGuests}
                 onChange={(e) => setNumberOfGuests(parseInt(e.target.value))}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent touch-manipulation"
+                style={{minHeight: '44px'}}
               >
                 {Array.from({ length: service.maxGuests }, (_, i) => i + 1).map((num) => (
                   <option key={num} value={num}>
@@ -239,7 +241,8 @@ export default function BookingModal({ service, onClose }: BookingModalProps) {
                   type="text"
                   value={contactInfo.name}
                   onChange={(e) => setContactInfo({ ...contactInfo, name: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent touch-manipulation"
+                  style={{minHeight: '44px'}}
                   placeholder="請輸入您的姓名"
                 />
               </div>
@@ -252,7 +255,8 @@ export default function BookingModal({ service, onClose }: BookingModalProps) {
                   type="email"
                   value={contactInfo.email}
                   onChange={(e) => setContactInfo({ ...contactInfo, email: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent touch-manipulation"
+                  style={{minHeight: '44px'}}
                   placeholder="請輸入您的電子信箱"
                 />
               </div>
@@ -266,7 +270,8 @@ export default function BookingModal({ service, onClose }: BookingModalProps) {
                 type="tel"
                 value={contactInfo.phone}
                 onChange={(e) => setContactInfo({ ...contactInfo, phone: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent touch-manipulation"
+                style={{minHeight: '44px'}}
                 placeholder="請輸入您的手機號碼"
               />
             </div>
@@ -279,7 +284,8 @@ export default function BookingModal({ service, onClose }: BookingModalProps) {
                 value={specialRequests}
                 onChange={(e) => setSpecialRequests(e.target.value)}
                 rows={3}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent touch-manipulation"
+                style={{minHeight: '80px'}}
                 placeholder="請說明任何特殊需求或備註..."
               />
             </div>
@@ -292,7 +298,7 @@ export default function BookingModal({ service, onClose }: BookingModalProps) {
             <h3 className="text-lg font-semibold text-gray-900">付款方式</h3>
             
             <div className="space-y-3">
-              <label className="flex items-center space-x-3 p-4 border rounded-lg cursor-pointer hover:bg-gray-50">
+              <label className="flex items-center space-x-3 p-4 border rounded-lg cursor-pointer hover:bg-gray-50 touch-manipulation" style={{minHeight: '60px'}}>
                 <input
                   type="radio"
                   value="credit_card"
@@ -305,7 +311,7 @@ export default function BookingModal({ service, onClose }: BookingModalProps) {
                 <span className="text-sm text-green-600">推薦</span>
               </label>
 
-              <label className="flex items-center space-x-3 p-4 border rounded-lg cursor-pointer hover:bg-gray-50">
+              <label className="flex items-center space-x-3 p-4 border rounded-lg cursor-pointer hover:bg-gray-50 touch-manipulation" style={{minHeight: '60px'}}>
                 <input
                   type="radio"
                   value="bank_transfer"
@@ -319,7 +325,7 @@ export default function BookingModal({ service, onClose }: BookingModalProps) {
                 <span className="flex-1">銀行轉帳</span>
               </label>
 
-              <label className="flex items-center space-x-3 p-4 border rounded-lg cursor-pointer hover:bg-gray-50">
+              <label className="flex items-center space-x-3 p-4 border rounded-lg cursor-pointer hover:bg-gray-50 touch-manipulation" style={{minHeight: '60px'}}>
                 <input
                   type="radio"
                   value="line_pay"
@@ -461,26 +467,27 @@ export default function BookingModal({ service, onClose }: BookingModalProps) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto">
-      <div className="flex items-center justify-center min-h-screen px-4 py-6">
+    <div className="fixed inset-0 z-50 overflow-y-auto touch-manipulation">
+      <div className="flex items-center justify-center min-h-screen px-2 py-4 sm:px-4 sm:py-6">
         <div className="fixed inset-0 bg-black bg-opacity-50" onClick={onClose}></div>
         
-        <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full relative z-10">
+        <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full relative z-10 max-h-[90vh] flex flex-col">
           {/* Header */}
-          <div className="flex items-center justify-between p-6 border-b border-gray-200">
+          <div className="flex items-center justify-between p-4 sm:p-6 border-b border-gray-200 flex-shrink-0">
             <h2 className="text-xl font-bold text-gray-900">
               {step === 4 ? '確認預訂' : '預訂服務'}
             </h2>
             <button
               onClick={onClose}
-              className="text-gray-400 hover:text-gray-600"
+              className="text-gray-400 hover:text-gray-600 p-1 -m-1 touch-manipulation"
+              style={{minWidth: '44px', minHeight: '44px'}}
             >
               <X className="w-6 h-6" />
             </button>
           </div>
 
           {/* Progress Indicator */}
-          <div className="px-6 py-4 border-b border-gray-200">
+          <div className="px-4 py-3 sm:px-6 sm:py-4 border-b border-gray-200 flex-shrink-0">
             <div className="flex items-center space-x-4">
               {[1, 2, 3, 4].map((stepNumber) => (
                 <React.Fragment key={stepNumber}>
@@ -510,7 +517,7 @@ export default function BookingModal({ service, onClose }: BookingModalProps) {
           </div>
 
           {/* Content */}
-          <div className="p-6">
+          <div className="p-4 sm:p-6 flex-1 overflow-y-auto">
             {/* 錯誤提示 */}
             {error && (
               <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
@@ -535,10 +542,11 @@ export default function BookingModal({ service, onClose }: BookingModalProps) {
           </div>
 
           {/* Footer */}
-          <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200 bg-gray-50">
+          <div className="flex items-center justify-between px-4 py-3 sm:px-6 sm:py-4 border-t border-gray-200 bg-gray-50 flex-shrink-0">
             <button
               onClick={() => step > 1 ? setStep(step - 1) : onClose()}
-              className="px-4 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-100 transition-colors"
+              className="px-4 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-100 transition-colors touch-manipulation"
+              style={{minHeight: '44px'}}
             >
               {step === 1 ? '取消' : '上一步'}
             </button>
@@ -553,7 +561,8 @@ export default function BookingModal({ service, onClose }: BookingModalProps) {
                 }
               }}
               disabled={!canProceedToNextStep() || isSubmitting || isProcessingPayment}
-              className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors touch-manipulation"
+              style={{minHeight: '44px'}}
             >
               {isProcessingPayment 
                 ? '處理支付中...' 

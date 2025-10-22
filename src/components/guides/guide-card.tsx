@@ -48,12 +48,12 @@ export default function GuideCard({ guide, className = '' }: GuideCardProps) {
   const minPrice = Math.min(...guide.guidedServices.map(s => Number(s.price)));
 
   return (
-    <div className={`bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow ${className}`}>
+    <div className={`bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow touch-manipulation ${className}`}>
       {/* Guide Header */}
-      <div className="p-6">
-        <div className="flex items-start space-x-4">
+      <div className="p-4 sm:p-6">
+        <div className="flex items-start space-x-3 sm:space-x-4">
           <div className="flex-shrink-0">
-            <div className="w-16 h-16 bg-gray-100 rounded-full overflow-hidden">
+            <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gray-100 rounded-full overflow-hidden">
               {guide.avatar ? (
                 <img
                   src={guide.avatar}
@@ -70,10 +70,10 @@ export default function GuideCard({ guide, className = '' }: GuideCardProps) {
           
           <div className="flex-1 min-w-0">
             <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold text-gray-900 truncate">
+              <h3 className="text-base sm:text-lg font-semibold text-gray-900 truncate">
                 {guide.name}
               </h3>
-              <button className="text-gray-400 hover:text-red-500 transition-colors">
+              <button className="text-gray-400 hover:text-red-500 transition-colors p-1 -m-1 touch-manipulation" style={{minWidth: '32px', minHeight: '32px'}}>
                 <Heart className="w-5 h-5" />
               </button>
             </div>
@@ -85,7 +85,7 @@ export default function GuideCard({ guide, className = '' }: GuideCardProps) {
               </div>
             )}
             
-            <div className="flex items-center space-x-4 mt-2">
+            <div className="flex items-center space-x-2 sm:space-x-4 mt-2 flex-wrap gap-1">
               <div className="flex items-center">
                 <Star className="w-4 h-4 text-yellow-400 fill-current mr-1" />
                 <span className="text-sm font-medium text-gray-900">
@@ -153,7 +153,7 @@ export default function GuideCard({ guide, className = '' }: GuideCardProps) {
       {/* Services Preview */}
       {guide.guidedServices.length > 0 && (
         <div className="border-t border-gray-100">
-          <div className="p-4">
+          <div className="p-3 sm:p-4">
             <div className="flex items-center justify-between mb-3">
               <h4 className="text-sm font-medium text-gray-900">服務項目</h4>
               <span className="text-xs text-gray-500">
@@ -161,11 +161,11 @@ export default function GuideCard({ guide, className = '' }: GuideCardProps) {
               </span>
             </div>
             
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
               {guide.guidedServices.slice(0, 2).map((service) => (
-                <div key={service.id} className="bg-gray-50 rounded-lg p-3">
+                <div key={service.id} className="bg-gray-50 rounded-lg p-2 sm:p-3">
                   {service.images.length > 0 && (
-                    <div className="w-full h-20 bg-gray-200 rounded mb-2 overflow-hidden">
+                    <div className="w-full h-16 sm:h-20 bg-gray-200 rounded mb-2 overflow-hidden">
                       <img
                         src={service.images[0]}
                         alt={service.title}
@@ -193,10 +193,10 @@ export default function GuideCard({ guide, className = '' }: GuideCardProps) {
       )}
 
       {/* Footer */}
-      <div className="border-t border-gray-100 p-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <div className="text-sm text-gray-600">
+      <div className="border-t border-gray-100 p-3 sm:p-4">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <div className="flex items-center space-x-2 sm:space-x-4 flex-wrap gap-1">
+            <div className="text-sm text-gray-600 whitespace-nowrap">
               起價 <span className="text-lg font-semibold text-gray-900">{formatPrice(minPrice)}</span>
             </div>
             
@@ -206,13 +206,13 @@ export default function GuideCard({ guide, className = '' }: GuideCardProps) {
             </div>
           </div>
           
-          <div className="flex space-x-2">
-            <button className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
+          <div className="flex space-x-2 self-start sm:self-auto">
+            <button className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors touch-manipulation" style={{minWidth: '40px', minHeight: '40px'}}>
               <MessageCircle className="w-4 h-4" />
             </button>
             <Link
               href={`/guides/${guide.id}`}
-              className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
+              className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors touch-manipulation" style={{minHeight: '40px'}}
             >
               查看詳情
             </Link>

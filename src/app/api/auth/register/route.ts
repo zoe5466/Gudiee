@@ -7,7 +7,7 @@ export async function POST(request: NextRequest) {
     console.log('Register API called');
     
     const body = await request.json();
-    const { email, password, name, userType = 'customer' } = body;
+    const { email, password, name, phone, userType = 'customer', subscribeNewsletter = false } = body;
 
     console.log('Registration attempt for:', email);
 
@@ -54,11 +54,13 @@ export async function POST(request: NextRequest) {
       id: `user-${Date.now()}`,
       email: email.toLowerCase(),
       name,
+      phone: phone || null,
       role: userType.toUpperCase(),
       isEmailVerified: false,
       isKycVerified: false,
       permissions: userType === 'guide' ? ['user:read', 'guide:manage'] : ['user:read'],
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
+      subscribeNewsletter
     };
 
     // 生成 token
@@ -79,6 +81,8 @@ export async function POST(request: NextRequest) {
     });
 
     console.log('Registration successful for:', email);
+    console.log('Generated user:', newUser);
+    console.log('Generated token:', token);
 
     return Response.json({
       success: true,

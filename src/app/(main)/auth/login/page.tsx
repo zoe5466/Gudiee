@@ -306,17 +306,20 @@ export default function LoginPage() {
                 記住我
               </span>
             </label>
-            <Link
-              href="/auth/forgot-password"
+            <button
+              onClick={() => alert('忘記密碼功能開發中，請聯繫客服：support@guidee.com')}
               style={{
                 fontSize: '0.875rem',
                 color: '#3b82f6',
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
                 textDecoration: 'none'
               }}
               className="hover:underline"
             >
               忘記密碼？
-            </Link>
+            </button>
           </div>
 
           {/* 登入按鈕 */}

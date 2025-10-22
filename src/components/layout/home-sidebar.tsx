@@ -55,9 +55,10 @@ export function HomeSidebar() {
       {/* 觸發按鈕 */}
       <button
         onClick={() => setIsOpen(true)}
-        className={`fixed z-40 p-3 bg-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 border border-gray-200 hover:bg-gray-50 ${
-          isHomePage ? 'top-1/2 left-4 transform -translate-y-1/2' : 'top-24 left-4'
+        className={`fixed z-40 bg-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 border border-gray-200 hover:bg-gray-50 touch-manipulation ${
+          isHomePage ? 'top-1/2 left-3 sm:left-4 transform -translate-y-1/2' : 'top-20 sm:top-24 left-3 sm:left-4'
         }`}
+        style={{ minWidth: '48px', minHeight: '48px', padding: '12px' }}
         aria-label="打開選單"
       >
         <Menu className="w-5 h-5 text-gray-700" />
@@ -73,16 +74,18 @@ export function HomeSidebar() {
 
       {/* 側邊選單 */}
       <div
-        className={`fixed top-0 left-0 h-full w-80 bg-white shadow-2xl z-50 transform transition-transform duration-300 ease-in-out ${
+        className={`fixed top-0 left-0 h-full bg-white shadow-2xl z-50 transform transition-transform duration-300 ease-in-out ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
+        style={{ width: 'min(320px, calc(100vw - 40px))' }}
       >
         {/* 頭部 */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200">
-          <h2 className="text-xl font-bold text-gray-900">功能選單</h2>
+        <div className="flex items-center justify-between p-4 sm:p-6 border-b border-gray-200">
+          <h2 className="text-lg sm:text-xl font-bold text-gray-900">功能選單</h2>
           <button
             onClick={() => setIsOpen(false)}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            className="p-2 hover:bg-gray-100 rounded-lg transition-colors touch-manipulation"
+            style={{ minWidth: '44px', minHeight: '44px' }}
             aria-label="關閉選單"
           >
             <X className="w-5 h-5 text-gray-600" />
@@ -92,7 +95,7 @@ export function HomeSidebar() {
         {/* 選單內容 */}
         <div className="p-4">
           {!isAuthenticated && (
-            <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+            <div className="mb-4 sm:mb-6 p-3 sm:p-4 bg-blue-50 border border-blue-200 rounded-lg">
               <p className="text-sm text-blue-800 mb-2">請先登入以使用完整功能</p>
               <button
                 onClick={() => handleItemClick('/auth/login')}
@@ -108,7 +111,8 @@ export function HomeSidebar() {
               <button
                 key={index}
                 onClick={() => handleItemClick(item.path)}
-                className="w-full flex items-start p-4 rounded-lg hover:bg-gray-50 transition-colors duration-150 text-left group"
+                className="w-full flex items-start p-3 sm:p-4 rounded-lg hover:bg-gray-50 active:bg-gray-100 transition-colors duration-150 text-left group touch-manipulation"
+                style={{ minHeight: '64px' }}
               >
                 <div className="flex-shrink-0 mt-0.5 text-gray-600 group-hover:text-blue-600 transition-colors">
                   {item.icon}
@@ -126,7 +130,7 @@ export function HomeSidebar() {
           </nav>
 
           {/* 額外資訊 */}
-          <div className="mt-8 p-4 bg-gray-50 rounded-lg">
+          <div className="mt-6 sm:mt-8 p-3 sm:p-4 bg-gray-50 rounded-lg">
             <h3 className="text-sm font-medium text-gray-900 mb-2">需要幫助？</h3>
             <p className="text-xs text-gray-600 mb-3">
               如果您有任何問題，請聯繫我們的客服團隊。

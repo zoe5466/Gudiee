@@ -171,7 +171,7 @@ export function PaymentForm({
         <h3 style={{ fontSize: '1.125rem', fontWeight: '600', color: '#0f172a', marginBottom: '1rem' }}>
           選擇付款方式
         </h3>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '0.75rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '0.5rem' }}>
           {paymentMethods.map(method => (
             <button
               key={method.id}
@@ -179,8 +179,8 @@ export function PaymentForm({
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.75rem',
-                padding: '1rem',
+                gap: '0.5rem',
+                padding: '0.875rem',
                 border: `2px solid ${selectedMethod.id === method.id ? '#3b82f6' : '#e2e8f0'}`,
                 borderRadius: '0.5rem',
                 backgroundColor: selectedMethod.id === method.id ? '#eff6ff' : 'white',
@@ -188,7 +188,9 @@ export function PaymentForm({
                 transition: 'all 0.2s',
                 fontSize: '0.875rem',
                 fontWeight: '500',
-                color: '#374151'
+                color: '#374151',
+                minHeight: '48px',
+                touchAction: 'manipulation'
               }}
               className="hover:border-blue-300"
             >
@@ -224,12 +226,14 @@ export function PaymentForm({
                 maxLength={19}
                 style={{
                   width: '100%',
-                  padding: '0.75rem',
+                  padding: '0.875rem',
                   border: `1px solid ${errors.cardNumber ? '#ef4444' : '#d1d5db'}`,
                   borderRadius: '0.5rem',
                   fontSize: '1rem',
                   outline: 'none',
-                  transition: 'all 0.2s'
+                  transition: 'all 0.2s',
+                  minHeight: '48px',
+                  touchAction: 'manipulation'
                 }}
                 className="focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
               />
@@ -241,7 +245,7 @@ export function PaymentForm({
               )}
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
               {/* 到期日 */}
               <div>
                 <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#374151', marginBottom: '0.5rem' }}>
@@ -255,12 +259,14 @@ export function PaymentForm({
                   maxLength={5}
                   style={{
                     width: '100%',
-                    padding: '0.75rem',
+                    padding: '0.875rem',
                     border: `1px solid ${errors.expiryDate ? '#ef4444' : '#d1d5db'}`,
                     borderRadius: '0.5rem',
                     fontSize: '1rem',
                     outline: 'none',
-                    transition: 'all 0.2s'
+                    transition: 'all 0.2s',
+                    minHeight: '48px',
+                    touchAction: 'manipulation'
                   }}
                   className="focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
                 />
@@ -284,12 +290,14 @@ export function PaymentForm({
                   maxLength={4}
                   style={{
                     width: '100%',
-                    padding: '0.75rem',
+                    padding: '0.875rem',
                     border: `1px solid ${errors.cvv ? '#ef4444' : '#d1d5db'}`,
                     borderRadius: '0.5rem',
                     fontSize: '1rem',
                     outline: 'none',
-                    transition: 'all 0.2s'
+                    transition: 'all 0.2s',
+                    minHeight: '48px',
+                    touchAction: 'manipulation'
                   }}
                   className="focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
                 />
@@ -313,12 +321,14 @@ export function PaymentForm({
                 placeholder="如卡片上所示"
                 style={{
                   width: '100%',
-                  padding: '0.75rem',
+                  padding: '0.875rem',
                   border: `1px solid ${errors.cardholderName ? '#ef4444' : '#d1d5db'}`,
                   borderRadius: '0.5rem',
                   fontSize: '1rem',
                   outline: 'none',
-                  transition: 'all 0.2s'
+                  transition: 'all 0.2s',
+                  minHeight: '48px',
+                  touchAction: 'manipulation'
                 }}
                 className="focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
               />
@@ -387,7 +397,9 @@ export function PaymentForm({
           fontWeight: '600',
           cursor: isLoading || isProcessing ? 'not-allowed' : 'pointer',
           transition: 'all 0.2s',
-          boxShadow: isLoading || isProcessing ? 'none' : '0 10px 15px -3px rgba(0, 0, 0, 0.1)'
+          boxShadow: isLoading || isProcessing ? 'none' : '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+          minHeight: '56px',
+          touchAction: 'manipulation'
         }}
         className={!isLoading && !isProcessing ? 'hover:bg-blue-700 hover:shadow-lg' : ''}
       >
