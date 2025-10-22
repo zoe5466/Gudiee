@@ -1,577 +1,464 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { 
-  Plus, 
   Search, 
   Filter, 
   MapPin, 
   Calendar, 
-  Clock, 
   DollarSign, 
-  Users, 
-  Tag,
-  MessageCircle,
+  Clock,
   Eye,
-  Edit3,
-  Trash2,
-  TrendingUp,
-  CheckCircle,
-  AlertCircle,
-  XCircle,
+  Users,
   ChevronDown,
-  Globe,
+  Plus,
   Star
 } from 'lucide-react';
-import { useAuth } from '@/store/auth';
-import { useToast } from '@/components/ui/toast';
-import { Loading } from '@/components/ui/loading';
 
 interface Task {
   id: string;
   title: string;
   description: string;
   category: string;
-  location: string;
+  type: string;
+  status: string;
+  priority: string;
   budget: {
     min: number;
     max: number;
     currency: string;
   };
-  dateRange: {
-    start: string;
-    end: string;
-    flexible: boolean;
+  location: {
+    city: string;
+    district?: string;
   };
-  duration: string;
-  maxApplicants: number;
-  currentApplicants: number;
-  requirements: string[];
-  status: 'draft' | 'active' | 'in_progress' | 'completed' | 'cancelled';
-  createdBy: string;
-  createdAt: string;
-  updatedAt: string;
-  applicants?: TaskApplicant[];
-  selectedGuide?: string;
-  priority: 'low' | 'medium' | 'high';
-  isUrgent: boolean;
+  timeline: {
+    startDate: string;
+    endDate: string;
+    estimatedHours: number;
+  };
+  skills: string[];
+  languages?: string[];
+  client: {
+    id: string;
+    name: string;
+    avatar?: string;
+    rating: number;
+    completedTasks: number;
+    isVerified: boolean;
+  };
   tags: string[];
+  views: number;
+  applications: number;
+  createdAt: string;
 }
-
-interface TaskApplicant {
-  id: string;
-  guideId: string;
-  guideName: string;
-  guideAvatar: string;
-  guideRating: number;
-  message: string;
-  proposedPrice: number;
-  appliedAt: string;
-  status: 'pending' | 'accepted' | 'rejected';
-}
-
-type TaskStatus = 'all' | 'draft' | 'active' | 'in_progress' | 'completed' | 'cancelled';
-type ViewMode = 'my-tasks' | 'browse-tasks' | 'create-task';
 
 export default function TasksPage() {
   const router = useRouter();
-  const { user, isAuthenticated } = useAuth();
-  const { success, error } = useToast();
-  
-  const [viewMode, setViewMode] = useState<ViewMode>('my-tasks');
-  const [statusFilter, setStatusFilter] = useState<TaskStatus>('all');
-  const [searchQuery, setSearchQuery] = useState('');
-  const [showFilters, setShowFilters] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const searchParams = useSearchParams();
   const [tasks, setTasks] = useState<Task[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState('all');
-
-  // 檢查認證狀態
-  useEffect(() => {
-    if (!isAuthenticated) {
-      router.push('/login');
-      return;
-    }
-    
-    loadTasks();
-  }, [isAuthenticated, router]);
-
-  const loadTasks = async () => {
-    setIsLoading(true);
-    try {
-      // TODO: 實際 API 調用
-      const mockTasks: Task[] = [
-        {
-          id: 'task-1',
-          title: '台北古蹟文化深度導覽',
-          description: '希望找到一位熟悉台北歷史文化的地陪，帶我們參觀故宮、中正紀念堂等重要景點，並深入了解背後的歷史故事。',
-          category: '文化導覽',
-          location: '台北市',
-          budget: { min: 1500, max: 2500, currency: 'TWD' },
-          dateRange: { start: '2024-01-25', end: '2024-01-27', flexible: true },
-          duration: '6小時',
-          maxApplicants: 5,
-          currentApplicants: 3,
-          requirements: ['熟悉台北歷史', '中英文流利', '有導遊證照'],
-          status: 'active',
-          createdBy: user?.id || '',
-          createdAt: '2024-01-15T10:00:00Z',
-          updatedAt: '2024-01-15T10:00:00Z',
-          priority: 'high',
-          isUrgent: false,
-          tags: ['文化', '歷史', '故宮', '古蹟']
-        },
-        {
-          id: 'task-2',
-          title: '夜市美食探索之旅',
-          description: '想要體驗正宗的台灣夜市文化，尋找道地的小吃和隱藏版美食。',
-          category: '美食體驗',
-          location: '台北市',
-          budget: { min: 800, max: 1200, currency: 'TWD' },
-          dateRange: { start: '2024-01-20', end: '2024-01-22', flexible: false },
-          duration: '4小時',
-          maxApplicants: 3,
-          currentApplicants: 1,
-          requirements: ['熟悉夜市', '美食達人'],
-          status: 'in_progress',
-          createdBy: user?.id || '',
-          createdAt: '2024-01-12T15:30:00Z',
-          updatedAt: '2024-01-14T09:15:00Z',
-          priority: 'medium',
-          isUrgent: true,
-          tags: ['美食', '夜市', '小吃', '在地體驗']
-        },
-        {
-          id: 'task-3',
-          title: '九份金瓜石攝影之旅',
-          description: '專業攝影師陪同拍攝九份老街和金瓜石的美景，包含日落和夜景。',
-          category: '攝影服務',
-          location: '新北市瑞芳區',
-          budget: { min: 2000, max: 3500, currency: 'TWD' },
-          dateRange: { start: '2024-02-01', end: '2024-02-03', flexible: true },
-          duration: '8小時',
-          maxApplicants: 2,
-          currentApplicants: 0,
-          requirements: ['攝影技能', '熟悉九份', '有專業設備'],
-          status: 'draft',
-          createdBy: user?.id || '',
-          createdAt: '2024-01-16T11:20:00Z',
-          updatedAt: '2024-01-16T11:20:00Z',
-          priority: 'low',
-          isUrgent: false,
-          tags: ['攝影', '九份', '金瓜石', '日落', '夜景']
-        }
-      ];
-      
-      setTasks(mockTasks);
-    } catch (err) {
-      error('載入失敗', '無法載入任務列表');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const categories = ['全部', '文化導覽', '美食體驗', '攝影服務', '購物助手', '交通協助', '其他'];
-
-  const filteredTasks = tasks.filter(task => {
-    const matchesStatus = statusFilter === 'all' || task.status === statusFilter;
-    const matchesSearch = searchQuery === '' || 
-      task.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      task.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      task.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      task.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
-    const matchesCategory = selectedCategory === 'all' || selectedCategory === '全部' || task.category === selectedCategory;
-    
-    return matchesStatus && matchesSearch && matchesCategory;
+  const [loading, setLoading] = useState(true);
+  const [filters, setFilters] = useState({
+    query: searchParams.get('query') || '',
+    category: searchParams.get('category') || '',
+    type: searchParams.get('type') || '',
+    status: searchParams.get('status') || 'OPEN',
+    priority: searchParams.get('priority') || '',
+    location: searchParams.get('location') || '',
+    budgetMin: searchParams.get('budgetMin') || '',
+    budgetMax: searchParams.get('budgetMax') || '',
+    sortBy: searchParams.get('sortBy') || 'newest'
   });
+  const [showFilters, setShowFilters] = useState(false);
 
-  const getStatusText = (status: Task['status']) => {
-    const statusMap = {
-      draft: '草稿',
-      active: '進行中',
-      in_progress: '執行中',
-      completed: '已完成',
-      cancelled: '已取消'
-    };
-    return statusMap[status];
-  };
+  const categories = [
+    { id: '', name: '全部分類' },
+    { id: 'delivery', name: '送件配送' },
+    { id: 'guide', name: '導遊服務' },
+    { id: 'translation', name: '翻譯服務' },
+    { id: 'photography', name: '攝影服務' },
+    { id: 'other', name: '其他服務' }
+  ];
 
-  const getStatusColor = (status: Task['status']) => {
-    const colorMap = {
-      draft: 'bg-gray-100 text-gray-800',
-      active: 'bg-blue-100 text-blue-800',
-      in_progress: 'bg-yellow-100 text-yellow-800',
-      completed: 'bg-green-100 text-green-800',
-      cancelled: 'bg-red-100 text-red-800'
-    };
-    return colorMap[status];
-  };
+  const types = [
+    { id: '', name: '全部類型' },
+    { id: 'urgent', name: '緊急任務' },
+    { id: 'normal', name: '一般任務' },
+    { id: 'long_term', name: '長期任務' }
+  ];
 
-  const getStatusIcon = (status: Task['status']) => {
-    switch (status) {
-      case 'active':
-        return <TrendingUp className="w-4 h-4" />;
-      case 'in_progress':
-        return <AlertCircle className="w-4 h-4" />;
-      case 'completed':
-        return <CheckCircle className="w-4 h-4" />;
-      case 'cancelled':
-        return <XCircle className="w-4 h-4" />;
-      default:
-        return <Edit3 className="w-4 h-4" />;
+  const priorities = [
+    { id: '', name: '全部優先級' },
+    { id: 'low', name: '低優先級', color: 'text-gray-600' },
+    { id: 'medium', name: '中優先級', color: 'text-blue-600' },
+    { id: 'high', name: '高優先級', color: 'text-orange-600' },
+    { id: 'urgent', name: '緊急', color: 'text-red-600' }
+  ];
+
+  const sortOptions = [
+    { id: 'newest', name: '最新發佈' },
+    { id: 'oldest', name: '最早發佈' },
+    { id: 'budget_high', name: '預算由高到低' },
+    { id: 'budget_low', name: '預算由低到高' },
+    { id: 'deadline', name: '截止日期' }
+  ];
+
+  useEffect(() => {
+    fetchTasks();
+  }, [filters]);
+
+  const fetchTasks = async () => {
+    setLoading(true);
+    try {
+      const params = new URLSearchParams();
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value) params.set(key, value);
+      });
+
+      const response = await fetch(`/api/tasks?${params.toString()}`);
+      const data = await response.json();
+      
+      if (data.success) {
+        setTasks(data.data || []);
+      } else {
+        console.error('Failed to fetch tasks:', data.message);
+      }
+    } catch (error) {
+      console.error('Error fetching tasks:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gray-50">
-        <div className="container py-8">
-          <div className="flex justify-center items-center py-20">
-            <Loading size="lg" />
-          </div>
-        </div>
-      </div>
-    );
-  }
+  const handleFilterChange = (key: string, value: string) => {
+    setFilters(prev => ({ ...prev, [key]: value }));
+  };
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    fetchTasks();
+  };
+
+  const getCategoryName = (categoryId: string) => {
+    return categories.find(c => c.id === categoryId)?.name || categoryId;
+  };
+
+  const getPriorityColor = (priority: string) => {
+    return priorities.find(p => p.id === priority)?.color || 'text-gray-600';
+  };
+
+  const getTypeColor = (type: string) => {
+    const colors = {
+      'urgent': 'bg-red-100 text-red-700',
+      'normal': 'bg-blue-100 text-blue-700',
+      'long_term': 'bg-green-100 text-green-700'
+    };
+    return colors[type as keyof typeof colors] || 'bg-gray-100 text-gray-700';
+  };
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('zh-TW');
+  };
+
+  const calculateDaysLeft = (endDate: string) => {
+    const today = new Date();
+    const end = new Date(endDate);
+    const diffTime = end.getTime() - today.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays;
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="container py-8">
-        {/* 頁面標題 */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">任務管理</h1>
-          <p className="text-gray-600">發布任務需求，找到完美的旅遊協助</p>
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        {/* Header */}
+        <div className="flex justify-between items-center mb-8">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900">任務市場</h1>
+            <p className="text-gray-600 mt-1">探索各種工作機會，展現您的專業技能</p>
+          </div>
+          <button
+            onClick={() => router.push('/tasks/create')}
+            className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            發佈任務
+          </button>
         </div>
 
-        {/* 導航選項卡 */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-6">
-          <div className="flex border-b border-gray-200">
+        {/* Search and Filters */}
+        <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
+          <form onSubmit={handleSearch} className="flex gap-4 mb-4">
+            <div className="flex-1">
+              <input
+                type="text"
+                value={filters.query}
+                onChange={(e) => handleFilterChange('query', e.target.value)}
+                placeholder="搜尋任務標題、描述或技能"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
             <button
-              onClick={() => setViewMode('my-tasks')}
-              className={`px-6 py-4 text-sm font-medium transition-colors ${
-                viewMode === 'my-tasks'
-                  ? 'text-[#FF5A5F] border-b-2 border-[#FF5A5F]'
-                  : 'text-gray-600 hover:text-gray-900'
-              }`}
+              type="submit"
+              className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
             >
-              我的任務
+              <Search className="w-4 h-4" />
             </button>
             <button
-              onClick={() => setViewMode('browse-tasks')}
-              className={`px-6 py-4 text-sm font-medium transition-colors ${
-                viewMode === 'browse-tasks'
-                  ? 'text-[#FF5A5F] border-b-2 border-[#FF5A5F]'
-                  : 'text-gray-600 hover:text-gray-900'
-              }`}
+              type="button"
+              onClick={() => setShowFilters(!showFilters)}
+              className="flex items-center px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
             >
-              瀏覽任務
+              <Filter className="w-4 h-4 mr-2" />
+              篩選
+              <ChevronDown className={`w-4 h-4 ml-2 transform transition-transform ${showFilters ? 'rotate-180' : ''}`} />
             </button>
+          </form>
+
+          {showFilters && (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 pt-4 border-t">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">分類</label>
+                <select
+                  value={filters.category}
+                  onChange={(e) => handleFilterChange('category', e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                >
+                  {categories.map(category => (
+                    <option key={category.id} value={category.id}>
+                      {category.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">類型</label>
+                <select
+                  value={filters.type}
+                  onChange={(e) => handleFilterChange('type', e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                >
+                  {types.map(type => (
+                    <option key={type.id} value={type.id}>
+                      {type.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">優先級</label>
+                <select
+                  value={filters.priority}
+                  onChange={(e) => handleFilterChange('priority', e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                >
+                  {priorities.map(priority => (
+                    <option key={priority.id} value={priority.id}>
+                      {priority.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">排序</label>
+                <select
+                  value={filters.sortBy}
+                  onChange={(e) => handleFilterChange('sortBy', e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                >
+                  {sortOptions.map(option => (
+                    <option key={option.id} value={option.id}>
+                      {option.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">地點</label>
+                <input
+                  type="text"
+                  value={filters.location}
+                  onChange={(e) => handleFilterChange('location', e.target.value)}
+                  placeholder="城市或區域"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">最低預算</label>
+                <input
+                  type="number"
+                  value={filters.budgetMin}
+                  onChange={(e) => handleFilterChange('budgetMin', e.target.value)}
+                  placeholder="TWD"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">最高預算</label>
+                <input
+                  type="number"
+                  value={filters.budgetMax}
+                  onChange={(e) => handleFilterChange('budgetMax', e.target.value)}
+                  placeholder="TWD"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Tasks List */}
+        {loading ? (
+          <div className="flex justify-center items-center h-64">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+          </div>
+        ) : tasks.length === 0 ? (
+          <div className="text-center py-12">
+            <div className="text-gray-400 text-6xl mb-4">📋</div>
+            <h3 className="text-xl font-semibold text-gray-900 mb-2">沒有找到任務</h3>
+            <p className="text-gray-600 mb-6">試試調整搜尋條件或發佈新任務</p>
             <button
-              onClick={() => setViewMode('create-task')}
-              className={`px-6 py-4 text-sm font-medium transition-colors ${
-                viewMode === 'create-task'
-                  ? 'text-[#FF5A5F] border-b-2 border-[#FF5A5F]'
-                  : 'text-gray-600 hover:text-gray-900'
-              }`}
+              onClick={() => router.push('/tasks/create')}
+              className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
             >
-              發布任務
+              發佈第一個任務
             </button>
           </div>
-        </div>
-
-        {viewMode === 'my-tasks' && (
-          <>
-            {/* 統計卡片 */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-              <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm text-gray-600">總任務</p>
-                    <p className="text-2xl font-bold text-gray-900">{tasks.length}</p>
-                  </div>
-                  <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                    <Edit3 className="w-6 h-6 text-blue-600" />
-                  </div>
-                </div>
-              </div>
-              
-              <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm text-gray-600">進行中</p>
-                    <p className="text-2xl font-bold text-gray-900">
-                      {tasks.filter(t => t.status === 'active').length}
-                    </p>
-                  </div>
-                  <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
-                    <TrendingUp className="w-6 h-6 text-yellow-600" />
-                  </div>
-                </div>
-              </div>
-              
-              <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm text-gray-600">已完成</p>
-                    <p className="text-2xl font-bold text-gray-900">
-                      {tasks.filter(t => t.status === 'completed').length}
-                    </p>
-                  </div>
-                  <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                    <CheckCircle className="w-6 h-6 text-green-600" />
-                  </div>
-                </div>
-              </div>
-              
-              <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm text-gray-600">申請者</p>
-                    <p className="text-2xl font-bold text-gray-900">
-                      {tasks.reduce((sum, task) => sum + task.currentApplicants, 0)}
-                    </p>
-                  </div>
-                  <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-                    <Users className="w-6 h-6 text-purple-600" />
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* 搜尋和篩選 */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <div className="flex flex-col sm:flex-row gap-4 flex-1">
-                  <div className="relative flex-1 max-w-md">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                    <input
-                      type="text"
-                      placeholder="搜尋任務..."
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-[#FF5A5F] focus:border-[#FF5A5F]"
-                    />
-                  </div>
-                  
-                  <select
-                    value={selectedCategory}
-                    onChange={(e) => setSelectedCategory(e.target.value)}
-                    className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-[#FF5A5F] focus:border-[#FF5A5F]"
-                  >
-                    {categories.map(category => (
-                      <option key={category} value={category === '全部' ? 'all' : category}>
-                        {category}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="flex items-center gap-3">
-                  <button
-                    onClick={() => setShowFilters(!showFilters)}
-                    className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:border-[#FF5A5F] transition-colors"
-                  >
-                    <Filter className="w-4 h-4" />
-                    篩選
-                    <ChevronDown className={`w-4 h-4 transition-transform ${showFilters ? 'rotate-180' : ''}`} />
-                  </button>
-                  
-                  <button
-                    onClick={() => setViewMode('create-task')}
-                    className="flex items-center gap-2 px-4 py-2 bg-[#FF5A5F] text-white rounded-lg hover:bg-[#E1464A] transition-colors"
-                  >
-                    <Plus className="w-4 h-4" />
-                    發布任務
-                  </button>
-                </div>
-              </div>
-
-              {showFilters && (
-                <div className="mt-4 pt-4 border-t border-gray-200">
-                  <div className="flex flex-wrap gap-2">
-                    <h3 className="text-sm font-medium text-gray-700 w-full mb-2">狀態篩選：</h3>
-                    {(['all', 'draft', 'active', 'in_progress', 'completed', 'cancelled'] as const).map((status) => (
-                      <button
-                        key={status}
-                        onClick={() => setStatusFilter(status)}
-                        className={`px-3 py-1 rounded-full text-sm transition-colors ${
-                          statusFilter === status
-                            ? 'bg-[#FF5A5F] text-white'
-                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                        }`}
+        ) : (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {tasks.map((task) => (
+              <div key={task.id} className="bg-white rounded-lg shadow-sm border hover:shadow-md transition-shadow">
+                <div className="p-6">
+                  {/* Header */}
+                  <div className="flex justify-between items-start mb-4">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className={`inline-flex px-2 py-1 rounded-full text-xs font-medium ${getTypeColor(task.type)}`}>
+                          {task.type === 'urgent' ? '緊急' : task.type === 'normal' ? '一般' : '長期'}
+                        </span>
+                        <span className={`text-xs font-medium ${getPriorityColor(task.priority)}`}>
+                          {task.priority === 'urgent' ? '🔥 緊急' : 
+                           task.priority === 'high' ? '⚡ 高' :
+                           task.priority === 'medium' ? '📋 中' : '📝 低'}
+                        </span>
+                      </div>
+                      <h3 
+                        className="text-lg font-semibold text-gray-900 cursor-pointer hover:text-blue-600 transition-colors"
+                        onClick={() => router.push(`/tasks/${task.id}`)}
                       >
-                        {status === 'all' ? '全部' : getStatusText(status)}
-                      </button>
-                    ))}
+                        {task.title}
+                      </h3>
+                      <p className="text-sm text-gray-600 mt-1">
+                        {getCategoryName(task.category)}
+                      </p>
+                    </div>
                   </div>
-                </div>
-              )}
-            </div>
 
-            {/* 任務列表 */}
-            {filteredTasks.length > 0 ? (
-              <div className="space-y-4">
-                {filteredTasks.map((task) => (
-                  <div key={task.id} className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
-                    <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-4">
-                      <div className="flex-1">
-                        <div className="flex items-start justify-between mb-4">
-                          <div className="flex-1">
-                            <div className="flex items-center gap-3 mb-2">
-                              <h3 className="text-lg font-semibold text-gray-900">{task.title}</h3>
-                              {task.isUrgent && (
-                                <span className="px-2 py-1 bg-red-100 text-red-800 text-xs font-medium rounded-full">
-                                  緊急
-                                </span>
-                              )}
-                            </div>
-                            <div className="flex items-center gap-2 mb-3">
-                              <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(task.status)}`}>
-                                {getStatusIcon(task.status)}
-                                {getStatusText(task.status)}
-                              </span>
-                              <span className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-full">
-                                {task.category}
-                              </span>
-                            </div>
-                            <p className="text-gray-600 mb-4 line-clamp-2">{task.description}</p>
-                          </div>
+                  {/* Description */}
+                  <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+                    {task.description}
+                  </p>
+
+                  {/* Budget */}
+                  <div className="flex items-center mb-4">
+                    <DollarSign className="w-4 h-4 text-green-600 mr-1" />
+                    <span className="font-semibold text-green-600">
+                      NT$ {task.budget.min.toLocaleString()} - {task.budget.max.toLocaleString()}
+                    </span>
+                  </div>
+
+                  {/* Location and Time */}
+                  <div className="flex items-center gap-4 mb-4 text-sm text-gray-600">
+                    <div className="flex items-center">
+                      <MapPin className="w-4 h-4 mr-1" />
+                      {task.location.city}
+                      {task.location.district && `, ${task.location.district}`}
+                    </div>
+                    <div className="flex items-center">
+                      <Calendar className="w-4 h-4 mr-1" />
+                      {formatDate(task.timeline.startDate)}
+                    </div>
+                    <div className="flex items-center">
+                      <Clock className="w-4 h-4 mr-1" />
+                      {task.timeline.estimatedHours}小時
+                    </div>
+                  </div>
+
+                  {/* Skills */}
+                  <div className="flex flex-wrap gap-1 mb-4">
+                    {task.skills.slice(0, 3).map((skill, index) => (
+                      <span key={index} className="inline-flex px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded">
+                        {skill}
+                      </span>
+                    ))}
+                    {task.skills.length > 3 && (
+                      <span className="inline-flex px-2 py-1 bg-gray-100 text-gray-500 text-xs rounded">
+                        +{task.skills.length - 3}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Client Info */}
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center">
+                      <img
+                        src={task.client.avatar || '/default-avatar.png'}
+                        alt={task.client.name}
+                        className="w-8 h-8 rounded-full mr-2"
+                      />
+                      <div className="text-sm">
+                        <div className="flex items-center">
+                          <span className="font-medium text-gray-900">{task.client.name}</span>
+                          {task.client.isVerified && (
+                            <span className="ml-1 text-blue-500">✓</span>
+                          )}
                         </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-sm text-gray-600 mb-4">
-                          <div className="flex items-center gap-2">
-                            <MapPin className="w-4 h-4" />
-                            <span>{task.location}</span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <Calendar className="w-4 h-4" />
-                            <span>{new Date(task.dateRange.start).toLocaleDateString('zh-TW')}</span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <Clock className="w-4 h-4" />
-                            <span>{task.duration}</span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <DollarSign className="w-4 h-4" />
-                            <span>NT$ {task.budget.min.toLocaleString()} - {task.budget.max.toLocaleString()}</span>
-                          </div>
-                        </div>
-
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-4 text-sm text-gray-600">
-                            <div className="flex items-center gap-1">
-                              <Users className="w-4 h-4" />
-                              <span>{task.currentApplicants}/{task.maxApplicants} 申請者</span>
-                            </div>
-                            <div className="flex flex-wrap gap-1">
-                              {task.tags.slice(0, 3).map((tag, index) => (
-                                <span key={index} className="px-2 py-1 bg-gray-100 text-gray-600 rounded text-xs">
-                                  {tag}
-                                </span>
-                              ))}
-                            </div>
-                          </div>
+                        <div className="flex items-center text-gray-600">
+                          <Star className="w-3 h-3 text-yellow-400 mr-1" />
+                          {task.client.rating} ({task.client.completedTasks})
                         </div>
                       </div>
+                    </div>
 
-                      <div className="flex flex-col gap-2 lg:min-w-[150px]">
-                        {task.status === 'active' && (
-                          <>
-                            <button className="btn btn-primary btn-sm flex items-center justify-center gap-2">
-                              <Eye className="w-4 h-4" />
-                              查看申請
-                            </button>
-                            <button className="btn btn-secondary btn-sm flex items-center justify-center gap-2">
-                              <Edit3 className="w-4 h-4" />
-                              編輯
-                            </button>
-                          </>
-                        )}
-                        
-                        {task.status === 'draft' && (
-                          <>
-                            <button className="btn btn-primary btn-sm">
-                              發布任務
-                            </button>
-                            <button className="btn btn-secondary btn-sm flex items-center justify-center gap-2">
-                              <Edit3 className="w-4 h-4" />
-                              編輯
-                            </button>
-                          </>
-                        )}
-                        
-                        {task.status === 'in_progress' && (
-                          <button className="btn btn-primary btn-sm flex items-center justify-center gap-2">
-                            <MessageCircle className="w-4 h-4" />
-                            聊天
-                          </button>
-                        )}
-                        
-                        {task.status === 'completed' && (
-                          <button className="btn btn-secondary btn-sm flex items-center justify-center gap-2">
-                            <Star className="w-4 h-4" />
-                            評價
-                          </button>
-                        )}
-                        
-                        <button className="btn btn-ghost btn-sm flex items-center justify-center gap-2 text-red-600 hover:text-red-700">
-                          <Trash2 className="w-4 h-4" />
-                          刪除
-                        </button>
+                    <div className="flex items-center gap-4 text-sm text-gray-500">
+                      <div className="flex items-center">
+                        <Eye className="w-4 h-4 mr-1" />
+                        {task.views}
+                      </div>
+                      <div className="flex items-center">
+                        <Users className="w-4 h-4 mr-1" />
+                        {task.applications}
                       </div>
                     </div>
                   </div>
-                ))}
-              </div>
-            ) : (
-              <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
-                <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Edit3 className="w-10 h-10 text-gray-400" />
+
+                  {/* Deadline */}
+                  <div className="mt-4 pt-4 border-t flex justify-between items-center">
+                    <div className="text-sm text-gray-600">
+                      截止: {formatDate(task.timeline.endDate)}
+                      {calculateDaysLeft(task.timeline.endDate) > 0 && (
+                        <span className="ml-2 text-blue-600 font-medium">
+                          ({calculateDaysLeft(task.timeline.endDate)} 天後)
+                        </span>
+                      )}
+                    </div>
+                    <button
+                      onClick={() => router.push(`/tasks/${task.id}`)}
+                      className="px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors"
+                    >
+                      查看詳情
+                    </button>
+                  </div>
                 </div>
-                <h3 className="text-lg font-medium text-gray-900 mb-2">
-                  {statusFilter === 'all' ? '還沒有任何任務' : `沒有${getStatusText(statusFilter)}的任務`}
-                </h3>
-                <p className="text-gray-600 mb-6">
-                  {statusFilter === 'all' 
-                    ? '發布您的第一個任務，找到完美的旅遊協助！' 
-                    : '試試調整篩選條件或發布新任務'
-                  }
-                </p>
-                <button
-                  onClick={() => setViewMode('create-task')}
-                  className="btn btn-primary"
-                >
-                  發布任務
-                </button>
               </div>
-            )}
-          </>
-        )}
-
-        {viewMode === 'browse-tasks' && (
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
-            <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Globe className="w-10 h-10 text-gray-400" />
-            </div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">瀏覽任務功能</h3>
-            <p className="text-gray-600 mb-6">此功能開發中，即將為您提供豐富的任務瀏覽體驗</p>
-            <p className="text-sm text-gray-500">
-              未來您可以在這裡瀏覽其他旅客發布的任務，並申請成為他們的地陪
-            </p>
-          </div>
-        )}
-
-        {viewMode === 'create-task' && (
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
-            <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Plus className="w-10 h-10 text-gray-400" />
-            </div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">發布任務功能</h3>
-            <p className="text-gray-600 mb-6">此功能開發中，即將為您提供完整的任務發布流程</p>
-            <p className="text-sm text-gray-500">
-              未來您可以在這裡詳細描述您的需求，設定預算和時間，找到最適合的地陪
-            </p>
+            ))}
           </div>
         )}
       </div>
