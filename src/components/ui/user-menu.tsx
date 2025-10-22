@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { User, LogOut, Settings, BookOpen, Heart } from 'lucide-react';
+import { User, LogOut, Settings, BookOpen, Heart, Briefcase, Plus } from 'lucide-react';
 import { useAuth } from '@/store/auth';
 
 export function UserMenu() {
@@ -65,6 +65,24 @@ export function UserMenu() {
       href: '/favorites',
       onClick: () => {
         router.push('/favorites');
+        setIsOpen(false);
+      }
+    },
+    {
+      icon: <Briefcase className="w-4 h-4" />,
+      label: '我的任務',
+      href: '/my-tasks',
+      onClick: () => {
+        router.push('/my-tasks');
+        setIsOpen(false);
+      }
+    },
+    {
+      icon: <Plus className="w-4 h-4" />,
+      label: '發佈任務',
+      href: '/tasks/create',
+      onClick: () => {
+        router.push('/tasks/create');
         setIsOpen(false);
       }
     },
