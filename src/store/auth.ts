@@ -270,20 +270,11 @@ export const useAuth = create<AuthState>()(
 
           // 更新本地用戶資料
           const updatedUser: User = {
-            ...result.data.user,
-            role: result.data.user.role.toLowerCase() as 'customer' | 'guide' | 'admin',
-            isKYCVerified: result.data.user.isKycVerified || false,
-            permissions: result.data.user.permissions || [],
+            ...user,
+            ...userData,
             profile: {
-              phone: result.data.user.userProfile?.phone,
-              bio: result.data.user.userProfile?.bio,
-              location: result.data.user.userProfile?.location,
-              birthDate: result.data.user.userProfile?.birthDate,
-              languages: result.data.user.userProfile?.languages,
-              specialties: result.data.user.userProfile?.specialties,
-              experienceYears: result.data.user.userProfile?.experienceYears,
-              certifications: result.data.user.userProfile?.certifications,
-              socialLinks: result.data.user.userProfile?.socialLinks,
+              ...user.profile,
+              ...userData.profile
             }
           };
           

@@ -131,15 +131,9 @@ export default function RegisterPage() {
         subscribeNewsletter: formData.subscribeNewsletter
       });
       
-      // 註冊成功，顯示成功訊息並跳轉
-      alert('註冊成功！歡迎加入 Guidee！');
-      
-      // 根據用戶類型跳轉到不同頁面
-      if (formData.userType === 'guide') {
-        router.push('/guide/dashboard');
-      } else {
-        router.push('/');
-      }
+      // 註冊成功，跳轉到個人資料設置頁面
+      alert('註冊成功！請完善個人資料以完成帳戶設置。');
+      router.push('/profile/setup');
     } catch (error: any) {
       setErrors({ 
         general: error.message || '註冊失敗，請稍後再試' 

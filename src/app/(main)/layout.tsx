@@ -1,5 +1,6 @@
 import { DualLayout } from '@/components/layout/dual-layout'
 import { AuthInit } from '@/components/auth/auth-init'
+import { ProfileSetupGuard } from '@/components/auth/profile-setup-guard'
 
 export default function MainLayout({
   children,
@@ -9,9 +10,11 @@ export default function MainLayout({
   return (
     <>
       <AuthInit />
-      <DualLayout>
-        {children}
-      </DualLayout>
+      <ProfileSetupGuard>
+        <DualLayout>
+          {children}
+        </DualLayout>
+      </ProfileSetupGuard>
     </>
   )
 }
