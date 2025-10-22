@@ -18,8 +18,17 @@ export interface User {
     phone?: string; // 電話號碼
     bio?: string; // 個人簡介
     location?: string; // 所在地點
+    birthDate?: string; // 生日
     languages?: string[]; // 語言能力
     specialties?: string[]; // 專長領域
+    experienceYears?: number; // 經驗年數
+    certifications?: string[]; // 認證資格
+    socialLinks?: { // 社群連結
+      website?: string;
+      instagram?: string;
+      facebook?: string;
+      linkedin?: string;
+    };
     avatar?: string; // 檔案頭像
   };
 }
@@ -38,6 +47,7 @@ interface AuthState {
   register: (data: RegisterData) => Promise<void>; // 用戶註冊
   logout: () => Promise<void>; // 用戶登出
   updateUser: (userData: Partial<User>) => Promise<void>; // 更新用戶資料
+  updateProfile: (profileData: Partial<User>) => Promise<void>; // 更新個人資料
   refreshAuth: () => Promise<void>; // 刷新認證令牌
   initializeAuth: () => Promise<void>; // 初始化認證狀態
   setLoading: (loading: boolean) => void; // 設置載入狀態
@@ -115,8 +125,12 @@ export const useAuth = create<AuthState>()(
               phone: data.data.user.phone,
               bio: data.data.user.userProfile?.bio,
               location: data.data.user.userProfile?.location,
+              birthDate: data.data.user.userProfile?.birthDate,
               languages: data.data.user.userProfile?.languages,
               specialties: data.data.user.userProfile?.specialties,
+              experienceYears: data.data.user.userProfile?.experienceYears,
+              certifications: data.data.user.userProfile?.certifications,
+              socialLinks: data.data.user.userProfile?.socialLinks,
             }
           };
           
@@ -240,8 +254,12 @@ export const useAuth = create<AuthState>()(
               phone: result.data.user.userProfile?.phone,
               bio: result.data.user.userProfile?.bio,
               location: result.data.user.userProfile?.location,
+              birthDate: result.data.user.userProfile?.birthDate,
               languages: result.data.user.userProfile?.languages,
               specialties: result.data.user.userProfile?.specialties,
+              experienceYears: result.data.user.userProfile?.experienceYears,
+              certifications: result.data.user.userProfile?.certifications,
+              socialLinks: result.data.user.userProfile?.socialLinks,
             }
           };
           
@@ -253,6 +271,42 @@ export const useAuth = create<AuthState>()(
         } catch (error) {
           set({ isLoading: false });
           throw error; // 拋出錯誤供上層處理
+        }
+      },
+
+      /**
+       * 更新個人資料方法 (mock implementation)
+       * @param profileData 要更新的個人資料
+       */
+      updateProfile: async (profileData: Partial<User>) => {
+        const { user } = get();
+        if (!user) {
+          throw new Error('未登入');
+        }
+        
+        set({ isLoading: true });
+        
+        try {
+          // Mock API delay
+          await new Promise(resolve => setTimeout(resolve, 1000));
+          
+          // Update user data locally (mock implementation)
+          const updatedUser: User = {
+            ...user,
+            ...profileData,
+            profile: {
+              ...user.profile,
+              ...profileData.profile
+            }
+          };
+          
+          set({
+            user: updatedUser,
+            isLoading: false,
+          });
+        } catch (error) {
+          set({ isLoading: false });
+          throw error;
         }
       },
 
@@ -314,8 +368,12 @@ export const useAuth = create<AuthState>()(
                   phone: data.data.user.phone,
                   bio: data.data.user.userProfile?.bio,
                   location: data.data.user.userProfile?.location,
+                  birthDate: data.data.user.userProfile?.birthDate,
                   languages: data.data.user.userProfile?.languages,
                   specialties: data.data.user.userProfile?.specialties,
+                  experienceYears: data.data.user.userProfile?.experienceYears,
+                  certifications: data.data.user.userProfile?.certifications,
+                  socialLinks: data.data.user.userProfile?.socialLinks,
                 }
               };
 

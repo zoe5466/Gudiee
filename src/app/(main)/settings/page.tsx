@@ -25,7 +25,6 @@ interface SettingItem {
   title: string;
   description: string;
   href: string;
-  badge?: string;
   color: string;
 }
 
@@ -225,11 +224,6 @@ export default function SettingsPage() {
                       </div>
                     </div>
                     <div className="flex items-center space-x-2">
-                      {item.badge && (
-                        <span className="px-2 py-1 bg-red-100 text-red-800 rounded-full text-xs">
-                          {item.badge}
-                        </span>
-                      )}
                       <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-gray-600" />
                     </div>
                   </Link>
