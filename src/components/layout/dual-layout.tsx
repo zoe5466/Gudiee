@@ -3,7 +3,6 @@
 import { usePathname } from 'next/navigation';
 import { useUserMode } from '@/store/user-mode';
 import { GuideSidebar } from './guide-sidebar';
-import { TravelerBottomNav } from './traveler-bottom-nav';
 import { Header } from './header';
 import { HomeSidebar } from './home-sidebar';
 import { CustomerSupportChat } from '@/components/chat/customer-support-chat';
@@ -51,13 +50,9 @@ export function DualLayout({ children }: DualLayoutProps) {
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
-      <main className={cn(
-        "min-h-screen pt-16",
-        "pb-20" // 為底部導航留空間
-      )}>
+      <main className="min-h-screen pt-16">
         {children}
       </main>
-      <TravelerBottomNav />
       <HomeSidebar />
       <CustomerSupportChat />
       <NotificationManager />
