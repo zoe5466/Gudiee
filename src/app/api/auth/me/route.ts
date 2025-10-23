@@ -78,10 +78,7 @@ function getCurrentUser() {
         phone: userData.phone || null,
         createdAt: new Date().toISOString(),
         userProfile: {
-          phone: userData.phone || undefined,
-          bio: undefined,
-          location: undefined,
-          birthDate: undefined,
+          ...(userData.phone && { phone: userData.phone }),
           languages: [],
           specialties: [],
           experienceYears: 0,
