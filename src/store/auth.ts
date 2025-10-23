@@ -251,6 +251,8 @@ export const useAuth = create<AuthState>()(
         set({ isLoading: true }); // 設置載入狀態
         
         try {
+          console.log('Sending update request with data:', userData);
+          
           // 向後端發送更新請求
           const response = await fetch('/api/user/profile', {
             method: 'PUT',
@@ -261,22 +263,43 @@ export const useAuth = create<AuthState>()(
             body: JSON.stringify(userData),
           });
 
+          console.log('Update response status:', response.status);
+
           const result = await response.json();
+          console.log('Update response data:', result);
 
           // 檢查請求是否成功
           if (!response.ok || !result.success) {
-            throw new Error(result.error || result.message || '更新個人資料失敗');
+            const errorMessage = result.error || result.message || '更新個人資料失敗';
+            console.error('Update failed:', errorMessage);
+            throw new Error(errorMessage);
           }
 
-          // 更新本地用戶資料
+          // 使用後端返回的用戶資料更新本地狀態
           const updatedUser: User = {
-            ...user,
-            ...userData,
+            id: result.data.user.id,
+            email: result.data.user.email,
+            name: result.data.user.name,
+            avatar: result.data.user.avatar,
+            role: result.data.user.role.toLowerCase() as 'customer' | 'guide' | 'admin',
+            isEmailVerified: result.data.user.isEmailVerified,
+            isKYCVerified: result.data.user.isKycVerified,
+            createdAt: result.data.user.createdAt,
+            permissions: result.data.user.permissions || [],
             profile: {
-              ...user.profile,
-              ...userData.profile
+              phone: result.data.user.userProfile?.phone,
+              bio: result.data.user.userProfile?.bio,
+              location: result.data.user.userProfile?.location,
+              birthDate: result.data.user.userProfile?.birthDate,
+              languages: result.data.user.userProfile?.languages || [],
+              specialties: result.data.user.userProfile?.specialties || [],
+              experienceYears: result.data.user.userProfile?.experienceYears,
+              certifications: result.data.user.userProfile?.certifications || [],
+              socialLinks: result.data.user.userProfile?.socialLinks,
             }
           };
+          
+          console.log('Updated user data:', updatedUser);
           
           // 更新狀態
           set({
@@ -284,6 +307,7 @@ export const useAuth = create<AuthState>()(
             isLoading: false,
           });
         } catch (error) {
+          console.error('Update user error:', error);
           set({ isLoading: false });
           throw error; // 拋出錯誤供上層處理
         }

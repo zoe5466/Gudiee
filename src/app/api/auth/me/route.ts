@@ -63,7 +63,31 @@ function getCurrentUser() {
     }
 
     // 從模擬數據中找到用戶
-    const user = mockUsers.find(u => u.id === userData.id);
+    let user = mockUsers.find(u => u.id === userData.id);
+    
+    // 如果在預定義用戶中找不到，表示是新註冊的用戶，從 token 中構建用戶資料
+    if (!user && userData.id && userData.email) {
+      user = {
+        id: userData.id,
+        email: userData.email,
+        name: userData.name || '用戶',
+        role: userData.role || 'CUSTOMER',
+        isEmailVerified: true,
+        isKycVerified: false, // 新註冊用戶需要完成 KYC
+        permissions: userData.role === 'GUIDE' ? ['user:read', 'guide:manage'] : ['user:read'],
+        phone: userData.phone || null,
+        createdAt: new Date().toISOString(),
+        userProfile: {
+          bio: null,
+          location: null,
+          languages: [],
+          specialties: [],
+          experienceYears: 0,
+          certifications: []
+        }
+      };
+    }
+    
     return user || null;
 
   } catch (error) {

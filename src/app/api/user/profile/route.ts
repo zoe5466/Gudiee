@@ -59,6 +59,43 @@ const mockUsers = [
       languages: ['中文'],
       specialties: []
     }
+  },
+  // 新增測試用戶 - 尚未完成 KYC 驗證的用戶
+  {
+    id: 'user-new-001',
+    email: 'newuser@test.com',
+    name: '測試用戶',
+    role: 'CUSTOMER',
+    avatar: null,
+    isEmailVerified: true,
+    isKycVerified: false, // 尚未完成 KYC
+    permissions: ['user:read'],
+    createdAt: new Date().toISOString(),
+    userProfile: {
+      phone: null,
+      bio: null,
+      location: null,
+      languages: [],
+      specialties: []
+    }
+  },
+  {
+    id: 'guide-new-001',
+    email: 'newguide@test.com',
+    name: '新導遊',
+    role: 'GUIDE',
+    avatar: null,
+    isEmailVerified: true,
+    isKycVerified: false, // 尚未完成 KYC
+    permissions: ['user:read'],
+    createdAt: new Date().toISOString(),
+    userProfile: {
+      phone: null,
+      bio: null,
+      location: null,
+      languages: [],
+      specialties: []
+    }
   }
 ];
 
@@ -81,7 +118,33 @@ function getCurrentUser() {
     }
 
     // 從模擬數據中找到用戶
-    const user = mockUsers.find(u => u.id === userData.id);
+    let user = mockUsers.find(u => u.id === userData.id);
+    
+    // 如果在預定義用戶中找不到，表示是新註冊的用戶，從 token 中構建用戶資料
+    if (!user && userData.id && userData.email) {
+      user = {
+        id: userData.id,
+        email: userData.email,
+        name: userData.name || '用戶',
+        role: userData.role || 'CUSTOMER',
+        avatar: null,
+        isEmailVerified: true,
+        isKycVerified: false, // 新註冊用戶需要完成 KYC
+        permissions: userData.role === 'GUIDE' ? ['user:read', 'guide:manage'] : ['user:read'],
+        createdAt: new Date().toISOString(),
+        userProfile: {
+          phone: userData.phone || null,
+          bio: null,
+          location: null,
+          birthDate: null,
+          languages: [],
+          specialties: [],
+          experienceYears: 0,
+          certifications: []
+        }
+      };
+    }
+    
     return user || null;
 
   } catch (error) {
@@ -134,7 +197,7 @@ export async function PUT(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { name, avatar, profile } = body;
+    const { name, avatar, profile, isKYCVerified } = body;
 
     console.log('Update profile for user:', user.email, body);
 
@@ -153,18 +216,37 @@ export async function PUT(request: NextRequest) {
       return errorResponse('自我介紹不能超過500個字元', 400);
     }
 
+    // 驗證生日日期格式
+    if (profile?.birthDate) {
+      const birthDate = new Date(profile.birthDate);
+      if (isNaN(birthDate.getTime())) {
+        return errorResponse('請輸入有效的出生日期', 400);
+      }
+      
+      // 檢查年齡合理性（18-100歲）
+      const age = new Date().getFullYear() - birthDate.getFullYear();
+      if (age < 18 || age > 100) {
+        return errorResponse('年齡必須在18至100歲之間', 400);
+      }
+    }
+
     // 更新用戶資料（在實際應用中這裡會更新資料庫）
     const updatedUser = {
       ...user,
       name: name.trim(),
       avatar: avatar || user.avatar,
+      // 更新 KYC 驗證狀態
+      ...(isKYCVerified !== undefined && { isKycVerified: isKYCVerified }),
       userProfile: {
         ...user.userProfile,
         phone: profile?.phone || user.userProfile?.phone,
         bio: profile?.bio || user.userProfile?.bio,
         location: profile?.location || user.userProfile?.location,
+        birthDate: profile?.birthDate || user.userProfile?.birthDate,
         languages: profile?.languages || user.userProfile?.languages || [],
-        specialties: profile?.specialties || user.userProfile?.specialties || []
+        specialties: profile?.specialties || user.userProfile?.specialties || [],
+        experienceYears: profile?.experienceYears !== undefined ? profile.experienceYears : user.userProfile?.experienceYears,
+        certifications: profile?.certifications || user.userProfile?.certifications || []
       },
       updatedAt: new Date().toISOString()
     };

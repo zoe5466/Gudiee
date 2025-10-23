@@ -240,7 +240,23 @@ export default function ProfileSetupPage() {
       }
       
     } catch (error) {
-      alert('設置失敗，請稍後再試');
+      console.error('設置失敗詳細錯誤:', error);
+      
+      // 顯示具體的錯誤訊息
+      let errorMessage = '設置失敗，請稍後再試';
+      
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      } else if (typeof error === 'string') {
+        errorMessage = error;
+      }
+      
+      // 檢查是否是網路錯誤
+      if (errorMessage.includes('fetch')) {
+        errorMessage = '網路連線錯誤，請檢查網路連線後重試';
+      }
+      
+      alert(errorMessage);
     } finally {
       setIsSubmitting(false);
     }

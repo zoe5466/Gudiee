@@ -67,7 +67,9 @@ export async function POST(request: NextRequest) {
     const token = btoa(JSON.stringify({
       id: newUser.id,
       email: newUser.email,
+      name: newUser.name,
       role: newUser.role,
+      phone: newUser.phone,
       exp: Date.now() + (7 * 24 * 60 * 60 * 1000)
     }));
 
