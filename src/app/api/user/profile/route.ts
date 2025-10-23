@@ -258,6 +258,10 @@ export async function PUT(request: NextRequest) {
     const userIndex = mockUsers.findIndex(u => u.id === user.id);
     if (userIndex !== -1) {
       mockUsers[userIndex] = updatedUser;
+    } else {
+      // 如果是新用戶，將其添加到 mockUsers 列表中
+      mockUsers.push(updatedUser);
+      console.log('Added new user to mockUsers:', user.email);
     }
 
     console.log('Profile updated successfully for:', user.email);
@@ -323,6 +327,10 @@ export async function PATCH(request: NextRequest) {
     const userIndex = mockUsers.findIndex(u => u.id === user.id);
     if (userIndex !== -1) {
       mockUsers[userIndex] = updatedUser;
+    } else {
+      // 如果是新用戶，將其添加到 mockUsers 列表中
+      mockUsers.push(updatedUser);
+      console.log('Added new user to mockUsers:', user.email);
     }
 
     console.log('Profile partially updated successfully for:', user.email);
