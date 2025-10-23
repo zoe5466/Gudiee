@@ -71,12 +71,12 @@ function getCurrentUser() {
         id: userData.id,
         email: userData.email,
         name: userData.name || '用戶',
-        role: userData.role || 'CUSTOMER',
+        role: (userData.role?.toLowerCase() || 'customer') as 'customer' | 'guide' | 'admin',
         isEmailVerified: true,
         isKycVerified: false, // 新註冊用戶需要完成 KYC
         permissions: userData.role === 'GUIDE' ? ['user:read', 'guide:manage'] : ['user:read'],
         createdAt: new Date().toISOString(),
-        userProfile: {
+        profile: {
           ...(userData.phone && { phone: userData.phone }),
           languages: [],
           specialties: [],

@@ -16,7 +16,7 @@ const mockUsers = [
     isKycVerified: true,
     permissions: ['user:read', 'guide:manage', 'booking:manage'],
     createdAt: '2024-01-15T08:00:00.000Z',
-    userProfile: {
+    profile: {
       phone: '0912345678',
       bio: '專業台北導遊，擁有5年導覽經驗，熟悉台北各大景點和在地文化。',
       location: '台北市',
@@ -34,7 +34,7 @@ const mockUsers = [
     isKycVerified: true,
     permissions: ['user:read', 'guide:manage', 'booking:manage'],
     createdAt: '2024-02-10T10:30:00.000Z',
-    userProfile: {
+    profile: {
       phone: '0923456789',
       bio: '資深地陪導遊，專精自然生態導覽，擁有豐富的戶外活動經驗。',
       location: '台中市',
@@ -52,7 +52,7 @@ const mockUsers = [
     isKycVerified: true,
     permissions: ['admin:full', 'user:manage', 'service:manage', 'booking:manage'],
     createdAt: '2024-01-01T00:00:00.000Z',
-    userProfile: {
+    profile: {
       languages: ['中文'],
       specialties: []
     }
@@ -68,7 +68,7 @@ const mockUsers = [
     isKycVerified: false, // 尚未完成 KYC
     permissions: ['user:read'],
     createdAt: new Date().toISOString(),
-    userProfile: {
+    profile: {
       languages: [],
       specialties: []
     }
@@ -83,7 +83,7 @@ const mockUsers = [
     isKycVerified: false, // 尚未完成 KYC
     permissions: ['user:read'],
     createdAt: new Date().toISOString(),
-    userProfile: {
+    profile: {
       languages: [],
       specialties: []
     }
@@ -123,7 +123,7 @@ function getCurrentUser() {
         isKycVerified: false, // 新註冊用戶需要完成 KYC
         permissions: userData.role === 'GUIDE' ? ['user:read', 'guide:manage'] : ['user:read'],
         createdAt: new Date().toISOString(),
-        userProfile: {
+        profile: {
           ...(userData.phone && { phone: userData.phone }),
           languages: [],
           specialties: [],
@@ -158,10 +158,10 @@ export async function GET(request: NextRequest) {
     console.log('Get profile for user:', user.email);
 
     // 移除敏感資訊並返回用戶資料
-    const { ...userProfile } = user;
+    const { ...userData } = user;
     
     return successResponse({
-      user: userProfile
+      user: userData
     });
 
   } catch (error) {
@@ -225,16 +225,16 @@ export async function PUT(request: NextRequest) {
       avatar: avatar || user.avatar,
       // 更新 KYC 驗證狀態
       ...(isKYCVerified !== undefined && { isKycVerified: isKYCVerified }),
-      userProfile: {
-        ...user.userProfile,
-        phone: profile?.phone || user.userProfile?.phone,
-        bio: profile?.bio || user.userProfile?.bio,
-        location: profile?.location || user.userProfile?.location,
-        birthDate: profile?.birthDate || user.userProfile?.birthDate,
-        languages: profile?.languages || user.userProfile?.languages || [],
-        specialties: profile?.specialties || user.userProfile?.specialties || [],
-        experienceYears: profile?.experienceYears !== undefined ? profile.experienceYears : user.userProfile?.experienceYears,
-        certifications: profile?.certifications || user.userProfile?.certifications || []
+      profile: {
+        ...user.profile,
+        phone: profile?.phone || user.profile?.phone,
+        bio: profile?.bio || user.profile?.bio,
+        location: profile?.location || user.profile?.location,
+        birthDate: profile?.birthDate || user.profile?.birthDate,
+        languages: profile?.languages || user.profile?.languages || [],
+        specialties: profile?.specialties || user.profile?.specialties || [],
+        experienceYears: profile?.experienceYears !== undefined ? profile.experienceYears : user.profile?.experienceYears,
+        certifications: profile?.certifications || user.profile?.certifications || []
       },
       updatedAt: new Date().toISOString()
     };
@@ -300,8 +300,8 @@ export async function PATCH(request: NextRequest) {
       ...user,
       ...(body.name !== undefined && { name: body.name.trim() }),
       ...(body.avatar !== undefined && { avatar: body.avatar }),
-      userProfile: {
-        ...user.userProfile,
+      profile: {
+        ...user.profile,
         ...(body.profile?.phone !== undefined && { phone: body.profile.phone }),
         ...(body.profile?.bio !== undefined && { bio: body.profile.bio }),
         ...(body.profile?.location !== undefined && { location: body.profile.location }),
