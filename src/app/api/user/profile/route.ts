@@ -4,8 +4,33 @@ import { NextRequest } from 'next/server';
 import { cookies } from 'next/headers';
 import { successResponse, errorResponse, unauthorizedResponse } from '@/lib/api-response';
 
+// 用戶資料介面定義
+interface UserProfile {
+  phone?: string;
+  bio?: string;
+  location?: string;
+  birthDate?: string;
+  languages: string[];
+  specialties: string[];
+  experienceYears?: number;
+  certifications: string[];
+}
+
+interface MockUser {
+  id: string;
+  email: string;
+  name: string;
+  role: string;
+  avatar?: string | null;
+  isEmailVerified: boolean;
+  isKycVerified: boolean;
+  permissions: string[];
+  createdAt: string;
+  profile: UserProfile;
+}
+
 // 模擬用戶資料庫（與認證 API 保持一致）
-const mockUsers = [
+const mockUsers: MockUser[] = [
   {
     id: 'guide-001',
     email: 'guide1@guidee.com',
@@ -20,8 +45,11 @@ const mockUsers = [
       phone: '0912345678',
       bio: '專業台北導遊，擁有5年導覽經驗，熟悉台北各大景點和在地文化。',
       location: '台北市',
+      birthDate: '1990-01-01',
       languages: ['中文', '英文'],
-      specialties: ['歷史文化', '美食導覽']
+      specialties: ['歷史文化', '美食導覽'],
+      experienceYears: 5,
+      certifications: ['導遊證照', '急救證照']
     }
   },
   {
@@ -38,8 +66,11 @@ const mockUsers = [
       phone: '0923456789',
       bio: '資深地陪導遊，專精自然生態導覽，擁有豐富的戶外活動經驗。',
       location: '台中市',
+      birthDate: '1985-05-15',
       languages: ['中文', '英文', '日文'],
-      specialties: ['自然生態', '攝影指導']
+      specialties: ['自然生態', '攝影指導'],
+      experienceYears: 8,
+      certifications: ['生態導遊證照', '攝影專業證照']
     }
   },
   {
@@ -54,7 +85,9 @@ const mockUsers = [
     createdAt: '2024-01-01T00:00:00.000Z',
     profile: {
       languages: ['中文'],
-      specialties: []
+      specialties: [] as string[],
+      experienceYears: 0,
+      certifications: [] as string[]
     }
   },
   // 新增測試用戶 - 尚未完成 KYC 驗證的用戶
@@ -69,8 +102,10 @@ const mockUsers = [
     permissions: ['user:read'],
     createdAt: new Date().toISOString(),
     profile: {
-      languages: [],
-      specialties: []
+      languages: [] as string[],
+      specialties: [] as string[],
+      experienceYears: 0,
+      certifications: [] as string[]
     }
   },
   {
@@ -84,8 +119,10 @@ const mockUsers = [
     permissions: ['user:read'],
     createdAt: new Date().toISOString(),
     profile: {
-      languages: [],
-      specialties: []
+      languages: [] as string[],
+      specialties: [] as string[],
+      experienceYears: 0,
+      certifications: [] as string[]
     }
   }
 ];

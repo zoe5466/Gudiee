@@ -25,16 +25,19 @@ interface User {
   id: string
   email: string
   name: string
-  role: string
+  avatar?: string | null
+  role: 'customer' | 'guide' | 'admin'
   isEmailVerified: boolean
   isKycVerified: boolean
   createdAt: string
   lastLoginAt?: string
-  userProfile?: {
-    name: string
+  permissions?: string[]
+  profile?: {
+    phone?: string
     bio?: string
-    location: string
-    languages: string[]
+    location?: string
+    birthDate?: string
+    languages?: string[]
     specialties?: string[]
     experienceYears?: number
     certifications?: string[]
@@ -86,8 +89,7 @@ export default function UsersManagement() {
     if (searchTerm) {
       filtered = filtered.filter(user => 
         user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.userProfile?.name?.toLowerCase().includes(searchTerm.toLowerCase())
+        user.name?.toLowerCase().includes(searchTerm.toLowerCase())
       )
     }
 
@@ -265,13 +267,13 @@ export default function UsersManagement() {
                   <div className="flex items-center space-x-4 flex-1">
                     <div className="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center">
                       <span className="text-sm font-semibold text-gray-600">
-                        {((user.userProfile?.name || user.name || user.email || '?')[0] || '?').toUpperCase()}
+                        {(user.name || user.email || '?')[0]?.toUpperCase()}
                       </span>
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center space-x-2">
                         <h3 className="text-sm font-semibold text-gray-900">
-                          {user.userProfile?.name || user.name || '未設定'}
+                          {user.name || '未設定'}
                         </h3>
                         <Badge variant={getRoleVariant(user.role)} className="text-xs">
                           {getRoleLabel(user.role)}
@@ -290,18 +292,18 @@ export default function UsersManagement() {
                         )}
                       </div>
                       <p className="text-sm text-gray-600">{user.email}</p>
-                      {user.userProfile?.location && (
-                        <p className="text-xs text-gray-500">📍 {user.userProfile.location}</p>
+                      {user.profile?.location && (
+                        <p className="text-xs text-gray-500">📍 {user.profile.location}</p>
                       )}
-                      {user.userProfile?.languages && user.userProfile.languages.length > 0 && (
+                      {user.profile?.languages && user.profile.languages.length > 0 && (
                         <div className="flex flex-wrap gap-1 mt-1">
-                          {user.userProfile.languages.slice(0, 3).map((lang, index) => (
+                          {user.profile.languages.slice(0, 3).map((lang, index) => (
                             <span key={index} className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">
                               {lang}
                             </span>
                           ))}
-                          {user.userProfile.languages.length > 3 && (
-                            <span className="text-xs text-gray-500">+{user.userProfile.languages.length - 3} 更多</span>
+                          {user.profile.languages.length > 3 && (
+                            <span className="text-xs text-gray-500">+{user.profile.languages.length - 3} 更多</span>
                           )}
                         </div>
                       )}
@@ -310,9 +312,9 @@ export default function UsersManagement() {
                       <p className="text-xs text-gray-500">
                         註冊於 {new Date(user.createdAt).toLocaleDateString('zh-TW')}
                       </p>
-                      {user.userProfile?.experienceYears && (
+                      {user.profile?.experienceYears && (
                         <p className="text-xs text-gray-500">
-                          {user.userProfile.experienceYears} 年經驗
+                          {user.profile.experienceYears} 年經驗
                         </p>
                       )}
                     </div>
@@ -385,12 +387,12 @@ export default function UsersManagement() {
                       <div className="flex items-center space-x-4">
                         <div className="w-16 h-16 bg-gray-300 rounded-full flex items-center justify-center">
                           <span className="text-xl font-bold text-gray-600">
-                            {((selectedUser.userProfile?.name || selectedUser.name || selectedUser.email || '?')[0] || '?').toUpperCase()}
+                            {(selectedUser.name || selectedUser.email || '?')[0]?.toUpperCase()}
                           </span>
                         </div>
                         <div>
                           <h3 className="text-lg font-semibold">
-                            {selectedUser.userProfile?.name || selectedUser.name || '未設定'}
+                            {selectedUser.name || '未設定'}
                           </h3>
                           <p className="text-gray-600">{selectedUser.email}</p>
                           <div className="flex items-center space-x-2 mt-2">
@@ -461,34 +463,34 @@ export default function UsersManagement() {
                 </div>
                 
                 {/* Profile Details */}
-                {selectedUser.userProfile && (
+                {selectedUser.profile && (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <Card>
                       <CardHeader>
                         <CardTitle className="text-lg">個人檔案</CardTitle>
                       </CardHeader>
                       <CardContent className="space-y-4">
-                        {selectedUser.userProfile.bio && (
+                        {selectedUser.profile.bio && (
                           <div>
                             <p className="text-sm text-gray-600 mb-1">個人簡介</p>
-                            <p className="text-sm bg-gray-50 p-3 rounded">{selectedUser.userProfile.bio}</p>
+                            <p className="text-sm bg-gray-50 p-3 rounded">{selectedUser.profile.bio}</p>
                           </div>
                         )}
                         
-                        {selectedUser.userProfile.location && (
+                        {selectedUser.profile.location && (
                           <div>
                             <p className="text-sm text-gray-600 mb-1">所在地區</p>
                             <p className="text-sm flex items-center">
                               <MapPin className="h-4 w-4 mr-1 text-gray-400" />
-                              {selectedUser.userProfile.location}
+                              {selectedUser.profile.location}
                             </p>
                           </div>
                         )}
                         
-                        {selectedUser.userProfile.experienceYears && (
+                        {selectedUser.profile.experienceYears && (
                           <div>
                             <p className="text-sm text-gray-600 mb-1">經驗年數</p>
-                            <p className="text-sm">{selectedUser.userProfile.experienceYears} 年</p>
+                            <p className="text-sm">{selectedUser.profile.experienceYears} 年</p>
                           </div>
                         )}
                       </CardContent>
@@ -499,11 +501,11 @@ export default function UsersManagement() {
                         <CardTitle className="text-lg">技能與語言</CardTitle>
                       </CardHeader>
                       <CardContent className="space-y-4">
-                        {selectedUser.userProfile.languages && selectedUser.userProfile.languages.length > 0 && (
+                        {selectedUser.profile.languages && selectedUser.profile.languages.length > 0 && (
                           <div>
                             <p className="text-sm text-gray-600 mb-2">語言能力</p>
                             <div className="flex flex-wrap gap-2">
-                              {selectedUser.userProfile.languages.map((lang, index) => (
+                              {selectedUser.profile.languages.map((lang, index) => (
                                 <Badge key={index} variant="secondary" className="text-xs">
                                   {lang}
                                 </Badge>
@@ -512,11 +514,11 @@ export default function UsersManagement() {
                           </div>
                         )}
                         
-                        {selectedUser.userProfile.specialties && selectedUser.userProfile.specialties.length > 0 && (
+                        {selectedUser.profile.specialties && selectedUser.profile.specialties.length > 0 && (
                           <div>
                             <p className="text-sm text-gray-600 mb-2">專業領域</p>
                             <div className="flex flex-wrap gap-2">
-                              {selectedUser.userProfile.specialties.map((specialty, index) => (
+                              {selectedUser.profile.specialties.map((specialty, index) => (
                                 <Badge key={index} variant="outline" className="text-xs">
                                   {specialty}
                                 </Badge>
@@ -525,11 +527,11 @@ export default function UsersManagement() {
                           </div>
                         )}
                         
-                        {selectedUser.userProfile.certifications && selectedUser.userProfile.certifications.length > 0 && (
+                        {selectedUser.profile.certifications && selectedUser.profile.certifications.length > 0 && (
                           <div>
                             <p className="text-sm text-gray-600 mb-2">認證資格</p>
                             <div className="space-y-1">
-                              {selectedUser.userProfile.certifications.map((cert, index) => (
+                              {selectedUser.profile.certifications.map((cert, index) => (
                                 <p key={index} className="text-xs bg-green-50 text-green-700 p-2 rounded flex items-center">
                                   <CheckCircle className="h-3 w-3 mr-1" />
                                   {cert}

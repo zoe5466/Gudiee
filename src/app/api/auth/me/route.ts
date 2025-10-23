@@ -7,40 +7,60 @@ const mockUsers = [
     id: 'guide-001',
     email: 'guide1@guidee.com',
     name: '張小美',
-    role: 'GUIDE',
+    role: 'guide',
+    avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face',
     isEmailVerified: true,
     isKycVerified: true,
     permissions: ['user:read', 'guide:manage', 'booking:manage'],
-    userProfile: {
+    createdAt: '2024-01-01T00:00:00.000Z',
+    profile: {
+      phone: '0912345678',
       bio: '專業台北導遊，擁有5年導覽經驗',
       location: '台北市',
+      birthDate: '1990-01-01',
       languages: ['中文', '英文'],
-      specialties: ['歷史文化', '美食導覽']
+      specialties: ['歷史文化', '美食導覽'],
+      experienceYears: 5,
+      certifications: ['導遊證照', '急救證照']
     }
   },
   {
     id: 'guide-002',
     email: 'guide2@guidee.com',
     name: '李大明',
-    role: 'GUIDE',
+    role: 'guide',
+    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face',
     isEmailVerified: true,
     isKycVerified: true,
     permissions: ['user:read', 'guide:manage', 'booking:manage'],
-    userProfile: {
+    createdAt: '2024-01-15T00:00:00.000Z',
+    profile: {
+      phone: '0923456789',
       bio: '資深地陪導遊，專精自然生態導覽',
       location: '台中市',
+      birthDate: '1985-05-15',
       languages: ['中文', '英文', '日文'],
-      specialties: ['自然生態', '攝影指導']
+      specialties: ['自然生態', '攝影指導'],
+      experienceYears: 8,
+      certifications: ['生態導遊證照', '攝影專業證照']
     }
   },
   {
     id: 'admin-001',
     email: 'admin@guidee.com',
     name: '系統管理員',
-    role: 'ADMIN',
+    role: 'admin',
+    avatar: null,
     isEmailVerified: true,
     isKycVerified: true,
-    permissions: ['admin:full', 'user:manage', 'service:manage', 'booking:manage']
+    permissions: ['admin:full', 'user:manage', 'service:manage', 'booking:manage'],
+    createdAt: '2023-12-01T00:00:00.000Z',
+    profile: {
+      languages: ['中文'],
+      specialties: [],
+      experienceYears: 0,
+      certifications: []
+    }
   }
 ];
 
@@ -67,11 +87,12 @@ function getCurrentUser() {
     
     // 如果在預定義用戶中找不到，表示是新註冊的用戶，從 token 中構建用戶資料
     if (!user && userData.id && userData.email) {
-      user = {
+      const newUser = {
         id: userData.id,
         email: userData.email,
         name: userData.name || '用戶',
         role: (userData.role?.toLowerCase() || 'customer') as 'customer' | 'guide' | 'admin',
+        avatar: null,
         isEmailVerified: true,
         isKycVerified: false, // 新註冊用戶需要完成 KYC
         permissions: userData.role === 'GUIDE' ? ['user:read', 'guide:manage'] : ['user:read'],
@@ -84,6 +105,7 @@ function getCurrentUser() {
           certifications: []
         }
       };
+      user = newUser;
     }
     
     return user || null;
