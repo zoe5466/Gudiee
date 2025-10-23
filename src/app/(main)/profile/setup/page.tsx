@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, ArrowRight, Upload, X, AlertCircle, CheckCircle, Camera, User, Phone, MapPin, FileText, IdCard } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Upload, X, AlertCircle, CheckCircle, Camera, User, Phone, MapPin, FileText, CreditCard } from 'lucide-react';
 import { useAuth } from '@/store/auth';
 
 interface SetupFormData {
@@ -418,7 +418,7 @@ export default function ProfileSetupPage() {
           {currentStep === 2 && (
             <div className="space-y-6">
               <div className="text-center mb-6">
-                <IdCard className="w-12 h-12 text-blue-600 mx-auto mb-3" />
+                <CreditCard className="w-12 h-12 text-blue-600 mx-auto mb-3" />
                 <h2 className="text-xl font-semibold text-gray-900">身分驗證</h2>
                 <p className="text-gray-600">請上傳身分證照片以完成身分驗證</p>
               </div>
