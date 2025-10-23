@@ -75,7 +75,6 @@ function getCurrentUser() {
         isEmailVerified: true,
         isKycVerified: false, // 新註冊用戶需要完成 KYC
         permissions: userData.role === 'GUIDE' ? ['user:read', 'guide:manage'] : ['user:read'],
-        phone: userData.phone || null,
         createdAt: new Date().toISOString(),
         userProfile: {
           ...(userData.phone && { phone: userData.phone }),
