@@ -53,9 +53,9 @@ const mockUsers = [
     permissions: ['admin:full', 'user:manage', 'service:manage', 'booking:manage'],
     createdAt: '2024-01-01T00:00:00.000Z',
     userProfile: {
-      phone: null,
-      bio: null,
-      location: null,
+      phone: undefined,
+      bio: undefined,
+      location: undefined,
       languages: ['中文'],
       specialties: []
     }
@@ -72,9 +72,9 @@ const mockUsers = [
     permissions: ['user:read'],
     createdAt: new Date().toISOString(),
     userProfile: {
-      phone: null,
-      bio: null,
-      location: null,
+      phone: undefined,
+      bio: undefined,
+      location: undefined,
       languages: [],
       specialties: []
     }
@@ -90,9 +90,9 @@ const mockUsers = [
     permissions: ['user:read'],
     createdAt: new Date().toISOString(),
     userProfile: {
-      phone: null,
-      bio: null,
-      location: null,
+      phone: undefined,
+      bio: undefined,
+      location: undefined,
       languages: [],
       specialties: []
     }
@@ -133,10 +133,10 @@ function getCurrentUser() {
         permissions: userData.role === 'GUIDE' ? ['user:read', 'guide:manage'] : ['user:read'],
         createdAt: new Date().toISOString(),
         userProfile: {
-          phone: userData.phone || null,
-          bio: null,
-          location: null,
-          birthDate: null,
+          phone: userData.phone || undefined,
+          bio: undefined,
+          location: undefined,
+          birthDate: undefined,
           languages: [],
           specialties: [],
           experienceYears: 0,
