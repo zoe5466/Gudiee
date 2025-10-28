@@ -13,6 +13,7 @@ import {
   Clock, 
   AlertTriangle,
   CheckCircle,
+  DollarSign,
   XCircle,
   Eye,
   Download,

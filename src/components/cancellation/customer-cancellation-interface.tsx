@@ -769,7 +769,7 @@ export function CustomerCancellationInterface({
                     margin: '0.5rem 0 0',
                     fontStyle: 'italic'
                   }}>
-                    "{description}"
+                    &quot;{description}&quot;
                   </p>
                 )}
               </div>

@@ -194,8 +194,8 @@ export function CancellationPolicyEngine({
   const currentCalculation = calculateRefund(
     selectedPolicy,
     calculatorData.bookingAmount,
-    calculatorData.serviceDate,
-    calculatorData.cancellationDate
+    calculatorData.serviceDate || '',
+    calculatorData.cancellationDate || ''
   );
 
   // 新增規則

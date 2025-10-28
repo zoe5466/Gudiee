@@ -137,7 +137,7 @@ export function ComprehensiveChatSystem({
     try {
       const messageData: SendMessageRequest = {
         content: content || undefined,
-        type: selectedFiles.length > 0 ? (selectedFiles[0].type.startsWith('image/') ? 'IMAGE' : 'FILE') : 'TEXT',
+        type: selectedFiles.length > 0 ? (selectedFiles[0]?.type.startsWith('image/') ? 'IMAGE' : 'FILE') : 'TEXT',
         attachments: selectedFiles.length > 0 ? selectedFiles : undefined,
         replyToId: replyToMessage?.id
       };
@@ -152,7 +152,10 @@ export function ComprehensiveChatSystem({
       inputRef.current?.focus();
       
       // Callback
-      onMessageSent?.(messages[messages.length - 1]);
+      const lastMessage = messages[messages.length - 1];
+      if (lastMessage) {
+        onMessageSent?.(lastMessage);
+      }
       
     } catch (error) {
       console.error('Failed to send message:', error);

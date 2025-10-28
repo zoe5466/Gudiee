@@ -547,7 +547,7 @@ export default function ReviewAnalyticsDashboard({
                     {statistics.recommendationRate.toFixed(1)}%
                   </p>
                   <p style={{ fontSize: '12px', color: '#1e40af', margin: '4px 0 0 0' }}>
-                    {statistics.ratingDistribution[5] + statistics.ratingDistribution[4]} 位推薦
+                    {(statistics.ratingDistribution[5] || 0) + (statistics.ratingDistribution[4] || 0)} 位推薦
                   </p>
                 </div>
                 <ThumbsUp size={32} color="#3b82f6" />

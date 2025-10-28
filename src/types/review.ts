@@ -421,12 +421,4 @@ export interface ReviewModeration {
   moderatedAt: string;              // 審核時間
 }
 
-// 匯出所有類型
-export type {
-  ReviewStatus,
-  ReviewerType,
-  ResponderType,
-  ReportReason,
-  RatingDimension,
-  TravelerRatingDimension
-};
+// 注意：類型已在上方直接導出，無需重複導出

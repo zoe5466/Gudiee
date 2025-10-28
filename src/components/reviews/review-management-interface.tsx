@@ -140,7 +140,7 @@ export default function ReviewManagementInterface({
           '價格合理，服務品質很好，值得推薦。',
           '導遊很準時，講解詳細，整體體驗很滿意。',
           '服務態度很好，但是行程內容可以更豐富一些。'
-        ][Math.floor(Math.random() * 6)],
+        ][Math.floor(Math.random() * 6)] || '',
         pros: Math.random() > 0.5 ? ['專業知識', '準時', '親切'] : [],
         cons: Math.random() > 0.7 ? ['時間安排緊湊'] : [],
         tags: Math.random() > 0.5 ? ['專業', '準時', '親切'] : [],
@@ -152,7 +152,7 @@ export default function ReviewManagementInterface({
             fileSize: 1024000
           }
         ] : [],
-        status: STATUS_OPTIONS[Math.floor(Math.random() * STATUS_OPTIONS.length)].value,
+        status: STATUS_OPTIONS[Math.floor(Math.random() * STATUS_OPTIONS.length)]?.value || 'PENDING',
         isAnonymous: Math.random() > 0.8,
         isVerified: Math.random() > 0.3,
         isFeatured: Math.random() > 0.9,

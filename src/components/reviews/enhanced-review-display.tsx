@@ -22,6 +22,7 @@ import {
   Heart,
   Reply,
   Edit,
+  BarChart3,
   Trash2,
   Send,
   X,
@@ -661,7 +662,7 @@ export default function EnhancedReviewDisplay({
               
               {/* 驗證標章 */}
               {review.reviewer.isVerified && (
-                <CheckCircle size={16} color="#10b981" title="已驗證用戶" />
+                <CheckCircle size={16} color="#10b981" />
               )}
               
               {/* 狀態標籤 */}
@@ -683,7 +684,7 @@ export default function EnhancedReviewDisplay({
               
               {/* 精選標籤 */}
               {review.isFeatured && (
-                <Award size={16} color="#f59e0b" title="精選評論" />
+                <Award size={16} color="#f59e0b" />
               )}
             </div>
 
@@ -1240,7 +1241,7 @@ export default function EnhancedReviewDisplay({
                          response.authorType === 'ADMIN' ? '管理員' : '用戶'}
                       </span>
                       {response.isOfficial && (
-                        <Shield size={12} color="#10b981" title="官方回覆" />
+                        <Shield size={12} color="#10b981" />
                       )}
                     </div>
                     <span style={{ fontSize: '12px', color: '#6b7280' }}>

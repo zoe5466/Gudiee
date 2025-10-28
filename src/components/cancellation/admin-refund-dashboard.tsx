@@ -527,7 +527,7 @@ export function AdminRefundDashboard({ className = '' }: AdminRefundDashboardPro
                         <div style={{ fontSize: '0.875rem' }}>
                           <span style={{ color: '#6b7280' }}>說明：</span>
                           <p style={{ color: '#111827', margin: '0.25rem 0 0', fontStyle: 'italic' }}>
-                            "{request.description}"
+                            &quot;{request.description}&quot;
                           </p>
                         </div>
                       )}

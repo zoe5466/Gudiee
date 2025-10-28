@@ -23,6 +23,7 @@ import {
   Search,
   RefreshCw
 } from 'lucide-react';
+import { ResponderType } from '@/types/review';
 import { useAuth } from '@/store/auth';
 import ComprehensiveReviewForm from './comprehensive-review-form';
 import EnhancedReviewDisplay from './enhanced-review-display';
@@ -143,17 +144,17 @@ export default function ServicePageReviewIntegration({
             '整體體驗不錯，導遊很友善，也很有耐心。行程內容豐富，學到了很多當地的歷史文化知識。建議可以在某些景點多停留一些時間。',
             '很棒的一日遊！導遊英文很好，溝通無障礙。帶我們體驗了當地的特色活動，還推薦了很棒的餐廳。會推薦給其他朋友！',
             '服務態度很好，行程安排也不錯。導遊對當地很熟悉，帶我們避開了擁擠的觀光路線。不過希望能提供更多拍照的機會和建議。'
-          ][Math.floor(Math.random() * 6)],
+          ][Math.floor(Math.random() * 6)] || '',
           pros: Math.random() > 0.3 ? [
-            ['專業知識豐富', '準時可靠', '路線安排佳'][Math.floor(Math.random() * 3)],
-            ['溝通良好', '服務周到', '價格合理'][Math.floor(Math.random() * 3)]
+            ['專業知識豐富', '準時可靠', '路線安排佳'][Math.floor(Math.random() * 3)]!,
+            ['溝通良好', '服務周到', '價格合理'][Math.floor(Math.random() * 3)]!
           ] : [],
           cons: Math.random() > 0.7 ? [
-            ['時間稍緊', '人數較多', '某些景點停留時間短'][Math.floor(Math.random() * 3)]
+            ['時間稍緊', '人數較多', '某些景點停留時間短'][Math.floor(Math.random() * 3)]!
           ] : [],
           tags: Math.random() > 0.4 ? [
-            ['專業', '準時', '友善', '知識豐富'][Math.floor(Math.random() * 4)],
-            ['推薦', '值得', '滿意'][Math.floor(Math.random() * 3)]
+            ['專業', '準時', '友善', '知識豐富'][Math.floor(Math.random() * 4)]!,
+            ['推薦', '值得', '滿意'][Math.floor(Math.random() * 3)]!
           ] : [],
           photos: Math.random() > 0.6 ? Array.from({ length: Math.floor(Math.random() * 4) + 1 }, (_, photoIndex) => ({
             id: `photo-${baseIndex}-${photoIndex}`,
@@ -205,13 +206,13 @@ export default function ServicePageReviewIntegration({
             id: `response-${baseIndex}`,
             reviewId: `review-${serviceId}-${baseIndex + 1}`,
             authorId: guideId,
-            authorType: 'GUIDE',
+            authorType: 'GUIDE' as ResponderType,
             content: [
               '謝謝您的評價！很高興能為您提供滿意的服務，希望這次的旅程為您留下美好的回憶。',
               '感謝您的建議！我們會繼續改進服務品質，希望下次有機會再為您服務。',
               '非常感謝您的推薦！能獲得您的認可是我們最大的鼓勵，期待與您再次相遇。',
               '謝謝您的回饋！我們會根據您的建議調整行程安排，提供更好的體驗。'
-            ][Math.floor(Math.random() * 4)],
+            ][Math.floor(Math.random() * 4)] || '',
             isOfficial: true,
             createdAt: new Date(Date.now() - Math.random() * 86400000 * 20).toISOString(),
             updatedAt: new Date().toISOString(),
@@ -515,7 +516,7 @@ export default function ServicePageReviewIntegration({
         id: `response-${Date.now()}`,
         reviewId,
         authorId: user.id,
-        authorType: user.id === guideId ? 'GUIDE' : 'ADMIN' as const,
+        authorType: (user.id === guideId ? 'GUIDE' : 'ADMIN') as ResponderType,
         content,
         isOfficial: user.id === guideId,
         createdAt: new Date().toISOString(),
@@ -653,7 +654,7 @@ export default function ServicePageReviewIntegration({
       {activeTab === 'overview' && statistics && (
         <div>
           {/* 評論統計 */}
-          <ReviewStats statistics={statistics} className="mb-6" />
+          <ReviewStats stats={statistics} className="mb-6" />
 
           {/* 快速洞察 */}
           <div style={{
@@ -683,7 +684,7 @@ export default function ServicePageReviewIntegration({
                 {statistics.recommendationRate.toFixed(1)}%
               </p>
               <p style={{ fontSize: '12px', color: '#166534', margin: '4px 0 0 0' }}>
-                {statistics.ratingDistribution[5] + statistics.ratingDistribution[4]} 位用戶推薦
+                {(statistics.ratingDistribution[5] || 0) + (statistics.ratingDistribution[4] || 0)} 位用戶推薦
               </p>
             </div>
 
