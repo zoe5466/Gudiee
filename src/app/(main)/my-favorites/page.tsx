@@ -8,7 +8,7 @@ import { Heart, Search, Filter, Star, MapPin, Clock, Users, Grid, List } from 'l
 import { useAuth } from '@/store/auth';
 import { useToast } from '@/components/ui/toast';
 import { Loading } from '@/components/ui/loading';
-import { FullNavigation } from '@/components/layout/page-navigation';
+import { SimpleNavigation } from '@/components/layout/page-navigation';
 
 // 收藏項目介面定義
 interface FavoriteItem {
@@ -170,7 +170,7 @@ export default function MyFavoritesPage() {
       minHeight: '100vh', 
       background: 'linear-gradient(to bottom right, #dbeafe, #ffffff, #e0e7ff)' 
     }}>
-      <FullNavigation />
+      <SimpleNavigation />
       
       <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '2rem 1rem' }}>
         {/* 頁面標題 */}
