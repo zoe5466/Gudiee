@@ -15,6 +15,7 @@ import {
   Plus,
   Star
 } from 'lucide-react';
+import { SimpleNavigation } from '@/components/layout/page-navigation';
 
 interface Task {
   id: string;
@@ -171,6 +172,7 @@ export default function TasksPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <SimpleNavigation />
       <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Header */}
         <div className="flex justify-between items-center mb-8">

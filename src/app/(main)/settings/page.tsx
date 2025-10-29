@@ -18,7 +18,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '@/store/auth';
 import { Loading } from '@/components/ui/loading';
-import { HomeButton } from '@/components/layout/page-navigation';
+import { SimpleNavigation } from '@/components/layout/page-navigation';
 
 interface SettingItem {
   icon: React.ComponentType<{ className?: string }>;
@@ -130,7 +130,7 @@ export default function SettingsPage() {
         minHeight: '100vh', 
         background: 'linear-gradient(to bottom right, #dbeafe, #ffffff, #e0e7ff)' 
       }}>
-        <HomeButton />
+        <SimpleNavigation />
         <div className="max-w-4xl mx-auto p-4 sm:p-8">
           <div className="text-center py-12">
             <Loading size="lg" />
@@ -145,7 +145,7 @@ export default function SettingsPage() {
       minHeight: '100vh', 
       background: 'linear-gradient(to bottom right, #dbeafe, #ffffff, #e0e7ff)' 
     }}>
-      <HomeButton />
+      <SimpleNavigation />
       <div className="max-w-4xl mx-auto p-4 sm:p-8">
         {/* 頁面標題 */}
         <div className="mb-8">

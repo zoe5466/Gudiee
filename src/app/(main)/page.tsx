@@ -6,6 +6,7 @@ import { HowItWorks } from '@/components/features/home/how-it-works';
 import { Statistics } from '@/components/features/home/statistics';
 import { Testimonials } from '@/components/features/home/testimonials';
 import { CallToAction } from '@/components/features/home/call-to-action';
+import { SimpleNavigation } from '@/components/layout/page-navigation';
 
 export const metadata: Metadata = {
   title: 'Guidee - 地陪媒合平台｜旅遊界的 Uber',
@@ -45,6 +46,7 @@ export const metadata: Metadata = {
 export default function HomePage() {
   return (
     <>
+      <SimpleNavigation />
       <Hero />
       <FeaturedServices />
       <Features />
