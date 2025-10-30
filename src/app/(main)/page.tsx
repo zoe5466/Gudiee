@@ -6,8 +6,6 @@ import { HowItWorks } from '@/components/features/home/how-it-works';
 import { Statistics } from '@/components/features/home/statistics';
 import { Testimonials } from '@/components/features/home/testimonials';
 import { CallToAction } from '@/components/features/home/call-to-action';
-import { SimpleNavigation } from '@/components/layout/page-navigation';
-
 export const metadata: Metadata = {
   title: 'Guidee - 地陪媒合平台｜旅遊界的 Uber',
   description: '連接在地地陪與旅客的雙邊媒合平台。輕鬆找到可信賴的在地嚮導，享受專業導覽服務。地陪穩定接案，獲得合理收入。立即加入 Guidee！',
@@ -46,7 +44,6 @@ export const metadata: Metadata = {
 export default function HomePage() {
   return (
     <>
-      <SimpleNavigation />
       <Hero />
       <FeaturedServices />
       <Features />

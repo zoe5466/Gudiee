@@ -92,7 +92,7 @@ export function HomeSidebar() {
 
       {/* 側邊選單 */}
       <div
-        className={`fixed top-0 left-0 h-full bg-white shadow-2xl z-50 transform transition-transform duration-300 ease-in-out ${
+        className={`fixed top-0 left-0 h-full bg-white shadow-2xl z-50 transform transition-transform duration-300 ease-in-out flex flex-col ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
         style={{ width: 'min(320px, calc(100vw - 40px))' }}
@@ -111,7 +111,7 @@ export function HomeSidebar() {
         </div>
 
         {/* 選單內容 */}
-        <div className="p-4">
+        <div className="p-4 flex-1 overflow-y-auto">
           {!isAuthenticated && (
             <div className="mb-4 sm:mb-6 p-3 sm:p-4 bg-blue-50 border border-blue-200 rounded-lg">
               <p className="text-sm text-blue-800 mb-2">請先登入以使用完整功能</p>
