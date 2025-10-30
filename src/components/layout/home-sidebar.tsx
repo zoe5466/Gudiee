@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import { Menu, X, User, MessageCircle, CheckSquare, Heart } from 'lucide-react';
+import { Menu, X, User, MessageCircle, CheckSquare, Heart, Home, Search, ShoppingBag, FileText } from 'lucide-react';
 import { useAuth } from '@/store/auth';
 
 export function HomeSidebar() {
@@ -16,28 +16,46 @@ export function HomeSidebar() {
 
   const menuItems = [
     {
-      icon: <User className="w-5 h-5" />,
-      label: '個人資料',
-      path: '/profile',
-      description: '查看和編輯個人資料'
+      icon: <Home className="w-5 h-5" />,
+      label: '首頁',
+      path: '/',
+      description: '回到首頁搜尋服務'
     },
     {
-      icon: <MessageCircle className="w-5 h-5" />,
-      label: '聊天',
-      path: '/messages',
-      description: '與導遊和客戶聊天'
+      icon: <Search className="w-5 h-5" />,
+      label: '探索',
+      path: '/explore',
+      description: '探索更多服務和導遊'
     },
     {
       icon: <CheckSquare className="w-5 h-5" />,
-      label: '任務',
+      label: '任務牆',
       path: '/tasks',
       description: '查看和管理任務'
     },
     {
+      icon: <ShoppingBag className="w-5 h-5" />,
+      label: '訂單紀錄',
+      path: '/orders',
+      description: '查看歷史訂單紀錄'
+    },
+    {
+      icon: <MessageCircle className="w-5 h-5" />,
+      label: '對話',
+      path: '/messages',
+      description: '與導遊和客戶聊天'
+    },
+    {
       icon: <Heart className="w-5 h-5" />,
-      label: '我的最愛',
+      label: '我的收藏',
       path: '/favorites',
       description: '收藏的服務和導遊'
+    },
+    {
+      icon: <User className="w-5 h-5" />,
+      label: '個人資料',
+      path: '/profile',
+      description: '查看和編輯個人資料'
     }
   ];
 
