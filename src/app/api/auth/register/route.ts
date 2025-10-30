@@ -1,5 +1,4 @@
-import { NextRequest } from 'next/server';
-import { cookies } from 'next/headers';
+import { NextRequest, NextResponse } from 'next/server';
 
 // 簡化的註冊 API（臨時解決方案）
 export async function POST(request: NextRequest) {
@@ -13,7 +12,7 @@ export async function POST(request: NextRequest) {
 
     // 驗證必填欄位
     if (!email || !password || !name) {
-      return Response.json({
+      return NextResponse.json({
         success: false,
         error: 'Email、密碼和姓名為必填項目'
       }, { status: 400 });
@@ -21,7 +20,7 @@ export async function POST(request: NextRequest) {
 
     // 簡化的 email 格式驗證
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      return Response.json({
+      return NextResponse.json({
         success: false,
         error: '請輸入有效的電子郵件格式'
       }, { status: 400 });
@@ -29,7 +28,7 @@ export async function POST(request: NextRequest) {
 
     // 密碼長度驗證
     if (password.length < 6) {
-      return Response.json({
+      return NextResponse.json({
         success: false,
         error: '密碼至少需要6個字符'
       }, { status: 400 });
@@ -43,7 +42,7 @@ export async function POST(request: NextRequest) {
     ];
     
     if (existingEmails.includes(email.toLowerCase())) {
-      return Response.json({
+      return NextResponse.json({
         success: false,
         error: '此電子郵件已被註冊'
       }, { status: 409 });
@@ -74,8 +73,16 @@ export async function POST(request: NextRequest) {
     }));
 
     // 設置 cookie
-    const cookieStore = cookies();
-    cookieStore.set('auth-token', token, {
+    const response = NextResponse.json({
+      success: true,
+      data: {
+        user: newUser,
+        token
+      },
+      message: '註冊成功'
+    });
+
+    response.cookies.set('auth-token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
@@ -86,18 +93,11 @@ export async function POST(request: NextRequest) {
     console.log('Generated user:', newUser);
     console.log('Generated token:', token);
 
-    return Response.json({
-      success: true,
-      data: {
-        user: newUser,
-        token
-      },
-      message: '註冊成功'
-    });
+    return response;
 
   } catch (error) {
     console.error('Registration error:', error);
-    return Response.json({
+    return NextResponse.json({
       success: false,
       error: '註冊失敗，請稍後再試'
     }, { status: 500 });
