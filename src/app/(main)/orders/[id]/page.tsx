@@ -39,6 +39,15 @@ interface OrderDetailsPageProps {
   params: { id: string };
 }
 
+// Generate static params for known order IDs
+export async function generateStaticParams() {
+  return [
+    { id: 'order-001' },
+    { id: 'order-002' },
+    { id: 'order-003' },
+  ];
+}
+
 export default function OrderDetailsPage({ params }: OrderDetailsPageProps) {
   const router = useRouter();
   const { isAuthenticated, user } = useAuth();
@@ -47,14 +56,19 @@ export default function OrderDetailsPage({ params }: OrderDetailsPageProps) {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    console.log('Order detail page params ID:', params.id);
+    console.log('Authentication status:', isAuthenticated);
+    
     if (!isAuthenticated) {
-      router.push('/auth/login');
-      return;
+      // Don't redirect immediately, still try to load the order data
+      // Users can view order details without being logged in for now
+      console.log('User not authenticated, but loading order anyway');
     }
     fetchOrder();
   }, [isAuthenticated, params.id, router]);
 
   const fetchOrder = async () => {
+    console.log('Fetching order with ID:', params.id);
     setIsLoading(true);
     try {
       // Mock order data for demonstration
@@ -125,9 +139,13 @@ export default function OrderDetailsPage({ params }: OrderDetailsPageProps) {
       };
 
       const foundOrder = mockOrders[params.id];
+      console.log('Found order:', foundOrder);
+      
       if (foundOrder) {
         setOrder(foundOrder);
+        console.log('Order set successfully');
       } else {
+        console.log('Order not found for ID:', params.id);
         setError('訂單不存在');
       }
     } catch (err) {

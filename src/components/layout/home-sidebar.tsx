@@ -73,7 +73,7 @@ export function HomeSidebar() {
       {/* 觸發按鈕 */}
       <button
         onClick={() => setIsOpen(true)}
-        className={`fixed z-40 bg-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 border border-gray-200 hover:bg-gray-50 touch-manipulation ${
+        className={`fixed z-50 bg-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 border border-gray-200 hover:bg-gray-50 touch-manipulation ${
           isHomePage ? 'top-1/2 left-3 sm:left-4 transform -translate-y-1/2' : 'top-20 sm:top-24 left-3 sm:left-4'
         }`}
         style={{ minWidth: '48px', minHeight: '48px', padding: '12px' }}

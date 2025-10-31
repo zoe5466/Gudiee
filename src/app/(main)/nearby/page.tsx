@@ -20,7 +20,6 @@ import {
   List,
   Locate
 } from 'lucide-react';
-import { SimpleNavigation } from '@/components/layout/page-navigation';
 
 interface NearbyPlace {
   id: string;
@@ -267,7 +266,6 @@ export default function NearbyPage() {
         alignItems: 'center',
         justifyContent: 'center'
       }}>
-        <SimpleNavigation />
         <div style={{ textAlign: 'center', color: 'white' }}>
           <div style={{
             width: '60px',
@@ -294,7 +292,6 @@ export default function NearbyPage() {
       minHeight: '100vh', 
       background: 'linear-gradient(to bottom right, #ecfdf5, #ffffff, #f0f9ff)' 
     }}>
-      <SimpleNavigation />
       
       {/* 主標題區域 */}
       <div style={{

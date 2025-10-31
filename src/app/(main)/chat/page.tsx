@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { ArrowLeft, Search, Plus, MessageCircle } from 'lucide-react';
-import { PageNavigation } from '@/components/layout/page-navigation';
 import { ChatInterface } from '@/components/chat/chat-interface';
 import { useAuth } from '@/store/auth';
 
@@ -129,7 +128,6 @@ export default function ChatPage() {
           <p style={{ color: '#6b7280', marginBottom: '1.5rem' }}>
             您需要登入才能使用聊天功能
           </p>
-          <PageNavigation showBackButton={true} backButtonText="返回首頁" />
         </div>
       </div>
     );
@@ -417,10 +415,6 @@ export default function ChatPage() {
         )}
       </div>
       
-      {/* 返回按鈕 */}
-      <div style={{ marginTop: '1rem' }}>
-        <PageNavigation showBackButton={true} backButtonText="返回首頁" />
-      </div>
     </div>
   );
 }

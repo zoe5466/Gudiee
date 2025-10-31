@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import { CreditCard, Plus, Trash2, Edit, Shield, CheckCircle, AlertCircle } from 'lucide-react';
 import { useAuth } from '@/store/auth';
 import { Loading } from '@/components/ui/loading';
-import { HomeButton } from '@/components/layout/page-navigation';
 import { Modal, useModal } from '@/components/ui/modal';
 import { useToast } from '@/components/ui/toast';
 
@@ -204,7 +203,6 @@ export default function PaymentMethodsPage() {
       minHeight: '100vh', 
       background: 'linear-gradient(to bottom right, #dbeafe, #ffffff, #e0e7ff)' 
     }}>
-      <HomeButton />
       <div className="max-w-4xl mx-auto p-4 sm:p-8">
         {/* 頁面標題 */}
         <div className="flex items-center justify-between mb-8">

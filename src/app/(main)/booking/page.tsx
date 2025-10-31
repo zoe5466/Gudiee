@@ -8,7 +8,6 @@ import { ChevronLeft, Calendar, Users, Clock, MapPin, CreditCard, Shield, Check,
 import { useOrder } from '@/store/order';
 import { useAuth } from '@/store/auth';
 import { Loading } from '@/components/ui/loading';
-import { FullNavigation } from '@/components/layout/page-navigation';
 import { useToast } from '@/components/ui/toast';
 import { CreateOrderRequest } from '@/types/order';
 
@@ -221,7 +220,6 @@ export default function BookingPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-      <FullNavigation />
 
       {/* Header */}
       <div className="bg-white border-b border-gray-200 mt-16 rounded-t-xl">

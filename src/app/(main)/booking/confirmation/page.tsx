@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { CheckCircle, Calendar, Clock, Users, MapPin, Phone, Mail, CreditCard, ArrowLeft, Download, Share2, MessageSquare } from 'lucide-react';
-import { HomeButton } from '@/components/layout/page-navigation';
 import { useAuth } from '@/store/auth';
 
 interface BookingDetails {
@@ -178,7 +177,6 @@ export default function BookingConfirmationPage() {
       minHeight: '100vh',
       background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)'
     }}>
-      <HomeButton />
       
       <div style={{
         maxWidth: '800px',
