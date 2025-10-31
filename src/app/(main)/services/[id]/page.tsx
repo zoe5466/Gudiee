@@ -10,7 +10,6 @@ import { useToast } from '@/components/ui/toast'; // 通知訊息組件
 import { Rating } from '@/components/ui/rating'; // 評分顯示組件
 import { Loading } from '@/components/ui/loading'; // 載入狀態組件
 import { DatePicker } from '@/components/ui/date-picker'; // 日期選擇組件
-import { FullNavigation } from '@/components/layout/page-navigation'; // 導航組件
 import { ReviewsList } from '@/components/reviews/reviews-list'; // 評論列表組件
 import { ReviewsSummary } from '@/components/reviews/reviews-summary'; // 評論摘要組件
 
@@ -301,8 +300,6 @@ export default function ServiceDetailPage({ params }: { params: { id: string } }
       minHeight: '100vh', 
       background: 'linear-gradient(to bottom right, #dbeafe, #ffffff, #e0e7ff)' 
     }}>
-      <FullNavigation />
-
       <main style={{ backgroundColor: 'white', borderRadius: '1rem 1rem 0 0', marginTop: '1rem' }}>
         {/* Image Gallery */}
         <div style={{ position: 'relative', height: '24rem', overflow: 'hidden', borderRadius: '1rem 1rem 0 0' }}>

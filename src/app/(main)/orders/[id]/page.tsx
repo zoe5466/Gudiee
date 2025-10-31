@@ -1,5 +1,3 @@
-// 訂單詳情頁面組件
-// 功能：顯示單一訂單的完整詳情資訊，包含預訂資訊、客戶資訊、價格明細、狀態追蹤等
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -7,14 +5,35 @@ import { useRouter } from 'next/navigation';
 import { 
   ArrowLeft, Calendar, Clock, Users, MapPin, Star, Phone, Mail, 
   CreditCard, Receipt, MessageCircle, CheckCircle, AlertCircle,
-  Download, Eye
+  Download, Eye, User
 } from 'lucide-react';
 import { useAuth } from '@/store/auth';
-import { useOrder } from '@/store/order';
-import { Loading } from '@/components/ui/loading';
-import { useToast } from '@/components/ui/toast';
-import { OrderStatusBadge } from '@/components/ui/order-status-badge';
-import { OrderStatus, Order } from '@/types/order';
+
+interface Order {
+  id: string;
+  orderNumber: string;
+  serviceName: string;
+  serviceImage: string;
+  guideName: string;
+  guideAvatar: string;
+  date: string;
+  startTime: string;
+  endTime: string;
+  location: string;
+  participants: number;
+  price: number;
+  status: 'pending' | 'confirmed' | 'completed' | 'cancelled';
+  createdAt: string;
+  customerName: string;
+  customerEmail: string;
+  customerPhone: string;
+  specialRequests?: string;
+  rating?: {
+    score: number;
+    comment: string;
+    ratedAt: string;
+  };
+}
 
 interface OrderDetailsPageProps {
   params: { id: string };
@@ -23,76 +42,130 @@ interface OrderDetailsPageProps {
 export default function OrderDetailsPage({ params }: OrderDetailsPageProps) {
   const router = useRouter();
   const { isAuthenticated, user } = useAuth();
-  const { currentOrder, fetchOrder, isLoading, error } = useOrder();
-  const { success, error: showError } = useToast();
-  
-  const [isInitializing, setIsInitializing] = useState(true);
+  const [order, setOrder] = useState<Order | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // 等待認證初始化
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsInitializing(false);
-    }, 1000);
-    return () => clearTimeout(timer);
-  }, []);
-
-  // 檢查用戶是否已登入
-  useEffect(() => {
-    if (!isInitializing && !isAuthenticated) {
-      router.push('/auth/login?redirect=/orders/' + params.id);
+    if (!isAuthenticated) {
+      router.push('/auth/login');
       return;
     }
-    
-    // 載入訂單詳情
-    if (!isInitializing && isAuthenticated && params.id) {
-      fetchOrder(params.id);
-    }
-  }, [isInitializing, isAuthenticated, params.id, router, fetchOrder]);
+    fetchOrder();
+  }, [isAuthenticated, params.id, router]);
 
+  const fetchOrder = async () => {
+    setIsLoading(true);
+    try {
+      // Mock order data for demonstration
+      const mockOrders: Record<string, Order> = {
+        'order-001': {
+          id: 'order-001',
+          orderNumber: 'GD2024010001',
+          serviceName: '台北101觀景台導覽',
+          serviceImage: '/images/services/taipei101.jpg',
+          guideName: '張小美',
+          guideAvatar: '/images/guides/guide1.jpg',
+          date: '2024-01-15',
+          startTime: '14:00',
+          endTime: '17:00',
+          location: '台北101',
+          participants: 2,
+          price: 1500,
+          status: 'confirmed',
+          createdAt: '2024-01-10T10:00:00Z',
+          customerName: user?.name || '顧客姓名',
+          customerEmail: user?.email || 'customer@example.com',
+          customerPhone: user?.profile?.phone || '0912345678',
+          specialRequests: '請準備舒適的鞋子，希望能拍照留念',
+        },
+        'order-002': {
+          id: 'order-002',
+          orderNumber: 'GD2024010002',
+          serviceName: '九份老街文化之旅',
+          serviceImage: '/images/services/jiufen.jpg',
+          guideName: '李大明',
+          guideAvatar: '/images/guides/guide2.jpg',
+          date: '2024-01-20',
+          startTime: '09:00',
+          endTime: '15:00',
+          location: '九份老街',
+          participants: 4,
+          price: 2000,
+          status: 'pending',
+          createdAt: '2024-01-12T15:30:00Z',
+          customerName: user?.name || '顧客姓名',
+          customerEmail: user?.email || 'customer@example.com',
+          customerPhone: user?.profile?.phone || '0912345678',
+        },
+        'order-003': {
+          id: 'order-003',
+          orderNumber: 'GD2024010003',
+          serviceName: '淡水夕陽攝影導覽',
+          serviceImage: '/images/services/tamsui.jpg',
+          guideName: '王小華',
+          guideAvatar: '/images/guides/guide3.jpg',
+          date: '2024-01-08',
+          startTime: '17:00',
+          endTime: '19:00',
+          location: '淡水漁人碼頭',
+          participants: 1,
+          price: 1200,
+          status: 'completed',
+          createdAt: '2024-01-05T12:00:00Z',
+          customerName: user?.name || '顧客姓名',
+          customerEmail: user?.email || 'customer@example.com',
+          customerPhone: user?.profile?.phone || '0912345678',
+          rating: {
+            score: 5,
+            comment: '非常棒的體驗！導遊專業又親切，拍到了很棒的夕陽照片。',
+            ratedAt: '2024-01-09T20:00:00Z'
+          }
+        }
+      };
 
-  const getStatusTimeline = (order: Order) => {
-    const steps = [
-      { key: 'DRAFT', label: '訂單建立', time: order.createdAt },
-      { key: 'PENDING', label: '等待確認', time: order.createdAt },
-      { key: 'CONFIRMED', label: '已確認', time: order.confirmedAt },
-      { key: 'PAID', label: '已付款', time: order.payment.paidAt },
-      { key: 'COMPLETED', label: '已完成', time: order.completedAt }
-    ];
-
-    return steps.filter(step => {
-      // 如果訂單已取消，只顯示到取消前的狀態
-      if (order.status === 'CANCELLED') {
-        return step.key === 'DRAFT' || step.key === 'PENDING';
+      const foundOrder = mockOrders[params.id];
+      if (foundOrder) {
+        setOrder(foundOrder);
+      } else {
+        setError('訂單不存在');
       }
-      
-      // 根據當前狀態決定顯示哪些步驟
-      const statusOrder = ['DRAFT', 'PENDING', 'CONFIRMED', 'PAID', 'IN_PROGRESS', 'COMPLETED'];
-      const currentIndex = statusOrder.indexOf(order.status);
-      const stepIndex = statusOrder.indexOf(step.key);
-      
-      return stepIndex <= currentIndex;
-    });
+    } catch (err) {
+      setError('載入訂單失敗');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  if (isInitializing || isLoading) {
+  const getStatusInfo = (status: string) => {
+    switch (status) {
+      case 'confirmed':
+        return { text: '已確認', color: 'bg-green-100 text-green-800', icon: CheckCircle };
+      case 'pending':
+        return { text: '待確認', color: 'bg-yellow-100 text-yellow-800', icon: AlertCircle };
+      case 'completed':
+        return { text: '已完成', color: 'bg-blue-100 text-blue-800', icon: CheckCircle };
+      case 'cancelled':
+        return { text: '已取消', color: 'bg-red-100 text-red-800', icon: AlertCircle };
+      default:
+        return { text: '未知', color: 'bg-gray-100 text-gray-800', icon: AlertCircle };
+    }
+  };
+
+  if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loading size="lg" />
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">載入訂單詳情中...</p>
+        </div>
       </div>
     );
   }
 
-  if (!isAuthenticated || !user) {
+  if (error || !order) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loading size="lg" />
-      </div>
-    );
-  }
-
-  if (error || !currentOrder) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-50">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <AlertCircle className="w-16 h-16 text-red-400 mx-auto mb-4" />
           <h2 className="text-xl font-semibold text-gray-900 mb-2">
@@ -102,21 +175,24 @@ export default function OrderDetailsPage({ params }: OrderDetailsPageProps) {
             無法載入訂單詳情，請稍後再試
           </p>
           <button
-            onClick={() => router.push('/my-bookings')}
-            className="btn btn-primary"
+            onClick={() => router.push('/orders')}
+            className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
           >
-            返回我的訂單
+            返回訂單列表
           </button>
         </div>
       </div>
     );
   }
 
+  const statusInfo = getStatusInfo(order.status);
+  const StatusIcon = statusInfo.icon;
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+    <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
-        <div className="max-w-6xl mx-auto px-4 py-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <button
@@ -130,40 +206,55 @@ export default function OrderDetailsPage({ params }: OrderDetailsPageProps) {
                   訂單詳情
                 </h1>
                 <p className="text-sm text-gray-600">
-                  {currentOrder.orderNumber}
+                  {order.orderNumber}
                 </p>
               </div>
             </div>
-            <OrderStatusBadge status={currentOrder.status} />
+            <div className={`flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium ${statusInfo.color}`}>
+              <StatusIcon className="w-4 h-4" />
+              {statusInfo.text}
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-4 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* 主要內容 */}
           <div className="lg:col-span-2 space-y-6">
             {/* 服務資訊 */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
               <h2 className="text-lg font-semibold text-gray-900 mb-4">服務資訊</h2>
               
               <div className="flex items-start gap-4 mb-6">
-                <img
-                  src={currentOrder.booking.serviceImage}
-                  alt={currentOrder.booking.serviceName}
-                  className="w-16 h-16 rounded-lg object-cover"
-                />
+                <div className="w-16 h-16 bg-gray-200 rounded-lg flex items-center justify-center">
+                  {order.serviceImage ? (
+                    <img
+                      src={order.serviceImage}
+                      alt={order.serviceName}
+                      className="w-full h-full rounded-lg object-cover"
+                    />
+                  ) : (
+                    <MapPin className="w-8 h-8 text-gray-400" />
+                  )}
+                </div>
                 <div className="flex-1">
                   <h3 className="font-medium text-gray-900 mb-1">
-                    {currentOrder.booking.serviceName}
+                    {order.serviceName}
                   </h3>
                   <div className="flex items-center gap-2 text-sm text-gray-600">
-                    <img
-                      src={currentOrder.booking.guideAvatar}
-                      alt={currentOrder.booking.guideName}
-                      className="w-5 h-5 rounded-full"
-                    />
-                    導遊：{currentOrder.booking.guideName}
+                    <div className="w-5 h-5 bg-gray-200 rounded-full flex items-center justify-center">
+                      {order.guideAvatar ? (
+                        <img
+                          src={order.guideAvatar}
+                          alt={order.guideName}
+                          className="w-full h-full rounded-full object-cover"
+                        />
+                      ) : (
+                        <User className="w-3 h-3 text-gray-400" />
+                      )}
+                    </div>
+                    導遊：{order.guideName}
                   </div>
                 </div>
               </div>
@@ -171,129 +262,65 @@ export default function OrderDetailsPage({ params }: OrderDetailsPageProps) {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 bg-gray-50 rounded-lg">
                 <div className="flex items-center gap-2 text-sm">
                   <Calendar className="w-4 h-4 text-gray-400" />
-                  <span>{new Date(currentOrder.booking.date).toLocaleDateString('zh-TW')}</span>
+                  <span>{new Date(order.date).toLocaleDateString('zh-TW')}</span>
                 </div>
                 <div className="flex items-center gap-2 text-sm">
                   <Clock className="w-4 h-4 text-gray-400" />
-                  <span>{currentOrder.booking.startTime} - {currentOrder.booking.endTime}</span>
+                  <span>{order.startTime} - {order.endTime}</span>
                 </div>
                 <div className="flex items-center gap-2 text-sm">
                   <Users className="w-4 h-4 text-gray-400" />
-                  <span>{currentOrder.booking.participants} 位旅客</span>
+                  <span>{order.participants} 位旅客</span>
                 </div>
                 <div className="flex items-center gap-2 text-sm">
                   <MapPin className="w-4 h-4 text-gray-400" />
-                  <span>{currentOrder.booking.location.name}</span>
+                  <span>{order.location}</span>
                 </div>
               </div>
 
-              {currentOrder.booking.specialRequests && (
+              {order.specialRequests && (
                 <div className="mt-4 p-3 bg-blue-50 rounded-lg">
                   <h4 className="text-sm font-medium text-blue-900 mb-1">特殊需求</h4>
-                  <p className="text-sm text-blue-800">{currentOrder.booking.specialRequests}</p>
+                  <p className="text-sm text-blue-800">{order.specialRequests}</p>
                 </div>
               )}
             </div>
 
             {/* 客戶資訊 */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
               <h2 className="text-lg font-semibold text-gray-900 mb-4">客戶資訊</h2>
               
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">姓名</label>
-                  <div className="text-sm text-gray-900">{currentOrder.customer.name}</div>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">國籍</label>
-                  <div className="text-sm text-gray-900">{currentOrder.customer.nationality || '未提供'}</div>
+                  <div className="text-sm text-gray-900">{order.customerName}</div>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">電子郵件</label>
                   <div className="flex items-center gap-2 text-sm text-gray-900">
                     <Mail className="w-4 h-4 text-gray-400" />
-                    {currentOrder.customer.email}
+                    {order.customerEmail}
                   </div>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">電話號碼</label>
                   <div className="flex items-center gap-2 text-sm text-gray-900">
                     <Phone className="w-4 h-4 text-gray-400" />
-                    {currentOrder.customer.phone}
+                    {order.customerPhone}
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">訂單建立時間</label>
+                  <div className="text-sm text-gray-900">
+                    {new Date(order.createdAt).toLocaleString('zh-TW')}
                   </div>
                 </div>
               </div>
-
-              {currentOrder.customer.emergencyContact && (
-                <div className="mt-4 p-3 bg-gray-50 rounded-lg">
-                  <h4 className="text-sm font-medium text-gray-900 mb-2">緊急聯絡人</h4>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-sm">
-                    <div>
-                      <span className="text-gray-600">姓名：</span>
-                      <span className="text-gray-900">{currentOrder.customer.emergencyContact.name}</span>
-                    </div>
-                    <div>
-                      <span className="text-gray-600">電話：</span>
-                      <span className="text-gray-900">{currentOrder.customer.emergencyContact.phone}</span>
-                    </div>
-                    <div>
-                      <span className="text-gray-600">關係：</span>
-                      <span className="text-gray-900">{currentOrder.customer.emergencyContact.relationship}</span>
-                    </div>
-                  </div>
-                </div>
-              )}
             </div>
 
-            {/* 取消資訊 */}
-            {currentOrder.cancellation && (
-              <div className="bg-red-50 border border-red-200 rounded-xl p-6">
-                <h2 className="text-lg font-semibold text-red-900 mb-4">取消資訊</h2>
-                <div className="space-y-3">
-                  <div>
-                    <span className="text-sm font-medium text-red-700">取消時間：</span>
-                    <span className="text-sm text-red-900 ml-2">
-                      {new Date(currentOrder.cancellation.cancelledAt).toLocaleString('zh-TW')}
-                    </span>
-                  </div>
-                  <div>
-                    <span className="text-sm font-medium text-red-700">取消者：</span>
-                    <span className="text-sm text-red-900 ml-2">
-                      {currentOrder.cancellation.cancelledBy === 'USER' ? '客戶' : 
-                       currentOrder.cancellation.cancelledBy === 'GUIDE' ? '導遊' : '系統管理員'}
-                    </span>
-                  </div>
-                  {currentOrder.cancellation.description && (
-                    <div>
-                      <span className="text-sm font-medium text-red-700">取消原因：</span>
-                      <p className="text-sm text-red-900 mt-1">{currentOrder.cancellation.description}</p>
-                    </div>
-                  )}
-                  
-                  {/* 退款資訊 */}
-                  <div className="mt-4 p-3 bg-red-100 rounded-lg">
-                    <h4 className="text-sm font-medium text-red-900 mb-2">退款政策</h4>
-                    <div className="text-sm text-red-800">
-                      {currentOrder.cancellation.refundPolicy.isRefundable ? (
-                        <>
-                          <p>可退款金額：NT$ {currentOrder.cancellation.refundPolicy.refundAmount.toLocaleString()}</p>
-                          <p>退款比例：{currentOrder.cancellation.refundPolicy.refundPercentage}%</p>
-                          {currentOrder.cancellation.refundPolicy.processingFee > 0 && (
-                            <p>手續費：NT$ {currentOrder.cancellation.refundPolicy.processingFee.toLocaleString()}</p>
-                          )}
-                        </>
-                      ) : (
-                        <p>根據退款政策，此訂單不符合退款條件</p>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-
             {/* 評價資訊 */}
-            {currentOrder.rating && (
-              <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-6">
+            {order.rating && (
+              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
                 <h2 className="text-lg font-semibold text-yellow-900 mb-4">服務評價</h2>
                 <div className="flex items-center gap-2 mb-3">
                   <div className="flex items-center gap-1">
@@ -301,7 +328,7 @@ export default function OrderDetailsPage({ params }: OrderDetailsPageProps) {
                       <Star
                         key={star}
                         className={`w-5 h-5 ${
-                          star <= currentOrder.rating!.score 
+                          star <= order.rating!.score 
                             ? 'text-yellow-400 fill-current' 
                             : 'text-gray-300'
                         }`}
@@ -309,14 +336,14 @@ export default function OrderDetailsPage({ params }: OrderDetailsPageProps) {
                     ))}
                   </div>
                   <span className="text-sm text-yellow-800">
-                    {currentOrder.rating.score} 分
+                    {order.rating.score} 分
                   </span>
                   <span className="text-xs text-yellow-600 ml-2">
-                    {new Date(currentOrder.rating.ratedAt).toLocaleDateString('zh-TW')}
+                    {new Date(order.rating.ratedAt).toLocaleDateString('zh-TW')}
                   </span>
                 </div>
-                {currentOrder.rating.comment && (
-                  <p className="text-sm text-yellow-800">{currentOrder.rating.comment}</p>
+                {order.rating.comment && (
+                  <p className="text-sm text-yellow-800">{order.rating.comment}</p>
                 )}
               </div>
             )}
@@ -324,144 +351,38 @@ export default function OrderDetailsPage({ params }: OrderDetailsPageProps) {
 
           {/* 側邊欄 */}
           <div className="space-y-6">
-            {/* 訂單狀態追蹤 */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-              <h3 className="font-semibold text-gray-900 mb-4">訂單狀態</h3>
-              
-              <div className="space-y-4">
-                {getStatusTimeline(currentOrder).map((step, index, array) => (
-                  <div key={step.key} className="flex items-start gap-3">
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
-                      step.time 
-                        ? 'bg-green-100 text-green-600' 
-                        : 'bg-gray-100 text-gray-400'
-                    }`}>
-                      {step.time ? (
-                        <CheckCircle className="w-5 h-5" />
-                      ) : (
-                        <div className="w-2 h-2 bg-current rounded-full" />
-                      )}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className={`text-sm font-medium ${
-                        step.time ? 'text-gray-900' : 'text-gray-500'
-                      }`}>
-                        {step.label}
-                      </p>
-                      {step.time && (
-                        <p className="text-xs text-gray-500 mt-1">
-                          {new Date(step.time).toLocaleString('zh-TW')}
-                        </p>
-                      )}
-                    </div>
-                    {index < array.length - 1 && (
-                      <div className="absolute left-4 mt-8 w-px h-4 bg-gray-200" />
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* 價格明細 */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            {/* 價格資訊 */}
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
               <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
                 <Receipt className="w-5 h-5" />
-                價格明細
+                價格資訊
               </h3>
               
               <div className="space-y-3">
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-600">服務費用</span>
-                  <span className="text-gray-900">NT$ {currentOrder.pricing.subtotal.toLocaleString()}</span>
+                  <span className="text-gray-900">NT$ {order.price.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">平台服務費</span>
-                  <span className="text-gray-900">NT$ {currentOrder.pricing.serviceFee.toLocaleString()}</span>
+                  <span className="text-gray-600">人數</span>
+                  <span className="text-gray-900">{order.participants} 人</span>
                 </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">稅費</span>
-                  <span className="text-gray-900">NT$ {currentOrder.pricing.tax.toLocaleString()}</span>
-                </div>
-                
-                {currentOrder.pricing.discount && (
-                  <div className="flex justify-between text-sm">
-                    <span className="text-green-600">折扣 ({currentOrder.pricing.discount.description})</span>
-                    <span className="text-green-600">
-                      -NT$ {(
-                        currentOrder.pricing.discount.type === 'FIXED' 
-                          ? currentOrder.pricing.discount.value
-                          : Math.round(currentOrder.pricing.subtotal * currentOrder.pricing.discount.value / 100)
-                      ).toLocaleString()}
-                    </span>
-                  </div>
-                )}
-                
                 <div className="border-t border-gray-200 pt-3">
                   <div className="flex justify-between text-base font-semibold">
                     <span className="text-gray-900">總計</span>
-                    <span className="text-gray-900">NT$ {currentOrder.pricing.total.toLocaleString()}</span>
+                    <span className="text-gray-900">NT$ {order.price.toLocaleString()}</span>
                   </div>
                 </div>
-              </div>
-            </div>
-
-            {/* 支付資訊 */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-              <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                <CreditCard className="w-5 h-5" />
-                支付資訊
-              </h3>
-              
-              <div className="space-y-3">
-                <div>
-                  <span className="text-sm text-gray-600">支付方式：</span>
-                  <span className="text-sm text-gray-900 ml-2">
-                    {currentOrder.payment.method === 'CREDIT_CARD' ? '信用卡' : 
-                     currentOrder.payment.method === 'BANK_TRANSFER' ? '銀行轉帳' : 
-                     currentOrder.payment.method}
-                  </span>
-                </div>
-                
-                <div>
-                  <span className="text-sm text-gray-600">支付狀態：</span>
-                  <span className={`text-sm ml-2 ${
-                    currentOrder.payment.status === 'COMPLETED' ? 'text-green-600' :
-                    currentOrder.payment.status === 'PENDING' ? 'text-yellow-600' :
-                    'text-red-600'
-                  }`}>
-                    {currentOrder.payment.status === 'COMPLETED' ? '已完成' :
-                     currentOrder.payment.status === 'PENDING' ? '待付款' :
-                     currentOrder.payment.status === 'FAILED' ? '失敗' : '已取消'}
-                  </span>
-                </div>
-                
-                {currentOrder.payment.paidAt && (
-                  <div>
-                    <span className="text-sm text-gray-600">付款時間：</span>
-                    <span className="text-sm text-gray-900 ml-2">
-                      {new Date(currentOrder.payment.paidAt).toLocaleString('zh-TW')}
-                    </span>
-                  </div>
-                )}
-                
-                {currentOrder.payment.transactionId && (
-                  <div>
-                    <span className="text-sm text-gray-600">交易編號：</span>
-                    <span className="text-sm text-gray-900 ml-2 font-mono">
-                      {currentOrder.payment.transactionId}
-                    </span>
-                  </div>
-                )}
               </div>
             </div>
 
             {/* 操作按鈕 */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
               <h3 className="font-semibold text-gray-900 mb-4">操作</h3>
               
               <div className="space-y-3">
                 <button
-                  onClick={() => router.push(`/chat?order=${currentOrder.id}`)}
+                  onClick={() => router.push(`/messages`)}
                   className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                 >
                   <MessageCircle className="w-4 h-4" />
@@ -482,6 +403,16 @@ export default function OrderDetailsPage({ params }: OrderDetailsPageProps) {
                   <Eye className="w-4 h-4" />
                   列印訂單
                 </button>
+
+                {order.status === 'completed' && !order.rating && (
+                  <button
+                    onClick={() => router.push(`/bookings/${order.id}/review`)}
+                    className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-colors"
+                  >
+                    <Star className="w-4 h-4" />
+                    評價服務
+                  </button>
+                )}
               </div>
             </div>
           </div>
