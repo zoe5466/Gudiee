@@ -168,8 +168,6 @@ export default function ProfileSetupPage() {
       case 3: // 個人簡介
         if (!formData.bio.trim()) {
           newErrors.bio = '請輸入個人簡介';
-        } else if (formData.bio.length < 50) {
-          newErrors.bio = '個人簡介至少需要50個字元';
         }
         break;
         

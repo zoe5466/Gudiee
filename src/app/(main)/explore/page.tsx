@@ -18,7 +18,6 @@ import {
   List,
   ArrowRight
 } from 'lucide-react';
-import { SimpleNavigation } from '@/components/layout/page-navigation';
 
 interface ExploreService {
   id: string;
@@ -192,7 +191,6 @@ export default function ExplorePage() {
         alignItems: 'center',
         justifyContent: 'center'
       }}>
-        <SimpleNavigation />
         <div style={{ textAlign: 'center', color: 'white' }}>
           <div style={{
             width: '60px',
@@ -214,8 +212,6 @@ export default function ExplorePage() {
       minHeight: '100vh', 
       background: 'linear-gradient(to bottom right, #dbeafe, #ffffff, #e0e7ff)' 
     }}>
-      <SimpleNavigation />
-      
       {/* 主標題區域 */}
       <div style={{
         background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',

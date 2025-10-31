@@ -8,7 +8,6 @@ import { AvatarUpload } from '@/components/ui/image-upload';
 import { Modal, useModal } from '@/components/ui/modal';
 import { Loading } from '@/components/ui/loading';
 import { useToast } from '@/components/ui/toast';
-import { SimpleNavigation } from '@/components/layout/page-navigation';
 
 interface ProfileFormData {
   name: string;
@@ -160,7 +159,6 @@ export default function ProfilePage() {
       minHeight: '100vh', 
       background: 'linear-gradient(to bottom right, #dbeafe, #ffffff, #e0e7ff)' 
     }}>
-      <SimpleNavigation />
       <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '1rem' }} className="sm:p-8">
         {/* 頁面標題 */}
         <div className="mb-8">

@@ -11,7 +11,6 @@ import { Card, CardContent } from '@/components/ui/card'; // 卡片組件
 import { Footer } from '@/components/layout/footer'; // 頁尾組件
 import { useToast } from '@/components/ui/toast'; // 提示訊息組件
 import { Loading } from '@/components/ui/loading'; // 載入組件
-import { SimpleNavigation } from '@/components/layout/page-navigation'; // 導航組件
 import { ReviewsSummary } from '@/components/reviews/reviews-summary'; // 評論摘要組件
 import { InteractiveMap } from '@/components/map/interactive-map'; // 互動地圖組件
 import { AdvancedSearch } from '@/components/search/advanced-search'; // 進階搜尋組件
@@ -558,8 +557,6 @@ export default function SearchPage() {
         background: 'linear-gradient(to bottom right, #dbeafe, #ffffff, #e0e7ff)'
       }}
     >
-      <SimpleNavigation />
-
       <main style={{ minHeight: '100vh', paddingTop: '3rem' }}>
         {/* Search Header */}
         <div 
