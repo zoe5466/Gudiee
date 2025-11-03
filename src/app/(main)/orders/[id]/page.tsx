@@ -39,14 +39,6 @@ interface OrderDetailsPageProps {
   params: { id: string };
 }
 
-// Generate static params for known order IDs
-export async function generateStaticParams() {
-  return [
-    { id: 'order-001' },
-    { id: 'order-002' },
-    { id: 'order-003' },
-  ];
-}
 
 export default function OrderDetailsPage({ params }: OrderDetailsPageProps) {
   const router = useRouter();
