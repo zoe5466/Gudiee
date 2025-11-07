@@ -19,7 +19,9 @@ import {
   ChevronDown,
   User,
   ArrowLeft,
-  MessageCircle
+  MessageCircle,
+  FileCheck,
+  UserCheck
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -185,6 +187,12 @@ export function AdminLayout({ children }: AdminLayoutProps) {
       label: t('admin.nav.guides'),
       icon: <Shield className="h-5 w-5" />,
       href: '/admin/guides'
+    },
+    {
+      id: 'kyc-review',
+      label: t('admin.nav.kyc_review'),
+      icon: <UserCheck className="h-5 w-5" />,
+      href: '/admin/kyc-review'
     },
     {
       id: 'services',

@@ -15,6 +15,7 @@ interface KYCFormData {
   idFrontImage: string;
   idBackImage: string;
   selfieImage: string;
+  criminalRecordCheck: string; // 良民證
 }
 
 interface KYCFormErrors {
@@ -25,9 +26,10 @@ interface KYCFormErrors {
   idFrontImage?: string;
   idBackImage?: string;
   selfieImage?: string;
+  criminalRecordCheck?: string;
 }
 
-type KYCStep = 1 | 2 | 3;
+type KYCStep = 1 | 2 | 3 | 4;
 
 export default function KYCPage() {
   const router = useRouter();
@@ -44,7 +46,8 @@ export default function KYCPage() {
     emergencyContact: '',
     idFrontImage: '',
     idBackImage: '',
-    selfieImage: ''
+    selfieImage: '',
+    criminalRecordCheck: ''
   });
   
   const [errors, setErrors] = useState<KYCFormErrors>({});
@@ -116,6 +119,20 @@ export default function KYCPage() {
     return Object.keys(newErrors).length === 0;
   };
 
+  const validateStep4 = (): boolean => {
+    const newErrors: KYCFormErrors = {};
+    
+    // 只有導遊需要上傳良民證
+    if (user?.role === 'guide') {
+      if (!formData.criminalRecordCheck) {
+        newErrors.criminalRecordCheck = '請上傳良民證（警察刑事紀錄證明書）';
+      }
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleInputChange = (field: keyof KYCFormData, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
     
@@ -127,6 +144,7 @@ export default function KYCPage() {
 
   const handleNextStep = () => {
     let isValid = false;
+    const maxStep = user?.role === 'guide' ? 4 : 3;
     
     switch (currentStep) {
       case 1:
@@ -138,11 +156,14 @@ export default function KYCPage() {
       case 3:
         isValid = validateStep3();
         break;
+      case 4:
+        isValid = validateStep4();
+        break;
     }
     
-    if (isValid && currentStep < 3) {
+    if (isValid && currentStep < maxStep) {
       setCurrentStep((prev) => (prev + 1) as KYCStep);
-    } else if (isValid && currentStep === 3) {
+    } else if (isValid && currentStep === maxStep) {
       handleSubmit();
     }
   };
@@ -190,11 +211,13 @@ export default function KYCPage() {
   const stepTitles = {
     1: '個人基本資料',
     2: '身分證明文件',
-    3: '本人驗證照片'
+    3: '本人驗證照片',
+    4: '良民證上傳（導遊專用）'
   };
 
   const getProgressWidth = () => {
-    return `${(currentStep / 3) * 100}%`;
+    const maxStep = user?.role === 'guide' ? 4 : 3;
+    return `${(currentStep / maxStep) * 100}%`;
   };
 
   return (
@@ -213,7 +236,7 @@ export default function KYCPage() {
           <div className="px-6 py-4 bg-gray-50">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm font-medium text-gray-700">驗證進度</span>
-              <span className="text-sm text-gray-500">第 {currentStep} 步，共 3 步</span>
+              <span className="text-sm text-gray-500">第 {currentStep} 步，共 {user?.role === 'guide' ? 4 : 3} 步</span>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-2">
               <div 
@@ -410,6 +433,74 @@ export default function KYCPage() {
                   </div>
                 </div>
               )}
+
+              {/* Step 4: Criminal Record Check (Guide Only) */}
+              {currentStep === 4 && user?.role === 'guide' && (
+                <div className="space-y-6">
+                  <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+                    <div className="flex">
+                      <div className="flex-shrink-0">
+                        <svg className="h-5 w-5 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                        </svg>
+                      </div>
+                      <div className="ml-3">
+                        <h3 className="text-sm font-medium text-amber-800">
+                          導遊專用 - 良民證上傳
+                        </h3>
+                        <div className="mt-2 text-sm text-amber-700">
+                          <p>
+                            為確保旅客安全，所有導遊必須提供有效的警察刑事紀錄證明書（良民證）。
+                            此為政府規定之必要文件，用於驗證導遊身分的合法性與安全性。
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-3">
+                      警察刑事紀錄證明書（良民證）*
+                    </label>
+                    <ImageUpload
+                      value={formData.criminalRecordCheck}
+                      onChange={(url) => handleInputChange('criminalRecordCheck', url as string)}
+                      accept="image/jpeg,image/png,application/pdf"
+                      maxSize={10} // 10MB for documents
+                      className="h-64"
+                      label="點擊上傳或拖拽檔案至此"
+                      description="支援 JPG、PNG、PDF 格式，檔案大小不超過 10MB"
+                    />
+                    {errors.criminalRecordCheck && (
+                      <p className="mt-1 text-sm text-red-600 text-center">{errors.criminalRecordCheck}</p>
+                    )}
+                  </div>
+                  
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <div className="flex">
+                      <div className="flex-shrink-0">
+                        <svg className="h-5 w-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                        </svg>
+                      </div>
+                      <div className="ml-3">
+                        <h3 className="text-sm font-medium text-blue-800">
+                          良民證申請指引
+                        </h3>
+                        <div className="mt-2 text-sm text-blue-700">
+                          <ul className="list-disc list-inside space-y-1">
+                            <li>可至各地警察局、戶政事務所或線上申請</li>
+                            <li>申請時請備妥身分證正本及印章</li>
+                            <li>申請費用約新台幣100元</li>
+                            <li>有效期限為申請日起3個月內</li>
+                            <li>請確保文件內容清晰可見，無遮擋或模糊</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
               
               {/* Security Notice - Show on all steps */}
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-6">
@@ -465,7 +556,7 @@ export default function KYCPage() {
                         <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
                         提交中...
                       </div>
-                    ) : currentStep === 3 ? '提交驗證' : '下一步'}
+                    ) : (currentStep === 3 && user?.role !== 'guide') || (currentStep === 4 && user?.role === 'guide') ? '提交驗證' : '下一步'}
                   </button>
                 </div>
               </div>

@@ -21,6 +21,7 @@ model User {
   role             UserRole  @default(CUSTOMER)
   isEmailVerified  Boolean   @default(false) @map("is_email_verified")
   isKycVerified    Boolean   @default(false) @map("is_kyc_verified")
+  isCriminalRecordVerified Boolean? @map("is_criminal_record_verified")
   permissions      Json      @default("[]")
   profile          Json?
   settings         Json      @default("{}")
@@ -44,6 +45,8 @@ model User {
   cmsContents          CmsContent[]
   supportTickets       SupportTicket[]
   adminReplies         SupportReply[]      @relation("AdminReplies")
+  kycSubmissions       KycSubmission[]
+  reviewedKycSubmissions KycSubmission[]   @relation("KycReviewedBy")
 
   @@map("users")
 }
@@ -502,4 +505,30 @@ enum SupportStatus {
   SENT    @map("sent")
   READ    @map("read")
   REPLIED @map("replied")
+}
+
+// KYC 提交模型
+model KycSubmission {
+  id                String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId            String    @map("user_id") @db.Uuid
+  idNumber          String?   @map("id_number")
+  birthDate         DateTime? @map("birth_date") @db.Date
+  address           String?
+  emergencyContact  String?   @map("emergency_contact")
+  idFrontImageUrl   String?   @map("id_front_image_url")
+  idBackImageUrl    String?   @map("id_back_image_url")
+  selfieImageUrl    String?   @map("selfie_image_url")
+  criminalRecordUrl String?   @map("criminal_record_url")
+  status            String    @default("pending")
+  reviewedBy        String?   @map("reviewed_by") @db.Uuid
+  reviewedAt        DateTime? @map("reviewed_at")
+  rejectionReason   String?   @map("rejection_reason")
+  createdAt         DateTime  @default(now()) @map("created_at")
+  updatedAt         DateTime  @updatedAt @map("updated_at")
+
+  // 關聯
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  reviewedByUser    User?     @relation("KycReviewedBy", fields: [reviewedBy], references: [id], onDelete: SetNull)
+
+  @@map("kyc_submissions")
 }

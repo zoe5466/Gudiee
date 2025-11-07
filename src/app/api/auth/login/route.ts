@@ -1,57 +1,7 @@
 import { NextRequest } from 'next/server';
 import { cookies } from 'next/headers';
-
-// 模擬用戶數據（臨時解決方案）
-const mockUsers = [
-  {
-    id: 'guide-001',
-    email: 'guide1@guidee.com',
-    passwordHash: '$2a$12$LQv3c1yqBwEHxPVhf.A3POQlPhJ4lMSjH4F4.h7V0TmkMOZ4QzK2.', // password123
-    name: '張小美',
-    role: 'GUIDE',
-    isEmailVerified: true,
-    isKycVerified: true,
-    permissions: ['user:read', 'guide:manage', 'booking:manage'],
-    userProfile: {
-      bio: '專業台北導遊，擁有5年導覽經驗',
-      location: '台北市',
-      languages: ['中文', '英文'],
-      specialties: ['歷史文化', '美食導覽']
-    }
-  },
-  {
-    id: 'guide-002',
-    email: 'guide2@guidee.com',
-    passwordHash: '$2a$12$LQv3c1yqBwEHxPVhf.A3POQlPhJ4lMSjH4F4.h7V0TmkMOZ4QzK2.', // password123
-    name: '李大明',
-    role: 'GUIDE',
-    isEmailVerified: true,
-    isKycVerified: true,
-    permissions: ['user:read', 'guide:manage', 'booking:manage'],
-    userProfile: {
-      bio: '資深地陪導遊，專精自然生態導覽',
-      location: '台中市',
-      languages: ['中文', '英文', '日文'],
-      specialties: ['自然生態', '攝影指導']
-    }
-  },
-  {
-    id: 'admin-001',
-    email: 'admin@guidee.com',
-    passwordHash: '$2a$12$LQv3c1yqBwEHxPVhf.A3POQlPhJ4lMSjH4F4.h7V0TmkMOZ4QzK2.', // password123
-    name: '系統管理員',
-    role: 'ADMIN',
-    isEmailVerified: true,
-    isKycVerified: true,
-    permissions: ['admin:full', 'user:manage', 'service:manage', 'booking:manage']
-  }
-];
-
-// 簡化的密碼驗證（實際應該使用 bcrypt）
-function verifyPassword(plainPassword: string, hashedPassword: string): boolean {
-  // 臨時簡化：所有測試帳號密碼都是 password123
-  return plainPassword === 'password123';
-}
+import { prisma } from '@/lib/prisma';
+import bcrypt from 'bcryptjs';
 
 // 簡化的 JWT 生成
 function generateToken(user: any): string {
@@ -59,7 +9,10 @@ function generateToken(user: any): string {
   return btoa(JSON.stringify({
     id: user.id,
     email: user.email,
+    name: user.name,
     role: user.role,
+    isKYCVerified: user.isKycVerified,
+    isCriminalRecordVerified: user.isCriminalRecordVerified,
     exp: Date.now() + (7 * 24 * 60 * 60 * 1000) // 7天後過期
   }));
 }
@@ -81,8 +34,13 @@ export async function POST(request: NextRequest) {
       }, { status: 400 });
     }
 
-    // 查找用戶
-    const user = mockUsers.find(u => u.email.toLowerCase() === email.toLowerCase());
+    // 從資料庫查找用戶
+    const user = await prisma.user.findUnique({
+      where: { email: email.toLowerCase() },
+      include: {
+        userProfile: true
+      }
+    });
     
     if (!user) {
       console.log('User not found:', email);
@@ -93,7 +51,7 @@ export async function POST(request: NextRequest) {
     }
 
     // 驗證密碼
-    const isValidPassword = verifyPassword(password, user.passwordHash);
+    const isValidPassword = await bcrypt.compare(password, user.passwordHash);
     if (!isValidPassword) {
       console.log('Invalid password for:', email);
       return Response.json({

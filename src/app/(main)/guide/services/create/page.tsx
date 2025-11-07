@@ -1,11 +1,14 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Plus, Minus, Upload, ArrowLeft, Calendar, Users, Clock, MapPin, DollarSign } from 'lucide-react';
+import { Plus, Minus, Upload, ArrowLeft, Calendar, Users, Clock, MapPin, DollarSign, Shield, AlertCircle } from 'lucide-react';
+import { useAuth } from '@/store/auth';
+import { Loading } from '@/components/ui/loading';
 
 export default function CreateServicePage() {
   const router = useRouter();
+  const { user, isAuthenticated, isLoading: authLoading } = useAuth();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     title: '',
@@ -23,6 +26,36 @@ export default function CreateServicePage() {
     images: [] as string[],
     cancellationPolicy: ''
   });
+
+  // 檢查認證狀態和權限
+  useEffect(() => {
+    if (!authLoading) {
+      // 檢查是否登入
+      if (!isAuthenticated) {
+        router.push('/auth/login');
+        return;
+      }
+
+      // 檢查是否為導遊角色
+      if (user?.role !== 'guide') {
+        router.push('/');
+        return;
+      }
+
+      // 檢查是否完成KYC驗證
+      if (!user?.isKYCVerified) {
+        router.push('/kyc');
+        return;
+      }
+
+      // 檢查是否完成良民證驗證（新增）
+      if (!user?.isCriminalRecordVerified) {
+        // 暫時跳轉到KYC頁面，實際部署時應該有專門的良民證驗證頁面
+        router.push('/kyc');
+        return;
+      }
+    }
+  }, [authLoading, isAuthenticated, user, router]);
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -89,6 +122,38 @@ export default function CreateServicePage() {
     { id: 'photography', name: '攝影導覽' },
     { id: 'shopping', name: '購物指南' }
   ];
+
+  // 顯示載入狀態
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <Loading size="lg" />
+      </div>
+    );
+  }
+
+  // 檢查認證狀態（額外保護）
+  if (!isAuthenticated || user?.role !== 'guide' || !user?.isKYCVerified || !user?.isCriminalRecordVerified) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center bg-white rounded-lg shadow-sm p-8 max-w-md">
+          <AlertCircle className="w-16 h-16 text-red-400 mx-auto mb-4" />
+          <h2 className="text-xl font-semibold text-gray-900 mb-2">
+            驗證未完成
+          </h2>
+          <p className="text-gray-600 mb-6">
+            您需要完成身分驗證和良民證上傳才能創建服務
+          </p>
+          <button
+            onClick={() => router.push('/kyc')}
+            className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            前往驗證
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">

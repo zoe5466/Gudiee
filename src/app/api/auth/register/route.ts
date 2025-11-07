@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-
-// 簡化的註冊 API（臨時解決方案）
+import { prisma } from '@/lib/prisma';
+import bcrypt from 'bcryptjs';
 export async function POST(request: NextRequest) {
   try {
     console.log('Register API called');
@@ -34,33 +34,37 @@ export async function POST(request: NextRequest) {
       }, { status: 400 });
     }
 
-    // 檢查 email 是否已存在（簡化版本）
-    const existingEmails = [
-      'guide1@guidee.com',
-      'guide2@guidee.com', 
-      'admin@guidee.com'
-    ];
+    // 檢查 email 是否已存在
+    const existingUser = await prisma.user.findUnique({
+      where: { email: email.toLowerCase() }
+    });
     
-    if (existingEmails.includes(email.toLowerCase())) {
+    if (existingUser) {
       return NextResponse.json({
         success: false,
         error: '此電子郵件已被註冊'
       }, { status: 409 });
     }
 
-    // 創建新用戶（模擬）
-    const newUser = {
-      id: `user-${Date.now()}`,
-      email: email.toLowerCase(),
-      name,
-      phone: phone || null,
-      role: userType.toUpperCase(),
-      isEmailVerified: false,
-      isKycVerified: false,
-      permissions: userType === 'guide' ? ['user:read', 'guide:manage'] : ['user:read'],
-      createdAt: new Date().toISOString(),
-      subscribeNewsletter
-    };
+    // 密碼雜湊化
+    const saltRounds = 12;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+    // 創建新用戶
+    const newUser = await prisma.user.create({
+      data: {
+        email: email.toLowerCase(),
+        passwordHash: hashedPassword,
+        name,
+        phone: phone || null,
+        role: userType.toUpperCase() as 'CUSTOMER' | 'GUIDE' | 'ADMIN',
+        isEmailVerified: false,
+        isKycVerified: false,
+        isCriminalRecordVerified: userType === 'guide' ? false : null,
+        permissions: userType === 'guide' ? ['user:read', 'guide:manage'] : ['user:read'],
+        settings: { subscribeNewsletter }
+      }
+    });
 
     // 生成 token
     const token = btoa(JSON.stringify({
@@ -69,14 +73,19 @@ export async function POST(request: NextRequest) {
       name: newUser.name,
       role: newUser.role,
       phone: newUser.phone,
+      isKYCVerified: newUser.isKycVerified,
+      isCriminalRecordVerified: newUser.isCriminalRecordVerified,
       exp: Date.now() + (7 * 24 * 60 * 60 * 1000)
     }));
+
+    // 準備回應資料（移除密碼）
+    const { passwordHash, ...userWithoutPassword } = newUser;
 
     // 設置 cookie
     const response = NextResponse.json({
       success: true,
       data: {
-        user: newUser,
+        user: userWithoutPassword,
         token
       },
       message: '註冊成功'

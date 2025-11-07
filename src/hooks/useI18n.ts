@@ -122,6 +122,7 @@ interface Translations {
   'admin.nav.booking_management': string;
   'admin.nav.review_management': string;
   'admin.nav.chat_management': string;
+  'admin.nav.kyc_review': string;
   
   // 管理面板通用
   'admin.common.loading': string;
@@ -316,6 +317,7 @@ const translations: Record<SupportedLocale, Translations> = {
     'admin.nav.booking_management': '預訂管理',
     'admin.nav.review_management': '評論管理',
     'admin.nav.chat_management': '客服管理',
+    'admin.nav.kyc_review': '資格審核',
     
     // 管理面板通用
     'admin.common.loading': '載入中...',
@@ -508,6 +510,7 @@ const translations: Record<SupportedLocale, Translations> = {
     'admin.nav.booking_management': '预订管理',
     'admin.nav.review_management': '评论管理',
     'admin.nav.chat_management': '客服管理',
+    'admin.nav.kyc_review': '资格审核',
     
     // 管理面板通用
     'admin.common.loading': '加载中...',
@@ -700,6 +703,7 @@ const translations: Record<SupportedLocale, Translations> = {
     'admin.nav.booking_management': 'Booking Management',
     'admin.nav.review_management': 'Review Management',
     'admin.nav.chat_management': 'Customer Support',
+    'admin.nav.kyc_review': 'KYC Review',
     
     // Admin Common
     'admin.common.loading': 'Loading...',
@@ -892,6 +896,7 @@ const translations: Record<SupportedLocale, Translations> = {
     'admin.nav.booking_management': '予約管理',
     'admin.nav.review_management': 'レビュー管理',
     'admin.nav.chat_management': 'カスタマーサポート',
+    'admin.nav.kyc_review': '資格審査',
     
     // 管理パネル共通
     'admin.common.loading': '読み込み中...',
@@ -1084,6 +1089,7 @@ const translations: Record<SupportedLocale, Translations> = {
     'admin.nav.booking_management': '예약 관리',
     'admin.nav.review_management': '리뷰 관리',
     'admin.nav.chat_management': '고객 지원',
+    'admin.nav.kyc_review': '신원 확인 심사',
     
     // 관리 패널 공통
     'admin.common.loading': '로딩 중...',

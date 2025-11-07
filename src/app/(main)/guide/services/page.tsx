@@ -57,6 +57,18 @@ export default function GuideServicesPage() {
       router.push('/');
       return;
     }
+
+    // 檢查是否完成KYC驗證
+    if (!user?.isKYCVerified) {
+      router.push('/kyc');
+      return;
+    }
+
+    // 檢查是否完成良民證驗證（新增）
+    if (!user?.isCriminalRecordVerified) {
+      router.push('/kyc');
+      return;
+    }
     
     fetchServices();
   }, [isAuthenticated, user, router]);

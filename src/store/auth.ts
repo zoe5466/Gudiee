@@ -12,6 +12,7 @@ export interface User {
   role: 'customer' | 'guide' | 'admin'; // 用戶角色
   isEmailVerified: boolean; // Email 驗證狀態
   isKYCVerified: boolean; // KYC 驗證狀態
+  isCriminalRecordVerified?: boolean; // 良民證驗證狀態（導遊專用）
   createdAt: string; // 帳戶建立時間
   permissions?: string[]; // 權限列表（可選）
   profile?: { // 用戶詳細檔案（可選）
