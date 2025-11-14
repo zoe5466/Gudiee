@@ -55,7 +55,7 @@ export function Header() {
               <div className="flex items-center">
                 {/* Logo 圖標 */}
                 <div className="w-8 h-8 bg-gradient-to-br from-[#FF5A5F] to-[#E1464A] rounded-lg flex items-center justify-center">
-                   <Image
+                   <Img
                       src="@/logo.jpg"
                       alt="Guidee Logo"
                       width={32}
