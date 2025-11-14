@@ -104,7 +104,7 @@ export function HeroClient() {
             color: '#2563eb',
             cursor: 'pointer'
           }}
-          onClick={() => router.push('/')}
+          onClick={() => router.push('/hero-client')}
         >
           Guidee
         </div>
