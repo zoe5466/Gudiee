@@ -55,7 +55,13 @@ export function Header() {
               <div className="flex items-center">
                 {/* Logo 圖標 */}
                 <div className="w-8 h-8 bg-gradient-to-br from-[#FF5A5F] to-[#E1464A] rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold text-sm">R</span>
+                   <Image
+                      src="@/logo.jpg"
+                      alt="Guidee Logo"
+                      width={32}
+                      height={32}
+                      className="object-cover"
+                  />
                 </div>
                 {/* 品牌名稱（在小螢幕隱藏） */}
                 <span className="ml-2 text-xl sm:text-2xl font-bold text-[#FF5A5F] hidden xs:block">guidee</span>
