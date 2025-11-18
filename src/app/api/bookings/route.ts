@@ -185,7 +185,10 @@ export async function POST(request: NextRequest) {
     }
 
     // 計算價格
-    const basePrice = service.price * numberOfGuests;
+    const pricePerGuest = typeof service.price === 'number'
+      ? service.price
+      : parseFloat(String(service.price));
+    const basePrice = pricePerGuest * numberOfGuests;
     const serviceFee = basePrice * 0.05; // 5% 服務費
     const totalAmount = basePrice + serviceFee;
 
