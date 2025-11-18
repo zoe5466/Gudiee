@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { Facebook, Twitter, Instagram, Youtube, Mail, Phone, MapPin } from 'lucide-react';
 
 export function Footer() {
@@ -53,8 +54,14 @@ export function Footer() {
             {/* Logo 和描述 */}
             <div className="space-y-6">
               <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-gradient-to-br from-sky-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
-                  <span className="text-white font-bold text-xl">R</span>
+                <div className="w-12 h-12 flex items-center justify-center flex-shrink-0">
+                  <Image
+                    src="/logo.jpg"
+                    alt="Guidee Logo"
+                    width={48}
+                    height={48}
+                    className="object-contain"
+                  />
                 </div>
                 <span className="text-2xl font-bold text-white">Guidee</span>
               </div>

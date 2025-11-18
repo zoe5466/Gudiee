@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import Image from 'next/image'
 import { Search, Globe, Menu, User, Heart, MessageCircle } from 'lucide-react'
 
 interface HomePageLayoutProps {
@@ -38,14 +39,21 @@ export function HomePageLayout({ children }: HomePageLayoutProps) {
               : 'bg-white/90 backdrop-blur-md rounded-2xl mt-4 shadow-lg px-6'
           }`}>
             {/* Logo */}
-            <div 
-              className="flex items-center cursor-pointer"
+            <div
+              className="flex items-center cursor-pointer hover:opacity-80 transition-opacity"
               onClick={() => router.push('/')}
             >
-              <div className="w-8 h-8 bg-gradient-to-br from-[#FF5A5F] to-[#E1464A] rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-sm">G</span>
+              <div className="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center flex-shrink-0">
+                <Image
+                  src="/logo.jpg"
+                  alt="Guidee Logo"
+                  width={48}
+                  height={48}
+                  priority
+                  className="object-contain"
+                />
               </div>
-              <span className="ml-2 text-2xl font-bold text-[#FF5A5F]">uidee</span>
+              <span className="ml-2 text-2xl font-bold text-[#2C4A7C] hidden sm:inline">Guidee</span>
             </div>
 
             {/* Center Search (when scrolled) */}
@@ -104,10 +112,16 @@ export function HomePageLayout({ children }: HomePageLayoutProps) {
             {/* Company */}
             <div>
               <div className="flex items-center mb-4">
-                <div className="w-8 h-8 bg-gradient-to-br from-[#FF5A5F] to-[#E1464A] rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold text-sm">G</span>
+                <div className="w-10 h-10 flex items-center justify-center flex-shrink-0">
+                  <Image
+                    src="/logo.jpg"
+                    alt="Guidee Logo"
+                    width={40}
+                    height={40}
+                    className="object-contain"
+                  />
                 </div>
-                <span className="ml-2 text-2xl font-bold text-white">uidee</span>
+                <span className="ml-2 text-2xl font-bold text-white">Guidee</span>
               </div>
               <p className="text-gray-300 text-sm">
                 連接在地地陪與旅客的專業媒合平台

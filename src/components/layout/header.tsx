@@ -5,6 +5,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Search, Globe, Menu, User } from 'lucide-react'; // 圖標組件
 import { LanguageToggle } from '@/components/i18n/language-switcher'; // 語言切換組件
 import { UserMenu } from '@/components/ui/user-menu'; // 用戶選單組件
@@ -51,22 +52,23 @@ export function Header() {
         <div className="px-4 sm:px-6 lg:px-10 xl:px-20">
           <div className="flex items-center justify-between h-16 sm:h-20">
             {/* 品牌 Logo 區域 */}
-            <div className="flex items-center">
+            <Link href="/" className="flex items-center hover:opacity-80 transition-opacity">
               <div className="flex items-center">
                 {/* Logo 圖標 */}
-                <div className="w-8 h-8 bg-gradient-to-br from-[#FF5A5F] to-[#E1464A] rounded-lg flex items-center justify-center">
-                   <Img
-                      src="@/logo.jpg"
-                      alt="Guidee Logo"
-                      width={32}
-                      height={32}
-                      className="object-cover"
+                <div className="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center flex-shrink-0">
+                  <Image
+                    src="/logo.jpg"
+                    alt="Guidee Logo"
+                    width={48}
+                    height={48}
+                    priority
+                    className="object-contain"
                   />
                 </div>
                 {/* 品牌名稱（在小螢幕隱藏） */}
-                <span className="ml-2 text-xl sm:text-2xl font-bold text-[#FF5A5F] hidden xs:block">guidee</span>
+                <span className="ml-2 text-xl sm:text-2xl font-bold text-[#2C4A7C] hidden xs:block">Guidee</span>
               </div>
-            </div>
+            </Link>
 
             {/* 搜尋欄（僅在搜尋頁面顯示） */}
             {isSearchPage && (

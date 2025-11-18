@@ -54,18 +54,18 @@ export const metadata: Metadata = {
     siteName: 'Guidee',
     images: [
       {
-        url: '/images/og-image.png',
-        width: 1200,
-        height: 630,
+        url: '/logo.jpg',
+        width: 512,
+        height: 512,
         alt: 'Guidee - 地陪媒合平台',
       },
     ],
   },
   twitter: {
-    card: 'summary_large_image',
+    card: 'summary',
     title: 'Guidee - 地陪媒合平台',
     description: '旅遊界的 Uber - 連接在地地陪與旅客的雙邊媒合平台',
-    images: ['/images/twitter-image.png'],
+    images: ['/logo.jpg'],
     creator: '@guidee_tw',
   },
   robots: {
@@ -94,10 +94,10 @@ export default function RootLayout({
   return (
     <html lang="zh-TW" suppressHydrationWarning>
       <head>
-        <link rel="icon" href="/favicon.ico" />
-        <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+        <link rel="icon" href="/logo.jpg" />
+        <link rel="apple-touch-icon" href="/logo.jpg" />
         <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#ed7411" />
+        <meta name="theme-color" content="#2C4A7C" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
       </head>
       <body 
