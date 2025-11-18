@@ -7,7 +7,19 @@ const globalForPrisma = globalThis as unknown as {
 export const prisma =
   globalForPrisma.prisma ??
   new PrismaClient({
-    log: ['query'],
+    // 日誌配置
+    log: process.env.NODE_ENV === 'development'
+      ? ['query', 'warn', 'error']
+      : ['error'],
+    errorFormat: process.env.NODE_ENV === 'development' ? 'pretty' : 'minimal',
   })
 
-if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
+// 在開發環境中重新使用 Prisma 實例，避免多次創建
+if (process.env.NODE_ENV !== 'production') {
+  globalForPrisma.prisma = prisma
+}
+
+// 優雅關閉
+process.on('exit', async () => {
+  await prisma.$disconnect()
+})

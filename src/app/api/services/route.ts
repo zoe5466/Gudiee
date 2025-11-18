@@ -1,140 +1,213 @@
 import { NextRequest } from 'next/server';
-import { serviceStorage } from '@/lib/mock-services';
+import { prisma } from '@/lib/prisma';
+import { getCurrentUser } from '@/lib/auth';
+import {
+  successResponse,
+  errorResponse,
+  unauthorizedResponse,
+  validationErrorResponse
+} from '@/lib/api-response';
 
 // GET /api/services - 獲取服務列表
 export async function GET(request: NextRequest) {
   try {
-    console.log('Services API called');
-    
     const { searchParams } = new URL(request.url);
-    const query = searchParams.get('q') || searchParams.get('query') || undefined;
-    const category = searchParams.get('category') || undefined;
-    const location = searchParams.get('location') || undefined;
+    const query = searchParams.get('q') || searchParams.get('query');
+    const location = searchParams.get('location');
     const priceMin = searchParams.get('priceMin') ? parseFloat(searchParams.get('priceMin')!) : undefined;
     const priceMax = searchParams.get('priceMax') ? parseFloat(searchParams.get('priceMax')!) : undefined;
     const minRating = searchParams.get('rating') ? parseFloat(searchParams.get('rating')!) : undefined;
-    const sortBy = (searchParams.get('sortBy') as any) || 'relevance';
+    const sortBy = searchParams.get('sortBy') || 'newest';
     const page = parseInt(searchParams.get('page') || '1');
     const limit = parseInt(searchParams.get('limit') || '12');
+    const skip = (page - 1) * limit;
 
-    // 使用 mock 服務進行搜尋
-    const allServices = serviceStorage.search({
-      query,
-      location,
-      category,
-      priceMin,
-      priceMax,
-      minRating,
-      sortBy
-    });
+    // 構建查詢條件
+    const where: any = {
+      status: 'ACTIVE'
+    };
 
-    // 分頁處理
-    const total = allServices.length;
-    const totalPages = Math.ceil(total / limit);
-    const startIndex = (page - 1) * limit;
-    const endIndex = startIndex + limit;
-    const services = allServices.slice(startIndex, endIndex);
+    if (query) {
+      where.OR = [
+        { title: { contains: query, mode: 'insensitive' } },
+        { description: { contains: query, mode: 'insensitive' } }
+      ];
+    }
 
-    return Response.json({
-      success: true,
-      data: services,
-      message: '服務列表獲取成功',
+    if (location) {
+      where.location = { contains: location, mode: 'insensitive' };
+    }
+
+    if (priceMin !== undefined || priceMax !== undefined) {
+      where.price = {};
+      if (priceMin !== undefined) where.price.gte = priceMin;
+      if (priceMax !== undefined) where.price.lte = priceMax;
+    }
+
+    // 構建排序條件
+    const orderBy: any = {};
+    switch (sortBy) {
+      case 'price_asc':
+        orderBy.price = 'asc';
+        break;
+      case 'price_desc':
+        orderBy.price = 'desc';
+        break;
+      case 'rating':
+        orderBy.averageRating = 'desc';
+        break;
+      case 'popular':
+        orderBy.bookingsCount = 'desc';
+        break;
+      case 'newest':
+      default:
+        orderBy.createdAt = 'desc';
+    }
+
+    // 獲取服務列表
+    const [services, total] = await Promise.all([
+      prisma.service.findMany({
+        where,
+        include: {
+          guide: {
+            select: {
+              id: true,
+              name: true,
+              avatar: true,
+              userProfile: {
+                select: {
+                  bio: true,
+                  languages: true,
+                  specialties: true,
+                  yearsOfExperience: true
+                }
+              }
+            }
+          },
+          _count: {
+            select: { reviews: true, bookings: true }
+          }
+        },
+        orderBy,
+        skip,
+        take: limit
+      }),
+      prisma.service.count({ where })
+    ]);
+
+    // 計算平均評分和審查統計
+    const servicesWithStats = await Promise.all(
+      services.map(async (service) => {
+        const reviews = await prisma.review.findMany({
+          where: { serviceId: service.id },
+          select: { rating: true }
+        });
+
+        const averageRating = reviews.length > 0
+          ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
+          : 0;
+
+        return {
+          ...service,
+          averageRating: parseFloat(averageRating.toFixed(1)),
+          reviewCount: reviews.length
+        };
+      })
+    );
+
+    // 根據最低評分過濾
+    const filteredServices = minRating
+      ? servicesWithStats.filter(s => s.averageRating >= minRating)
+      : servicesWithStats;
+
+    return successResponse({
+      data: filteredServices,
       pagination: {
         page,
         limit,
         total,
-        totalPages
+        totalPages: Math.ceil(total / limit)
       }
-    });
+    }, '服務列表獲取成功');
 
   } catch (error) {
     console.error('Get services error:', error);
-    return Response.json({
-      success: false,
-      error: 'Internal server error',
-      message: '獲取服務列表失敗'
-    }, { status: 500 });
+    return errorResponse('獲取服務列表失敗', 500);
   }
 }
 
 // POST /api/services - 創建新服務
 export async function POST(request: NextRequest) {
   try {
-    console.log('Create service API called');
-    
-    const data = await request.json();
-    console.log('Received service data:', data);
-
-    // 驗證必填欄位
-    if (!data.title || !data.description || !data.location || !data.price) {
-      return Response.json({
-        success: false,
-        error: 'Missing required fields',
-        message: '請填寫所有必填欄位'
-      }, { status: 400 });
+    const user = await getCurrentUser();
+    if (!user) {
+      return unauthorizedResponse();
     }
 
-    // 創建新服務數據
-    const newService = {
-      title: data.title as string,
-      description: data.description as string,
-      shortDescription: (data.shortDescription || data.title) as string,
-      price: parseFloat(data.price),
-      location: data.location as string,
-      duration: parseInt(data.duration) || 4,
-      maxGuests: parseInt(data.maxGuests) || 6,
-      minGuests: parseInt(data.minGuests) || 1,
-      category: data.category ? { id: data.category as string, name: data.category as string } : undefined,
-      status: 'ACTIVE' as const,
-      highlights: Array.isArray(data.highlights) ? data.highlights.filter((h: string) => h.trim()) : [],
-      included: Array.isArray(data.included) ? data.included.filter((i: string) => i.trim()) : [],
-      excluded: Array.isArray(data.excluded) ? data.excluded.filter((e: string) => e.trim()) : [],
-      images: data.images || [
-        'https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=800&h=600&fit=crop',
-        'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop'
-      ],
-      cancellationPolicy: data.cancellationPolicy || '24小時前免費取消',
-      guide: {
-        id: 'guide-current',
-        name: '專業導遊',
-        avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face',
-        bio: '專業認證導遊，擁有豐富的在地經驗',
-        location: data.location as string,
-        languages: ['中文', '英文'],
-        specialties: [data.category || '觀光導覽'],
-        experienceYears: 5
-      },
-      stats: {
-        averageRating: 0,
-        totalReviews: 0,
-        totalBookings: 0,
-        ratingDistribution: { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 }
-      },
-      availability: {
-        availableDates: [],
-        bookedDates: []
-      },
-      reviews: []
-    };
+    if (user.role !== 'GUIDE') {
+      return errorResponse('只有導遊可以建立服務', 403);
+    }
 
-    // 使用 serviceStorage 添加服務
-    const { serviceStorage } = await import('@/lib/mock-services');
-    const createdService = serviceStorage.add(newService);
+    const data = await request.json();
 
-    console.log('Service created successfully:', createdService.id);
+    // 驗證必填欄位
+    const errors: Record<string, string> = {};
+    if (!data.title) errors.title = '服務標題為必填項目';
+    if (!data.description) errors.description = '服務描述為必填項目';
+    if (!data.location) errors.location = '服務地點為必填項目';
+    if (!data.price || data.price <= 0) errors.price = '服務價格必須大於 0';
+    if (!data.duration || data.duration <= 0) errors.duration = '服務時長必須大於 0';
 
-    return Response.json({
-      success: true,
-      data: createdService,
-      message: '服務創建成功'
+    if (Object.keys(errors).length > 0) {
+      return validationErrorResponse(errors);
+    }
+
+    // 創建新服務
+    const newService = await prisma.service.create({
+      data: {
+        title: data.title,
+        description: data.description,
+        location: data.location,
+        latitude: data.latitude,
+        longitude: data.longitude,
+        price: parseFloat(data.price),
+        duration: parseInt(data.duration),
+        maxGuests: parseInt(data.maxGuests) || 6,
+        minGuests: parseInt(data.minGuests) || 1,
+        category: data.category,
+        status: 'ACTIVE',
+        guideId: user.id,
+        images: data.images || [],
+        highlights: data.highlights || [],
+        included: data.included || [],
+        excluded: data.excluded || [],
+        cancellationPolicy: data.cancellationPolicy || '24小時前免費取消'
+      },
+      include: {
+        guide: {
+          select: {
+            id: true,
+            name: true,
+            avatar: true,
+            userProfile: {
+              select: {
+                bio: true,
+                languages: true,
+                specialties: true,
+                yearsOfExperience: true
+              }
+            }
+          }
+        }
+      }
     });
+
+    return successResponse({
+      data: newService
+    }, '服務創建成功');
 
   } catch (error) {
     console.error('Create service error:', error);
-    return Response.json({
-      success: false,
-      error: 'Internal server error',
-      message: '創建服務失敗'
-    }, { status: 500 });
+    return errorResponse('創建服務失敗', 500);
   }
 }

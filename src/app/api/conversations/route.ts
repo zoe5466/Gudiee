@@ -61,47 +61,74 @@ export async function GET(request: NextRequest) {
       prisma.conversation.count({ where })
     ]);
 
-    // 為每個對話添加額外信息
-    const enrichedConversations = await Promise.all(
-      conversations.map(async (conversation) => {
-        // 獲取未讀消息數
-        const unreadCount = await prisma.message.count({
-          where: {
-            conversationId: conversation.id,
-            senderId: { not: user.id },
-            isRead: false
-          }
-        });
-
-        // 獲取參與者信息
-        const participantIds = conversation.participants.filter(id => id !== user.id);
-        const participants = await prisma.user.findMany({
-          where: {
-            id: { in: participantIds }
-          },
-          select: {
-            id: true,
-            name: true,
-            avatar: true,
-            role: true
-          }
-        });
-
-        // 計算對話標題
-        let conversationTitle = conversation.title;
-        if (!conversationTitle && conversation.type === 'DIRECT') {
-          conversationTitle = participants.map(p => p.name).join(', ');
-        }
-
-        return {
-          ...conversation,
-          title: conversationTitle,
-          participants: participants,
-          unreadCount,
-          lastMessage: conversation.messages[0] || null
-        };
-      })
+    // 批量獲取未讀計數和參與者信息 - 避免 N+1 查詢
+    const conversationIds = conversations.map(c => c.id);
+    const allParticipantIds = conversations.flatMap(c =>
+      c.participants.filter(id => id !== user.id)
     );
+
+    // 一次性獲取所有未讀計數
+    const unreadCountsMap = new Map();
+    if (conversationIds.length > 0) {
+      const unreadMessages = await prisma.message.groupBy({
+        by: ['conversationId'],
+        where: {
+          conversationId: { in: conversationIds },
+          senderId: { not: user.id },
+          isRead: false
+        },
+        _count: {
+          id: true
+        }
+      });
+
+      unreadMessages.forEach(item => {
+        unreadCountsMap.set(item.conversationId, item._count.id);
+      });
+    }
+
+    // 一次性獲取所有參與者信息
+    const participantsMap = new Map();
+    if (allParticipantIds.length > 0) {
+      const uniqueParticipantIds = [...new Set(allParticipantIds)];
+      const participants = await prisma.user.findMany({
+        where: {
+          id: { in: uniqueParticipantIds }
+        },
+        select: {
+          id: true,
+          name: true,
+          avatar: true,
+          role: true
+        }
+      });
+
+      participants.forEach(p => {
+        participantsMap.set(p.id, p);
+      });
+    }
+
+    // 組裝最終數據 - 單個同步操作，無額外查詢
+    const enrichedConversations = conversations.map((conversation) => {
+      const convParticipantIds = conversation.participants.filter(id => id !== user.id);
+      const participants = convParticipantIds
+        .map(id => participantsMap.get(id))
+        .filter(Boolean);
+
+      // 計算對話標題
+      let conversationTitle = conversation.title;
+      if (!conversationTitle && conversation.type === 'DIRECT') {
+        conversationTitle = participants.map(p => p!.name).join(', ');
+      }
+
+      return {
+        ...conversation,
+        title: conversationTitle,
+        participants,
+        unreadCount: unreadCountsMap.get(conversation.id) || 0,
+        lastMessage: conversation.messages[0] || null
+      };
+    });
 
     return successResponse({
       conversations: enrichedConversations,
