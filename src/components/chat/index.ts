@@ -1,9 +1,22 @@
-// Export all chat-related components and types for easy importing
+/**
+ * Chat Components Index
+ *
+ * Core Systems:
+ * - ComprehensiveChatSystem: Feature-rich chat system with files, search, group support
+ * - ChatInterface: Lightweight peer-to-peer chat (used by /chat page)
+ *
+ * Convenience Wrappers:
+ * - BookingChat: Pre-configured chat for booking-specific conversations
+ * - CustomerSupportChat: Pre-configured support chat with custom headers
+ * - DirectChat: Direct user-to-user messaging
+ * - ChatWidget: Floating widget for chat access
+ */
 
-// Main chat system component
+// Core chat systems
 export { ComprehensiveChatSystem } from './comprehensive-chat-system';
+export { ChatInterface } from './chat-interface';
 
-// Wrapper components for different use cases
+// Convenience wrapper components for different use cases
 export {
   BookingChat,
   CustomerSupportChat,
@@ -13,6 +26,7 @@ export {
 
 // Hooks
 export { useChatSystem } from '@/hooks/useChatSystem';
+export { useChat } from '@/hooks/useChat';
 
 // Types
 export type {
@@ -31,7 +45,3 @@ export type {
   BookingReference,
   ChatHookConfig
 } from '@/types/chat';
-
-// Legacy components (for backward compatibility)
-export { ChatInterface } from './chat-interface';
-export { useChat } from '@/hooks/useChat';

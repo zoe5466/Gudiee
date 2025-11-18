@@ -1,19 +1,23 @@
 'use client'
 
 import { useState } from 'react'
-import { useTranslation } from '@/hooks/use-i18n'
+import { useI18n } from '@/components/providers/i18n-provider'
+import { SupportedLocale, localeInfo } from '@/hooks/useI18n'
 import { ChevronDown, Globe } from 'lucide-react'
 
 export function LanguageSwitcher() {
-  const { t, changeLanguage, getCurrentLanguage, getLanguages } = useTranslation()
+  const { locale, setLocale } = useI18n()
   const [isOpen, setIsOpen] = useState(false)
-  
-  const currentLanguage = getCurrentLanguage()
-  const languages = getLanguages()
-  const currentLangData = languages.find(lang => lang.code === currentLanguage)
 
-  const handleLanguageChange = async (locale: string) => {
-    await changeLanguage(locale)
+  const languages = Object.entries(localeInfo).map(([code, data]) => ({
+    code: code as SupportedLocale,
+    name: data.name,
+    flag: data.flag
+  }))
+  const currentLangData = languages.find(lang => lang.code === locale)
+
+  const handleLanguageChange = (newLocale: string) => {
+    setLocale(newLocale as SupportedLocale)
     setIsOpen(false)
   }
 
@@ -75,7 +79,7 @@ export function LanguageSwitcher() {
                 textAlign: 'left',
                 fontSize: '0.875rem',
                 border: 'none',
-                backgroundColor: currentLanguage === language.code ? '#f3f4f6' : 'transparent',
+                backgroundColor: locale === language.code ? '#f3f4f6' : 'transparent',
                 cursor: 'pointer',
                 transition: 'background-color 0.2s'
               }}
@@ -83,7 +87,7 @@ export function LanguageSwitcher() {
             >
               <span style={{ fontSize: '1.125rem' }}>{language.flag}</span>
               <span>{language.name}</span>
-              {currentLanguage === language.code && (
+              {locale === language.code && (
                 <span style={{ marginLeft: 'auto', color: '#3b82f6', fontSize: '0.75rem' }}>✓</span>
               )}
             </button>
@@ -96,11 +100,14 @@ export function LanguageSwitcher() {
 
 // 簡化版本用於手機版
 export function LanguageSwitcherMobile() {
-  const { getCurrentLanguage, getLanguages } = useTranslation()
-  
-  const currentLanguage = getCurrentLanguage()
-  const languages = getLanguages()
-  const currentLangData = languages.find(lang => lang.code === currentLanguage)
+  const { locale } = useI18n()
+
+  const languages = Object.entries(localeInfo).map(([code, data]) => ({
+    code: code as SupportedLocale,
+    name: data.name,
+    flag: data.flag
+  }))
+  const currentLangData = languages.find(lang => lang.code === locale)
 
   return (
     <div
