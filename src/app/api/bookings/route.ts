@@ -1,6 +1,7 @@
 // 預訂管理 API 路由
 // 功能：處理預訂的創建、查詢、更新等操作，支援多角色權限控制
 import { NextRequest } from 'next/server';
+import { Decimal } from '@prisma/client/runtime/library';
 import { prisma } from '@/lib/prisma';
 import { getCurrentUser } from '@/lib/auth';
 import {
@@ -199,14 +200,20 @@ export async function POST(request: NextRequest) {
         guideId: service.guideId,
         travelerId: user.id,
         bookingDate: new Date(bookingDate),
-        numberOfGuests,
-        basePrice,
-        serviceFee,
-        totalAmount,
+        guests: numberOfGuests,
+        durationHours: service.durationHours,
+        basePrice: new Decimal(basePrice),
+        serviceFee: new Decimal(serviceFee),
+        totalAmount: new Decimal(totalAmount),
         currency: 'TWD',
         specialRequests: specialRequests || '',
         status: 'PENDING',
-        paymentStatus: 'PENDING'
+        paymentStatus: 'PENDING',
+        contactInfo: {
+          name: user.name,
+          email: user.email,
+          phone: user.phone
+        }
       },
       include: {
         service: {
