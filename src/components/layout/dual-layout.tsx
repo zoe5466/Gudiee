@@ -5,7 +5,7 @@ import { useUserMode } from '@/store/user-mode';
 import { GuideSidebar } from './guide-sidebar';
 import { Header } from './header';
 import { HomeSidebar } from './home-sidebar';
-import { CustomerSupportChat } from '@/components/chat/customer-support-chat';
+import { CustomerSupportChat } from '@/components/chat';
 import { NotificationManager } from '@/components/notifications/notification-manager';
 import { cn } from '@/lib/utils';
 
