@@ -200,6 +200,7 @@ export async function POST(request: NextRequest) {
         guideId: service.guideId,
         travelerId: user.id,
         bookingDate: new Date(bookingDate),
+        startTime: new Date(bookingDate + ' 09:00:00'), // 默認上午 9 點開始
         guests: numberOfGuests,
         durationHours: service.durationHours,
         basePrice: new Decimal(basePrice),

@@ -35,6 +35,3 @@ export { ReviewFiltersComponent } from './review-filters';
 // Integration Components
 export { default as ServicePageReviewIntegration } from './service-page-review-integration';
 export { default as ReviewManagementInterface } from './review-management-interface';
-
-// Type exports (if needed)
-export type { ReviewStatsProps } from './review-analytics-dashboard';

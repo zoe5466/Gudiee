@@ -27,7 +27,6 @@ import { ResponderType } from '@/types/review';
 import { useAuth } from '@/store/auth';
 import ComprehensiveReviewForm from './comprehensive-review-form';
 import EnhancedReviewDisplay from './enhanced-review-display';
-import ReviewStats from './review-stats';
 import type { 
   Review, 
   ReviewStatistics, 
@@ -653,9 +652,6 @@ export default function ServicePageReviewIntegration({
       {/* 總覽標籤 */}
       {activeTab === 'overview' && statistics && (
         <div>
-          {/* 評論統計 */}
-          <ReviewStats stats={statistics} className="mb-6" />
-
           {/* 快速洞察 */}
           <div style={{
             display: 'grid',

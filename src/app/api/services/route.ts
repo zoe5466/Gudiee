@@ -1,4 +1,5 @@
 import { NextRequest } from 'next/server';
+import { Decimal } from '@prisma/client/runtime/library';
 import { prisma } from '@/lib/prisma';
 import { getCurrentUser } from '@/lib/auth';
 import {
@@ -79,7 +80,7 @@ export async function GET(request: NextRequest) {
                   bio: true,
                   languages: true,
                   specialties: true,
-                  yearsOfExperience: true
+                  experienceYears: true
                 }
               }
             }
@@ -165,22 +166,21 @@ export async function POST(request: NextRequest) {
     // 創建新服務
     const newService = await prisma.service.create({
       data: {
+        guideId: user.id,
         title: data.title,
         description: data.description,
         location: data.location,
-        latitude: data.latitude,
-        longitude: data.longitude,
-        price: parseFloat(data.price),
-        duration: parseInt(data.duration),
+        coordinates: data.latitude && data.longitude ? `${data.latitude},${data.longitude}` : undefined,
+        price: new Decimal(parseFloat(data.price)),
+        durationHours: parseInt(data.duration),
         maxGuests: parseInt(data.maxGuests) || 6,
         minGuests: parseInt(data.minGuests) || 1,
-        category: data.category,
+        categoryId: data.category,
         status: 'ACTIVE',
-        guideId: user.id,
         images: data.images || [],
         highlights: data.highlights || [],
         included: data.included || [],
-        excluded: data.excluded || [],
+        notIncluded: data.excluded || [],
         cancellationPolicy: data.cancellationPolicy || '24小時前免費取消'
       },
       include: {
@@ -194,7 +194,7 @@ export async function POST(request: NextRequest) {
                 bio: true,
                 languages: true,
                 specialties: true,
-                yearsOfExperience: true
+                experienceYears: true
               }
             }
           }

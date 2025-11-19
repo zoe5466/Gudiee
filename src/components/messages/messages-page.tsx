@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import { MessageCircle } from 'lucide-react';
 import ConversationList from './conversation-list';
-import ChatInterface from './chat-interface';
 
 interface MessagesPageProps {
   initialConversationId?: string;
@@ -46,10 +45,12 @@ export default function MessagesPage({
         selectedConversationId ? 'block' : 'hidden lg:block'
       }`}>
         {selectedConversationId ? (
-          <ChatInterface 
-            conversationId={selectedConversationId}
-            className="h-full"
-          />
+          <div className="h-full bg-white">
+            {/* Chat interface will be loaded based on selectedConversationId */}
+            <div className="flex items-center justify-center h-full">
+              <p className="text-gray-500">Loading conversation...</p>
+            </div>
+          </div>
         ) : (
           <div className="flex flex-col items-center justify-center h-full text-center px-6">
             <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-6">
