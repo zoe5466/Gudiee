@@ -43,14 +43,14 @@ export function HomePageLayout({ children }: HomePageLayoutProps) {
               className="flex items-center cursor-pointer hover:opacity-80 transition-opacity"
               onClick={() => router.push('/')}
             >
-              <div className="w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center flex-shrink-0 rounded-lg overflow-hidden">
+              <div className="h-16 flex items-center justify-center flex-shrink-0">
                 <Image
                   src="/logo-navbar.png"
                   alt="Guidee Logo"
-                  width={48}
-                  height={48}
+                  width={216}
+                  height={86}
                   priority
-                  className="object-contain"
+                  className="object-contain h-full w-auto"
                 />
               </div>
             </div>

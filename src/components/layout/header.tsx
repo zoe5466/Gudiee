@@ -54,15 +54,15 @@ export function Header() {
             {/* 品牌 Logo 區域 */}
             <Link href="/" className="flex items-center hover:opacity-80 transition-opacity">
               <div className="flex items-center">
-                {/* Logo 圖標 - 導航欄版本 */}
-                <div className="w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center flex-shrink-0 rounded-lg overflow-hidden">
+                {/* Logo 導航欄版本（圖標 + 文字） */}
+                <div className="h-16 sm:h-20 flex items-center justify-center flex-shrink-0">
                   <Image
                     src="/logo-navbar.png"
                     alt="Guidee Logo"
-                    width={48}
-                    height={48}
+                    width={216}
+                    height={86}
                     priority
-                    className="object-contain"
+                    className="object-contain h-full w-auto"
                   />
                 </div>
               </div>
