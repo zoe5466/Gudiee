@@ -43,9 +43,9 @@ export function HomePageLayout({ children }: HomePageLayoutProps) {
               className="flex items-center cursor-pointer hover:opacity-80 transition-opacity"
               onClick={() => router.push('/')}
             >
-              <div className="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center flex-shrink-0">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center flex-shrink-0 rounded-lg overflow-hidden">
                 <Image
-                  src="/logo.jpg"
+                  src="/logo.png"
                   alt="Guidee Logo"
                   width={48}
                   height={48}
@@ -112,9 +112,9 @@ export function HomePageLayout({ children }: HomePageLayoutProps) {
             {/* Company */}
             <div>
               <div className="flex items-center mb-4">
-                <div className="w-10 h-10 flex items-center justify-center flex-shrink-0">
+                <div className="w-10 h-10 flex items-center justify-center flex-shrink-0 rounded-lg overflow-hidden">
                   <Image
-                    src="/logo.jpg"
+                    src="/logo.png"
                     alt="Guidee Logo"
                     width={40}
                     height={40}

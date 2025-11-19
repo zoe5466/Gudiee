@@ -55,9 +55,9 @@ export function Header() {
             <Link href="/" className="flex items-center hover:opacity-80 transition-opacity">
               <div className="flex items-center">
                 {/* Logo 圖標 */}
-                <div className="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center flex-shrink-0">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center flex-shrink-0 rounded-lg overflow-hidden">
                   <Image
-                    src="/logo.jpg"
+                    src="/logo.png"
                     alt="Guidee Logo"
                     width={48}
                     height={48}
