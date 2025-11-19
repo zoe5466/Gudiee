@@ -43,9 +43,9 @@ export function HomePageLayout({ children }: HomePageLayoutProps) {
               className="flex items-center cursor-pointer hover:opacity-80 transition-opacity"
               onClick={() => router.push('/')}
             >
-              <div className="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center flex-shrink-0 rounded-lg overflow-hidden">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center flex-shrink-0 rounded-lg overflow-hidden">
                 <Image
-                  src="/logo.png"
+                  src="/logo-navbar.png"
                   alt="Guidee Logo"
                   width={48}
                   height={48}
@@ -53,7 +53,6 @@ export function HomePageLayout({ children }: HomePageLayoutProps) {
                   className="object-contain"
                 />
               </div>
-              <span className="ml-2 text-2xl font-bold text-[#002C56] hidden sm:inline">Guidee</span>
             </div>
 
             {/* Center Search (when scrolled) */}
