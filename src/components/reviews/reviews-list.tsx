@@ -338,7 +338,7 @@ export function ReviewsList({
 
               {/* 商家回覆 */}
               {review.response && (
-                <div className="bg-gray-50 rounded-lg p-4 mb-4">
+                <div className="bg-[#cfdbe9] rounded-lg p-4 mb-4">
                   <div className="flex items-center gap-2 mb-2">
                     <MessageCircle className="w-4 h-4 text-blue-600" />
                     <span className="text-sm font-medium text-gray-900">
@@ -354,7 +354,7 @@ export function ReviewsList({
 
               {/* 回覆表單 */}
               {showResponseForm === review.id && (
-                <div className="bg-gray-50 rounded-lg p-4 mb-4">
+                <div className="bg-[#cfdbe9] rounded-lg p-4 mb-4">
                   <textarea
                     value={responseText}
                     onChange={(e) => setResponseText(e.target.value)}
@@ -375,7 +375,7 @@ export function ReviewsList({
                         setShowResponseForm(null);
                         setResponseText('');
                       }}
-                      className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50"
+                      className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-[#cfdbe9]"
                     >
                       取消
                     </button>

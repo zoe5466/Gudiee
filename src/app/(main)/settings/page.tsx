@@ -207,7 +207,7 @@ export default function SettingsPage() {
                   <Link
                     key={itemIndex}
                     href={item.href}
-                    className="flex items-center justify-between p-6 hover:bg-gray-50 transition-colors group"
+                    className="flex items-center justify-between p-6 hover:bg-[#cfdbe9] transition-colors group"
                   >
                     <div className="flex items-center space-x-4">
                       <div className={`w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center group-hover:bg-gray-200 transition-colors`}>

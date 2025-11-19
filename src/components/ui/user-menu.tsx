@@ -129,9 +129,9 @@ export function UserMenu() {
       <button
         ref={buttonRef}
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center border border-gray-300 rounded-full p-2 hover:shadow-md transition-shadow duration-200 bg-white"
+        className="flex items-center border border-gray-300 rounded-full p-2 hover:shadow-md transition-shadow duration-200 bg-[#cfdbe9]"
       >
-        <div className="w-6 h-6 bg-gray-500 rounded-full flex items-center justify-center text-white text-xs font-medium">
+        <div className="w-6 h-6 bg-[#cfdbe9]0 rounded-full flex items-center justify-center text-white text-xs font-medium">
           {user?.name?.[0]?.toUpperCase() || user?.email?.[0]?.toUpperCase() || 'U'}
         </div>
         <span className="ml-2 text-sm font-medium text-gray-700 max-w-20 truncate hidden sm:block">

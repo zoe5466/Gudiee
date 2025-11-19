@@ -356,7 +356,7 @@ export default function UserDetailPage() {
                   {user.userProfile.bio && (
                     <div>
                       <h4 className="text-sm font-medium text-gray-600 mb-2">個人簡介</h4>
-                      <p className="text-sm bg-gray-50 p-4 rounded-lg">{user.userProfile.bio}</p>
+                      <p className="text-sm bg-[#cfdbe9] p-4 rounded-lg">{user.userProfile.bio}</p>
                     </div>
                   )}
 
@@ -420,7 +420,7 @@ export default function UserDetailPage() {
                       <h4 className="text-sm font-medium text-gray-600 mb-3">最近提供的服務</h4>
                       <div className="space-y-2">
                         {user.recentServices.map((service) => (
-                          <div key={service.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                          <div key={service.id} className="flex items-center justify-between p-3 bg-[#cfdbe9] rounded-lg">
                             <div>
                               <p className="text-sm font-medium">{service.title}</p>
                               <p className="text-xs text-gray-500">
@@ -444,7 +444,7 @@ export default function UserDetailPage() {
                       <h4 className="text-sm font-medium text-gray-600 mb-3">最近預訂記錄</h4>
                       <div className="space-y-2">
                         {user.recentBookings.map((booking) => (
-                          <div key={booking.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                          <div key={booking.id} className="flex items-center justify-between p-3 bg-[#cfdbe9] rounded-lg">
                             <div>
                               <p className="text-sm font-medium">{booking.serviceTitle}</p>
                               <p className="text-xs text-gray-500">

@@ -209,7 +209,7 @@ export default function GuideDashboardPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="bg-white">
         <div className="container py-8">
           <div className="flex justify-center items-center py-20">
             <Loading size="lg" />
@@ -220,7 +220,7 @@ export default function GuideDashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="bg-white">
       <div className="container py-8">
         {/* 頁面標題和快捷操作 */}
         <div className="flex flex-col lg:flex-row lg:items-center justify-between mb-8">
@@ -340,7 +340,7 @@ export default function GuideDashboardPage() {
             </div>
             <div className="space-y-3">
               {pendingActions.slice(0, 3).map((action) => (
-                <div key={action.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200">
+                <div key={action.id} className="flex items-center justify-between p-4 bg-[#cfdbe9] rounded-lg border border-gray-200">
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
                       <h4 className="font-medium text-gray-900">{action.title}</h4>
@@ -443,7 +443,7 @@ export default function GuideDashboardPage() {
                 {recentReviews.length > 0 ? (
                   <div className="space-y-4">
                     {recentReviews.slice(0, 2).map((review) => (
-                      <div key={review.id} className="p-4 bg-gray-50 rounded-lg">
+                      <div key={review.id} className="p-4 bg-[#cfdbe9] rounded-lg">
                         <div className="flex items-center mb-3">
                           <img
                             src={review.customerAvatar}
@@ -490,7 +490,7 @@ export default function GuideDashboardPage() {
               <div className="space-y-3">
                 <button
                   onClick={() => router.push('/guide/messages')}
-                  className="w-full flex items-center justify-between p-3 text-left border border-gray-200 rounded-lg hover:border-[#002C56] hover:bg-gray-50 transition-colors"
+                  className="w-full flex items-center justify-between p-3 text-left border border-gray-200 rounded-lg hover:border-[#002C56] hover:bg-[#cfdbe9] transition-colors"
                 >
                   <div className="flex items-center">
                     <MessageCircle className="w-5 h-5 text-gray-600 mr-3" />
@@ -501,7 +501,7 @@ export default function GuideDashboardPage() {
                 
                 <button
                   onClick={() => router.push('/guide/orders')}
-                  className="w-full flex items-center justify-between p-3 text-left border border-gray-200 rounded-lg hover:border-[#002C56] hover:bg-gray-50 transition-colors"
+                  className="w-full flex items-center justify-between p-3 text-left border border-gray-200 rounded-lg hover:border-[#002C56] hover:bg-[#cfdbe9] transition-colors"
                 >
                   <div className="flex items-center">
                     <Calendar className="w-5 h-5 text-gray-600 mr-3" />
@@ -512,7 +512,7 @@ export default function GuideDashboardPage() {
                 
                 <button
                   onClick={() => router.push('/guide/account')}
-                  className="w-full flex items-center justify-between p-3 text-left border border-gray-200 rounded-lg hover:border-[#002C56] hover:bg-gray-50 transition-colors"
+                  className="w-full flex items-center justify-between p-3 text-left border border-gray-200 rounded-lg hover:border-[#002C56] hover:bg-[#cfdbe9] transition-colors"
                 >
                   <div className="flex items-center">
                     <Settings className="w-5 h-5 text-gray-600 mr-3" />
@@ -523,7 +523,7 @@ export default function GuideDashboardPage() {
                 
                 <button
                   onClick={() => router.push('/guide/analytics')}
-                  className="w-full flex items-center justify-between p-3 text-left border border-gray-200 rounded-lg hover:border-[#002C56] hover:bg-gray-50 transition-colors"
+                  className="w-full flex items-center justify-between p-3 text-left border border-gray-200 rounded-lg hover:border-[#002C56] hover:bg-[#cfdbe9] transition-colors"
                 >
                   <div className="flex items-center">
                     <BarChart3 className="w-5 h-5 text-gray-600 mr-3" />

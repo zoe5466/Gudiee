@@ -132,7 +132,7 @@ export default function SearchFilters({
       <button
         type="button"
         onClick={() => toggleSection(key)}
-        className={`w-full flex items-center justify-between p-4 text-left hover:bg-gray-50 ${
+        className={`w-full flex items-center justify-between p-4 text-left hover:bg-[#cfdbe9] ${
           hasActiveFilter ? 'bg-blue-50' : ''
         }`}
       >
@@ -252,7 +252,7 @@ export default function SearchFilters({
                   {categories.map(category => (
                     <label
                       key={category.id}
-                      className="flex items-center justify-between p-2 hover:bg-gray-50 rounded cursor-pointer"
+                      className="flex items-center justify-between p-2 hover:bg-[#cfdbe9] rounded cursor-pointer"
                     >
                       <div className="flex items-center space-x-2">
                         <input
@@ -285,7 +285,7 @@ export default function SearchFilters({
                 {ratingOptions.map(option => (
                   <label
                     key={option.value}
-                    className="flex items-center space-x-2 p-2 hover:bg-gray-50 rounded cursor-pointer"
+                    className="flex items-center space-x-2 p-2 hover:bg-[#cfdbe9] rounded cursor-pointer"
                   >
                     <input
                       type="radio"
@@ -317,7 +317,7 @@ export default function SearchFilters({
                 {durationOptions.map((option, index) => (
                   <label
                     key={index}
-                    className="flex items-center space-x-2 p-2 hover:bg-gray-50 rounded cursor-pointer"
+                    className="flex items-center space-x-2 p-2 hover:bg-[#cfdbe9] rounded cursor-pointer"
                   >
                     <input
                       type="radio"
@@ -346,7 +346,7 @@ export default function SearchFilters({
                 {guestOptions.map(option => (
                   <label
                     key={option.value}
-                    className="flex items-center space-x-2 p-2 hover:bg-gray-50 rounded cursor-pointer"
+                    className="flex items-center space-x-2 p-2 hover:bg-[#cfdbe9] rounded cursor-pointer"
                   >
                     <input
                       type="radio"
@@ -380,7 +380,7 @@ export default function SearchFilters({
                     className={`px-3 py-1 rounded-full text-sm border transition-colors ${
                       filters.tags?.includes(tag)
                         ? 'bg-blue-100 border-blue-300 text-blue-700'
-                        : 'bg-gray-50 border-gray-200 text-gray-700 hover:bg-gray-100'
+                        : 'bg-[#cfdbe9] border-gray-200 text-gray-700 hover:bg-gray-100'
                     }`}
                   >
                     {tag}
@@ -397,7 +397,7 @@ export default function SearchFilters({
       <div className="lg:hidden">
         <button
           onClick={() => setShowMobileFilters(true)}
-          className="flex items-center space-x-2 px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
+          className="flex items-center space-x-2 px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-[#cfdbe9]"
         >
           <Filter className="w-4 h-4" />
           <span>篩選</span>

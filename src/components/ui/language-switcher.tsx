@@ -37,7 +37,7 @@ export function LanguageSwitcher() {
           transition: 'all 0.2s',
           fontSize: '0.875rem'
         }}
-        className="hover:bg-gray-50 hover:border-gray-300"
+        className="hover:bg-[#cfdbe9] hover:border-gray-300"
       >
         <Globe style={{ width: '16px', height: '16px' }} />
         <span>{currentLangData?.flag}</span>
@@ -83,7 +83,7 @@ export function LanguageSwitcher() {
                 cursor: 'pointer',
                 transition: 'background-color 0.2s'
               }}
-              className="hover:bg-gray-50 first:rounded-t-[0.4rem] last:rounded-b-[0.4rem]"
+              className="hover:bg-[#cfdbe9] first:rounded-t-[0.4rem] last:rounded-b-[0.4rem]"
             >
               <span style={{ fontSize: '1.125rem' }}>{language.flag}</span>
               <span>{language.name}</span>

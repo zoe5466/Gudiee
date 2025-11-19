@@ -175,7 +175,7 @@ export class ErrorBoundary extends Component<Props, State> {
                   cursor: 'pointer',
                   transition: 'all 0.2s'
                 }}
-                className="hover:bg-gray-50"
+                className="hover:bg-[#cfdbe9]"
               >
                 <Home style={{ width: '1rem', height: '1rem' }} />
                 回到首頁

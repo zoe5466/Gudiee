@@ -211,7 +211,7 @@ export default function ForgotPasswordPage() {
                 fontWeight: '500',
                 transition: 'all 0.2s'
               }}
-              className="hover:bg-gray-50"
+              className="hover:bg-[#cfdbe9]"
             >
               返回登入
             </Link>

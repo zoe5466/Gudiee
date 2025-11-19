@@ -213,7 +213,7 @@ export default function BookingModal({ service, onClose }: BookingModalProps) {
 
             {/* 價格預覽 */}
             {selectedDate && (
-              <div className="bg-gray-50 p-4 rounded-lg">
+              <div className="bg-[#cfdbe9] p-4 rounded-lg">
                 <div className="flex items-center justify-between text-sm">
                   <span>{formatDate(selectedDate)}</span>
                   <span>{numberOfGuests} 人</span>
@@ -298,7 +298,7 @@ export default function BookingModal({ service, onClose }: BookingModalProps) {
             <h3 className="text-lg font-semibold text-gray-900">付款方式</h3>
             
             <div className="space-y-3">
-              <label className="flex items-center space-x-3 p-4 border rounded-lg cursor-pointer hover:bg-gray-50 touch-manipulation" style={{minHeight: '60px'}}>
+              <label className="flex items-center space-x-3 p-4 border rounded-lg cursor-pointer hover:bg-[#cfdbe9] touch-manipulation" style={{minHeight: '60px'}}>
                 <input
                   type="radio"
                   value="credit_card"
@@ -311,7 +311,7 @@ export default function BookingModal({ service, onClose }: BookingModalProps) {
                 <span className="text-sm text-green-600">推薦</span>
               </label>
 
-              <label className="flex items-center space-x-3 p-4 border rounded-lg cursor-pointer hover:bg-gray-50 touch-manipulation" style={{minHeight: '60px'}}>
+              <label className="flex items-center space-x-3 p-4 border rounded-lg cursor-pointer hover:bg-[#cfdbe9] touch-manipulation" style={{minHeight: '60px'}}>
                 <input
                   type="radio"
                   value="bank_transfer"
@@ -325,7 +325,7 @@ export default function BookingModal({ service, onClose }: BookingModalProps) {
                 <span className="flex-1">銀行轉帳</span>
               </label>
 
-              <label className="flex items-center space-x-3 p-4 border rounded-lg cursor-pointer hover:bg-gray-50 touch-manipulation" style={{minHeight: '60px'}}>
+              <label className="flex items-center space-x-3 p-4 border rounded-lg cursor-pointer hover:bg-[#cfdbe9] touch-manipulation" style={{minHeight: '60px'}}>
                 <input
                   type="radio"
                   value="line_pay"
@@ -341,7 +341,7 @@ export default function BookingModal({ service, onClose }: BookingModalProps) {
             </div>
 
             {/* 費用明細 */}
-            <div className="bg-gray-50 p-4 rounded-lg">
+            <div className="bg-[#cfdbe9] p-4 rounded-lg">
               <h4 className="font-medium text-gray-900 mb-3">費用明細</h4>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
@@ -373,7 +373,7 @@ export default function BookingModal({ service, onClose }: BookingModalProps) {
             </div>
 
             {/* 預訂摘要 */}
-            <div className="bg-gray-50 p-4 rounded-lg space-y-3">
+            <div className="bg-[#cfdbe9] p-4 rounded-lg space-y-3">
               <div className="flex items-center space-x-3">
                 <div className="w-12 h-12 bg-gray-200 rounded-full overflow-hidden">
                   {service.guide.avatar ? (
@@ -542,7 +542,7 @@ export default function BookingModal({ service, onClose }: BookingModalProps) {
           </div>
 
           {/* Footer */}
-          <div className="flex items-center justify-between px-4 py-3 sm:px-6 sm:py-4 border-t border-gray-200 bg-gray-50 flex-shrink-0">
+          <div className="flex items-center justify-between px-4 py-3 sm:px-6 sm:py-4 border-t border-gray-200 bg-[#cfdbe9] flex-shrink-0">
             <button
               onClick={() => step > 1 ? setStep(step - 1) : onClose()}
               className="px-4 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-100 transition-colors touch-manipulation"

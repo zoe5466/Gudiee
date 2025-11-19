@@ -262,7 +262,7 @@ export default function UsersManagement() {
               {filteredUsers.map((user) => (
                 <div
                   key={user.id}
-                  className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                  className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-[#cfdbe9] transition-colors"
                 >
                   <div className="flex items-center space-x-4 flex-1">
                     <div className="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center">
@@ -473,7 +473,7 @@ export default function UsersManagement() {
                         {selectedUser.profile.bio && (
                           <div>
                             <p className="text-sm text-gray-600 mb-1">個人簡介</p>
-                            <p className="text-sm bg-gray-50 p-3 rounded">{selectedUser.profile.bio}</p>
+                            <p className="text-sm bg-[#cfdbe9] p-3 rounded">{selectedUser.profile.bio}</p>
                           </div>
                         )}
                         

@@ -289,7 +289,7 @@ export default function MessagesPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="bg-white">
         <div className="container py-8">
           <div className="flex justify-center items-center py-20">
             <Loading size="lg" />
@@ -300,7 +300,7 @@ export default function MessagesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="bg-white">
       <div className="container py-8">
         <div className="mb-6">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">訊息中心</h1>
@@ -336,7 +336,7 @@ export default function MessagesPage() {
                           setActiveConversation(conversation.id);
                           loadMessages(conversation.id);
                         }}
-                        className={`p-4 cursor-pointer hover:bg-gray-50 transition-colors ${
+                        className={`p-4 cursor-pointer hover:bg-[#cfdbe9] transition-colors ${
                           activeConversation === conversation.id ? 'bg-blue-50 border-r-2 border-[#002C56]' : ''
                         }`}
                       >
@@ -393,7 +393,7 @@ export default function MessagesPage() {
               {activeConv ? (
                 <>
                   {/* 對話標題 */}
-                  <div className="flex items-center justify-between p-4 border-b border-gray-200 bg-gray-50">
+                  <div className="bg-white">
                     <div className="flex items-center space-x-3">
                       {isMobileView && (
                         <button
@@ -459,7 +459,7 @@ export default function MessagesPage() {
                   </div>
 
                   {/* 輸入區域 */}
-                  <div className="p-4 border-t border-gray-200 bg-gray-50">
+                  <div className="bg-white">
                     <div className="flex items-end space-x-2">
                       <button className="p-2 text-gray-500 hover:text-gray-700">
                         <Paperclip className="w-5 h-5" />

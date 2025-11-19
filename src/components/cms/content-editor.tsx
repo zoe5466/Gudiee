@@ -355,7 +355,7 @@ export function ContentEditor({
                 fontSize: '0.875rem',
                 fontWeight: '500'
               }}
-              className="hover:bg-gray-50"
+              className="hover:bg-[#cfdbe9]"
             >
               <X style={{ width: '1rem', height: '1rem' }} />
               取消

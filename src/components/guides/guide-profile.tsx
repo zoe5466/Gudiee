@@ -154,7 +154,7 @@ export default function GuideProfile({ guideId }: GuideProfileProps) {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="animate-pulse">
             <div className="bg-white rounded-lg shadow-sm p-8">
@@ -175,7 +175,7 @@ export default function GuideProfile({ guideId }: GuideProfileProps) {
 
   if (error || !guide) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-[#cfdbe9] flex items-center justify-center">
         <div className="text-center">
           <div className="text-red-500 mb-4">{error || '找不到嚮導資料'}</div>
           <Link
@@ -190,7 +190,7 @@ export default function GuideProfile({ guideId }: GuideProfileProps) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Back Button */}
         <div className="mb-6">
@@ -277,7 +277,7 @@ export default function GuideProfile({ guideId }: GuideProfileProps) {
                   >
                     <Heart className={`w-5 h-5 ${isFavorited ? 'fill-current' : ''}`} />
                   </button>
-                  <button className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-50 rounded-lg">
+                  <button className="p-2 text-gray-400 hover:text-gray-600 hover:bg-[#cfdbe9] rounded-lg">
                     <Share className="w-5 h-5" />
                   </button>
                 </div>
@@ -497,7 +497,7 @@ export default function GuideProfile({ guideId }: GuideProfileProps) {
                 </button>
                 
                 {guide.verifications.phone && (
-                  <button className="w-full flex items-center justify-center px-4 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
+                  <button className="w-full flex items-center justify-center px-4 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-[#cfdbe9] transition-colors">
                     <Phone className="w-4 h-4 mr-2" />
                     致電詢問
                   </button>

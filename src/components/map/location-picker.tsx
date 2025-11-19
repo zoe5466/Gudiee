@@ -305,7 +305,7 @@ export function LocationPicker({
                   fontWeight: '500',
                   cursor: 'pointer'
                 }}
-                className="hover:bg-gray-50"
+                className="hover:bg-[#cfdbe9]"
               >
                 取消
               </button>

@@ -513,7 +513,7 @@ export default function GuideDashboard({ className = '' }: GuideDashboardProps) 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <Link 
             href="/services/new"
-            className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+            className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-[#cfdbe9] transition-colors"
           >
             <Plus className="h-6 w-6 text-blue-600 mr-3" />
             <div>
@@ -524,7 +524,7 @@ export default function GuideDashboard({ className = '' }: GuideDashboardProps) 
 
           <Link 
             href="/guide/bookings"
-            className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+            className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-[#cfdbe9] transition-colors"
           >
             <Calendar className="h-6 w-6 text-green-600 mr-3" />
             <div>
@@ -535,7 +535,7 @@ export default function GuideDashboard({ className = '' }: GuideDashboardProps) 
 
           <Link 
             href="/guide/earnings"
-            className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+            className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-[#cfdbe9] transition-colors"
           >
             <DollarSign className="h-6 w-6 text-purple-600 mr-3" />
             <div>
@@ -546,7 +546,7 @@ export default function GuideDashboard({ className = '' }: GuideDashboardProps) 
 
           <Link 
             href="/messages"
-            className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+            className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-[#cfdbe9] transition-colors"
           >
             <MessageCircle className="h-6 w-6 text-orange-600 mr-3" />
             <div>

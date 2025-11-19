@@ -132,7 +132,7 @@ export function Skeleton({
 // Page Loading Component
 export function PageLoading() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+    <div className="bg-white">
       <Loading size="lg" text="載入中..." />
     </div>
   );

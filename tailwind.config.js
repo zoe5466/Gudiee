@@ -16,8 +16,9 @@ module.exports = {
     'bg-white/90',
     'backdrop-blur-md',
     'text-white',
-    'text-[#FF5A5F]',
-    'bg-[#FF5A5F]',
+    'text-[#002C56]',
+    'bg-[#002C56]',
+    'bg-[#cfdbe9]',
     // Grid layout classes
     'grid',
     'grid-cols-12',

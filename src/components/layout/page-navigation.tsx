@@ -277,7 +277,7 @@ export function SideMenu() {
                   transition: 'all 0.2s ease',
                   textAlign: 'left'
                 }}
-                className="hover:bg-gray-50"
+                className="hover:bg-[#cfdbe9]"
               >
                 <div style={{
                   width: '40px',

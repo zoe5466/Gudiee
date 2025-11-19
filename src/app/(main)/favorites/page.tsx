@@ -107,14 +107,14 @@ export default function FavoritesPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-[#cfdbe9] flex items-center justify-center">
         <Loading variant="spinner" size="lg" />
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="bg-white">
       <div className="container py-8">
         {/* Header */}
         <div className="mb-8">

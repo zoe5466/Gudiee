@@ -63,7 +63,7 @@ const featuredGuides = [
 
 export function GuideListings() {
   return (
-    <section className="section bg-white">
+    <section className="section bg-[#cfdbe9]">
       <div className="container">
         <div className="flex items-center justify-between mb-8">
           <h2 className="heading-2">精選地陪</h2>

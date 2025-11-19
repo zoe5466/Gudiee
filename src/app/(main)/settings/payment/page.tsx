@@ -430,7 +430,7 @@ export default function PaymentSettingsPage() {
               {transactions.map((transaction) => (
                 <div
                   key={transaction.id}
-                  className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                  className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-[#cfdbe9] transition-colors"
                 >
                   <div className="flex items-center space-x-4">
                     <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">

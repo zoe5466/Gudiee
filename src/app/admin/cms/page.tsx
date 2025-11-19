@@ -284,7 +284,7 @@ export default function CMSPage() {
                       borderRadius: '0.375rem',
                       marginBottom: index < stats.topContent.length - 1 ? '0.5rem' : 0
                     }}
-                    className="hover:bg-gray-50"
+                    className="hover:bg-[#cfdbe9]"
                   >
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                       <div style={{
@@ -509,7 +509,7 @@ export default function CMSPage() {
                   cursor: 'pointer',
                   transition: 'all 0.2s'
                 }}
-                className="hover:bg-gray-50"
+                className="hover:bg-[#cfdbe9]"
               >
                 <Icon style={{ width: '1rem', height: '1rem' }} />
                 {label}

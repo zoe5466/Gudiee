@@ -73,7 +73,7 @@ export function HomeSidebar() {
       {/* 觸發按鈕 */}
       <button
         onClick={() => setIsOpen(true)}
-        className={`fixed z-50 bg-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 border border-gray-200 hover:bg-gray-50 touch-manipulation ${
+        className={`fixed z-50 bg-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 border border-gray-200 hover:bg-[#cfdbe9] touch-manipulation ${
           isHomePage ? 'top-1/2 left-3 sm:left-4 transform -translate-y-1/2' : 'top-20 sm:top-24 left-3 sm:left-4'
         }`}
         style={{ minWidth: '48px', minHeight: '48px', padding: '12px' }}
@@ -129,7 +129,7 @@ export function HomeSidebar() {
               <button
                 key={index}
                 onClick={() => handleItemClick(item.path)}
-                className="w-full flex items-start p-3 sm:p-4 rounded-lg hover:bg-gray-50 active:bg-gray-100 transition-colors duration-150 text-left group touch-manipulation"
+                className="w-full flex items-start p-3 sm:p-4 rounded-lg hover:bg-[#cfdbe9] active:bg-gray-100 transition-colors duration-150 text-left group touch-manipulation"
                 style={{ minHeight: '64px' }}
               >
                 <div className="flex-shrink-0 mt-0.5 text-gray-600 group-hover:text-blue-600 transition-colors">
@@ -148,7 +148,7 @@ export function HomeSidebar() {
           </nav>
 
           {/* 額外資訊 */}
-          <div className="mt-6 sm:mt-8 p-3 sm:p-4 bg-gray-50 rounded-lg">
+          <div className="mt-6 sm:mt-8 p-3 sm:p-4 bg-[#cfdbe9] rounded-lg">
             <h3 className="text-sm font-medium text-gray-900 mb-2">需要幫助？</h3>
             <p className="text-xs text-gray-600 mb-3">
               如果您有任何問題，請聯繫我們的客服團隊。

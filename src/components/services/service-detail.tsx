@@ -144,7 +144,7 @@ export default function ServiceDetail({ serviceId }: ServiceDetailProps) {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="animate-pulse">
             <div className="h-8 bg-gray-200 rounded w-1/4 mb-6"></div>
@@ -170,7 +170,7 @@ export default function ServiceDetail({ serviceId }: ServiceDetailProps) {
 
   if (error || !service) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-[#cfdbe9] flex items-center justify-center">
         <div className="text-center">
           <div className="text-red-500 mb-4">{error || '找不到服務資料'}</div>
           <Link
@@ -185,7 +185,7 @@ export default function ServiceDetail({ serviceId }: ServiceDetailProps) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Back Button */}
         <div className="mb-6">
@@ -563,7 +563,7 @@ export default function ServiceDetail({ serviceId }: ServiceDetailProps) {
               </button>
 
               <div className="mt-4 space-y-3">
-                <button className="w-full flex items-center justify-center py-2 px-4 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
+                <button className="w-full flex items-center justify-center py-2 px-4 border border-gray-300 text-gray-700 rounded-lg hover:bg-[#cfdbe9] transition-colors">
                   <MessageCircle className="w-4 h-4 mr-2" />
                   聯繫嚮導
                 </button>

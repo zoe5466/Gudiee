@@ -405,7 +405,7 @@ export default function BookingsManagement() {
               {filteredBookings.map((booking) => (
                 <div
                   key={booking.id}
-                  className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors"
+                  className="border border-gray-200 rounded-lg p-4 hover:bg-[#cfdbe9] transition-colors"
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
@@ -487,7 +487,7 @@ export default function BookingsManagement() {
                       
                       {/* Notes */}
                       {booking.notes && (
-                        <div className="text-sm text-gray-600 bg-gray-50 p-2 rounded mt-2">
+                        <div className="text-sm text-gray-600 bg-[#cfdbe9] p-2 rounded mt-2">
                           <strong>備註:</strong> {booking.notes}
                         </div>
                       )}

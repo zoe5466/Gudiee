@@ -827,7 +827,7 @@ export default function RegisterPage() {
                   cursor: 'pointer',
                   transition: 'all 0.2s'
                 }}
-                className="hover:bg-gray-50"
+                className="hover:bg-[#cfdbe9]"
               >
                 上一步
               </button>

@@ -58,7 +58,7 @@ export default function AdminAnalyticsPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-[#cfdbe9] p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
@@ -119,7 +119,7 @@ export default function AdminAnalyticsPage() {
               <h2 className="text-lg font-semibold text-gray-900">收入趨勢</h2>
               <BarChart3 className="w-5 h-5 text-gray-400" />
             </div>
-            <div className="h-64 bg-gray-50 rounded-lg flex items-center justify-center">
+            <div className="h-64 bg-[#cfdbe9] rounded-lg flex items-center justify-center">
               <div className="text-center">
                 <TrendingUp className="w-12 h-12 text-gray-400 mx-auto mb-2" />
                 <p className="text-gray-500">圖表數據加載中...</p>
@@ -134,7 +134,7 @@ export default function AdminAnalyticsPage() {
               <h2 className="text-lg font-semibold text-gray-900">用戶分布</h2>
               <PieChart className="w-5 h-5 text-gray-400" />
             </div>
-            <div className="h-64 bg-gray-50 rounded-lg flex items-center justify-center">
+            <div className="h-64 bg-[#cfdbe9] rounded-lg flex items-center justify-center">
               <div className="text-center">
                 <PieChart className="w-12 h-12 text-gray-400 mx-auto mb-2" />
                 <p className="text-gray-500">圖表數據加載中...</p>
@@ -150,7 +150,7 @@ export default function AdminAnalyticsPage() {
             <h2 className="text-lg font-semibold text-gray-900 mb-4">最近活動</h2>
             <div className="space-y-4">
               {recentActivities.map((activity) => (
-                <div key={activity.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <div key={activity.id} className="flex items-center justify-between p-3 bg-[#cfdbe9] rounded-lg">
                   <div>
                     <p className="text-sm font-medium text-gray-900">{activity.action}</p>
                     <p className="text-xs text-gray-600">{activity.user}</p>

@@ -261,7 +261,7 @@ export default function ServicesManagement() {
               {filteredServices.map((service) => (
                 <div
                   key={service.id}
-                  className="flex items-start justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                  className="flex items-start justify-between p-4 border border-gray-200 rounded-lg hover:bg-[#cfdbe9] transition-colors"
                 >
                   <div className="flex items-start space-x-4 flex-1">
                     <div className="w-20 h-20 bg-gray-200 rounded-lg overflow-hidden flex-shrink-0">

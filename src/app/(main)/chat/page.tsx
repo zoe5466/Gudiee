@@ -261,7 +261,7 @@ export default function ChatPage() {
                     backgroundColor: selectedContact?.id === contact.id ? '#f0f9ff' : 'transparent',
                     transition: 'all 0.2s'
                   }}
-                  className="hover:bg-gray-50"
+                  className="hover:bg-[#cfdbe9]"
                 >
                   <div style={{ display: 'flex', gap: '0.75rem' }}>
                     {/* 頭像 */}

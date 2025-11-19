@@ -126,7 +126,7 @@ export default function CreateServicePage() {
   // 顯示載入狀態
   if (authLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-[#cfdbe9] flex items-center justify-center">
         <Loading size="lg" />
       </div>
     );
@@ -135,7 +135,7 @@ export default function CreateServicePage() {
   // 檢查認證狀態（額外保護）
   if (!isAuthenticated || user?.role !== 'guide' || !user?.isKYCVerified || !user?.isCriminalRecordVerified) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-[#cfdbe9] flex items-center justify-center">
         <div className="text-center bg-white rounded-lg shadow-sm p-8 max-w-md">
           <AlertCircle className="w-16 h-16 text-red-400 mx-auto mb-4" />
           <h2 className="text-xl font-semibold text-gray-900 mb-2">
@@ -156,7 +156,7 @@ export default function CreateServicePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="bg-white">
       <div className="max-w-4xl mx-auto p-6">
         {/* Header */}
         <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
@@ -437,7 +437,7 @@ export default function CreateServicePage() {
             <div className="flex justify-between mt-8">
               <button
                 onClick={() => setStep(1)}
-                className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-[#cfdbe9] transition-colors"
               >
                 上一步
               </button>
@@ -509,7 +509,7 @@ export default function CreateServicePage() {
             <div className="flex justify-between mt-8">
               <button
                 onClick={() => setStep(2)}
-                className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-[#cfdbe9] transition-colors"
               >
                 上一步
               </button>

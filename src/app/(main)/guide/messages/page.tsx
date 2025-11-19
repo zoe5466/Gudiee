@@ -253,7 +253,7 @@ export default function GuideMessagesPage() {
                       backgroundColor: selectedConversation === conversation.id ? '#eff6ff' : 'transparent',
                       transition: 'all 0.2s'
                     }}
-                    className="hover:bg-gray-50"
+                    className="hover:bg-[#cfdbe9]"
                   >
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                       <div style={{ position: 'relative' }}>

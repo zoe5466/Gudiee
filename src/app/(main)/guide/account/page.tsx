@@ -246,7 +246,7 @@ export default function GuideAccountPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="bg-white">
         <div className="container py-8">
           <div className="flex justify-center items-center py-20">
             <Loading size="lg" />
@@ -257,7 +257,7 @@ export default function GuideAccountPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="bg-white">
       <div className="container py-8">
         {/* 頁面標題 */}
         <div className="mb-8">

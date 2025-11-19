@@ -121,7 +121,7 @@ export function ReviewFiltersComponent({
             className={`flex items-center gap-2 px-3 py-2 border rounded-md text-sm transition-colors ${
               hasActiveFilters 
                 ? 'border-blue-500 bg-blue-50 text-blue-700'
-                : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+                : 'border-gray-300 text-gray-700 hover:bg-[#cfdbe9]'
             }`}
           >
             <Filter className="w-4 h-4" />
@@ -274,7 +274,7 @@ export function ReviewFiltersComponent({
                       className={`px-2 py-1 rounded-full text-sm border transition-colors ${
                         filters.tags?.includes(tag)
                           ? 'bg-blue-100 border-blue-300 text-blue-700'
-                          : 'bg-gray-50 border-gray-200 text-gray-700 hover:bg-gray-100'
+                          : 'bg-[#cfdbe9] border-gray-200 text-gray-700 hover:bg-gray-100'
                       }`}
                     >
                       {tag}
@@ -292,7 +292,7 @@ export function ReviewFiltersComponent({
               </h4>
               <button
                 onClick={() => setShowDatePicker(!showDatePicker)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-left hover:bg-gray-50"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-left hover:bg-[#cfdbe9]"
               >
                 {filters.dateRange 
                   ? `${filters.dateRange.start.toLocaleDateString()} - ${filters.dateRange.end.toLocaleDateString()}`
@@ -301,7 +301,7 @@ export function ReviewFiltersComponent({
               </button>
               
               {showDatePicker && (
-                <div className="mt-2 p-3 border border-gray-200 rounded-md bg-gray-50">
+                <div className="bg-white">
                   <div className="grid grid-cols-2 gap-2">
                     <div>
                       <label className="block text-xs text-gray-600 mb-1">開始日期</label>

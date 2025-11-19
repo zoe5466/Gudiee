@@ -170,7 +170,7 @@ export default function TasksPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="bg-white">
       <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
@@ -208,7 +208,7 @@ export default function TasksPage() {
             <button
               type="button"
               onClick={() => setShowFilters(!showFilters)}
-              className="flex items-center px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+              className="flex items-center px-4 py-2 border border-gray-300 rounded-lg hover:bg-[#cfdbe9] transition-colors"
             >
               <Filter className="w-4 h-4 mr-2" />
               篩選

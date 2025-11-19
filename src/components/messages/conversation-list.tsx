@@ -253,7 +253,7 @@ export default function ConversationList({
                 <button
                   key={conversation.id}
                   onClick={() => onConversationSelect(conversation.id)}
-                  className={`w-full flex items-center p-4 hover:bg-gray-50 transition-colors text-left ${
+                  className={`w-full flex items-center p-4 hover:bg-[#cfdbe9] transition-colors text-left ${
                     isSelected ? 'bg-blue-50 border-r-2 border-blue-500' : ''
                   }`}
                 >

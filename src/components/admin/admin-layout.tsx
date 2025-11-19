@@ -105,7 +105,7 @@ export function AdminLayout({ children }: AdminLayoutProps) {
       case 'user':
         return 'bg-orange-500'
       default:
-        return 'bg-gray-500'
+        return 'bg-[#cfdbe9]0'
     }
   }
 

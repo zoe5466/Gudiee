@@ -209,7 +209,7 @@ export default function MyTasksPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="bg-white">
       <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
@@ -425,7 +425,7 @@ export default function MyTasksPage() {
                       <h4 className="font-medium text-gray-900 mb-3">申請者 ({task.applicants.length})</h4>
                       <div className="space-y-3">
                         {task.applicants.map((applicant) => (
-                          <div key={applicant.workerId} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                          <div key={applicant.workerId} className="flex items-center justify-between p-3 bg-[#cfdbe9] rounded-lg">
                             <div className="flex items-center flex-1">
                               <img
                                 src={applicant.workerAvatar || '/default-avatar.png'}

@@ -163,7 +163,7 @@ export default function GuideCard({ guide, className = '' }: GuideCardProps) {
             
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
               {guide.guidedServices.slice(0, 2).map((service) => (
-                <div key={service.id} className="bg-gray-50 rounded-lg p-2 sm:p-3">
+                <div key={service.id} className="bg-[#cfdbe9] rounded-lg p-2 sm:p-3">
                   {service.images.length > 0 && (
                     <div className="w-full h-16 sm:h-20 bg-gray-200 rounded mb-2 overflow-hidden">
                       <img

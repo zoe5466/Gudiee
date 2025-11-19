@@ -144,7 +144,7 @@ export function LanguageSwitcher({
           transition: 'all 0.2s',
           minWidth: '8rem'
         }}
-        className="hover:bg-gray-50 hover:border-gray-300"
+        className="hover:bg-[#cfdbe9] hover:border-gray-300"
       >
         <Globe style={{ width: '1rem', height: '1rem' }} />
         {showNativeName && (
@@ -198,7 +198,7 @@ export function LanguageSwitcher({
                 transition: 'all 0.2s',
                 textAlign: 'left'
               }}
-              className="hover:bg-gray-50"
+              className="hover:bg-[#cfdbe9]"
             >
               <div style={{ flex: 1 }}>
                 <div style={{ fontWeight: '500' }}>
@@ -272,7 +272,7 @@ export function LanguageToggle({ className = '' }: { className?: string }) {
           fontWeight: '500',
           color: '#374151'
         }}
-        className={`hover:bg-gray-50 ${className}`}
+        className={`hover:bg-[#cfdbe9] ${className}`}
       >
         <Globe className="w-4 h-4 text-gray-500 mr-2" />
         Loading...
@@ -298,7 +298,7 @@ export function LanguageToggle({ className = '' }: { className?: string }) {
         fontWeight: '500',
         color: '#374151'
       }}
-      className={`hover:bg-gray-50 ${className}`}
+      className={`hover:bg-[#cfdbe9] ${className}`}
       title={`切換到 ${getNextLanguageText(locale)}`}
     >
       <Globe className="w-4 h-4 text-gray-500 mr-2" />

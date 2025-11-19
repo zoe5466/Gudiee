@@ -130,7 +130,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
               border: 'none',
               cursor: 'pointer'
             }}
-            className="hover:bg-white"
+            className="hover:bg-[#cfdbe9]"
           >
             <Heart style={{ width: '1rem', height: '1rem', fill: liked ? 'currentColor' : 'none' }} />
           </button>
@@ -637,7 +637,7 @@ export default function SearchPage() {
 
             {/* Filters Panel */}
             {showFilters && (
-              <div className="mt-4 p-6 bg-gray-50 rounded-xl border border-gray-200">
+              <div className="mt-4 p-6 bg-[#cfdbe9] rounded-xl border border-gray-200">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                   {/* Location */}
                   <div>

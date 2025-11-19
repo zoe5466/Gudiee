@@ -247,7 +247,7 @@ export default function AdminDashboard({ className = '' }: AdminDashboardProps) 
       case 'info':
         return 'bg-blue-50 border-blue-200';
       default:
-        return 'bg-gray-50 border-gray-200';
+        return 'bg-[#cfdbe9] border-gray-200';
     }
   };
 
@@ -514,7 +514,7 @@ export default function AdminDashboard({ className = '' }: AdminDashboardProps) 
             <div className="grid grid-cols-1 gap-4">
               <Link 
                 href="/admin/users"
-                className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-[#cfdbe9] transition-colors"
               >
                 <div className="flex items-center space-x-3">
                   <Users className="h-6 w-6 text-blue-600" />
@@ -528,7 +528,7 @@ export default function AdminDashboard({ className = '' }: AdminDashboardProps) 
 
               <Link 
                 href="/admin/services"
-                className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-[#cfdbe9] transition-colors"
               >
                 <div className="flex items-center space-x-3">
                   <MapPin className="h-6 w-6 text-green-600" />
@@ -544,7 +544,7 @@ export default function AdminDashboard({ className = '' }: AdminDashboardProps) 
 
               <Link 
                 href="/admin/reviews"
-                className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-[#cfdbe9] transition-colors"
               >
                 <div className="flex items-center space-x-3">
                   <Star className="h-6 w-6 text-yellow-600" />
@@ -560,7 +560,7 @@ export default function AdminDashboard({ className = '' }: AdminDashboardProps) 
 
               <Link 
                 href="/admin/support"
-                className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-[#cfdbe9] transition-colors"
               >
                 <div className="flex items-center space-x-3">
                   <MessageCircle className="h-6 w-6 text-red-600" />
@@ -576,7 +576,7 @@ export default function AdminDashboard({ className = '' }: AdminDashboardProps) 
 
               <Link 
                 href="/admin/analytics"
-                className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-[#cfdbe9] transition-colors"
               >
                 <div className="flex items-center space-x-3">
                   <BarChart3 className="h-6 w-6 text-purple-600" />

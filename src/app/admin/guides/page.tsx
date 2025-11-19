@@ -301,7 +301,7 @@ export default function GuidesManagement() {
               {filteredGuides.map((guide) => (
                 <div
                   key={guide.id}
-                  className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                  className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-[#cfdbe9] transition-colors"
                 >
                   <div className="flex items-center space-x-4 flex-1">
                     <div className="w-12 h-12 bg-gray-300 rounded-full flex items-center justify-center flex-shrink-0">

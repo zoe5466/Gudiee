@@ -181,7 +181,7 @@ export default function GuidesList({ className = '' }: GuidesListProps) {
                 className={`flex items-center px-4 py-2 border rounded-lg transition-colors ${
                   showFilters || hasActiveFilters
                     ? 'border-blue-500 text-blue-600 bg-blue-50'
-                    : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+                    : 'border-gray-300 text-gray-700 hover:bg-[#cfdbe9]'
                 }`}
               >
                 <Filter className="w-4 h-4 mr-2" />
@@ -216,7 +216,7 @@ export default function GuidesList({ className = '' }: GuidesListProps) {
 
           {/* Filter Panel */}
           {showFilters && (
-            <div className="mt-4 p-4 bg-gray-50 rounded-lg">
+            <div className="mt-4 p-4 bg-[#cfdbe9] rounded-lg">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -392,7 +392,7 @@ export default function GuidesList({ className = '' }: GuidesListProps) {
             <button
               onClick={() => fetchGuides(pagination.page - 1)}
               disabled={!pagination.hasPrev}
-              className="px-3 py-2 border border-gray-300 rounded-md disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+              className="px-3 py-2 border border-gray-300 rounded-md disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#cfdbe9]"
             >
               上一頁
             </button>
@@ -408,7 +408,7 @@ export default function GuidesList({ className = '' }: GuidesListProps) {
                   className={`px-3 py-2 border rounded-md ${
                     page === pagination.page
                       ? 'border-blue-500 bg-blue-50 text-blue-600'
-                      : 'border-gray-300 hover:bg-gray-50'
+                      : 'border-gray-300 hover:bg-[#cfdbe9]'
                   }`}
                 >
                   {page}
@@ -419,7 +419,7 @@ export default function GuidesList({ className = '' }: GuidesListProps) {
             <button
               onClick={() => fetchGuides(pagination.page + 1)}
               disabled={!pagination.hasNext}
-              className="px-3 py-2 border border-gray-300 rounded-md disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+              className="px-3 py-2 border border-gray-300 rounded-md disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#cfdbe9]"
             >
               下一頁
             </button>

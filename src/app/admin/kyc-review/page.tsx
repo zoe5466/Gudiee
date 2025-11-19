@@ -276,7 +276,7 @@ export default function KYCReviewPage() {
                             className={`p-4 border rounded-lg cursor-pointer transition-all ${
                               selectedSubmission?.id === submission.id
                                 ? 'border-blue-500 bg-blue-50'
-                                : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                                : 'border-gray-200 hover:border-gray-300 hover:bg-[#cfdbe9]'
                             }`}
                             onClick={() => setSelectedSubmission(submission)}
                           >

@@ -292,8 +292,8 @@ export default function ChatManagement() {
       case 'URGENT': return 'bg-red-500'
       case 'HIGH': return 'bg-orange-500'
       case 'NORMAL': return 'bg-blue-500'
-      case 'LOW': return 'bg-gray-500'
-      default: return 'bg-gray-500'
+      case 'LOW': return 'bg-[#cfdbe9]0'
+      default: return 'bg-[#cfdbe9]0'
     }
   }
 
@@ -313,7 +313,7 @@ export default function ChatManagement() {
       case 'SENT': return 'text-red-600 bg-red-50'
       case 'READ': return 'text-orange-600 bg-orange-50'
       case 'REPLIED': return 'text-green-600 bg-green-50'
-      default: return 'text-gray-600 bg-gray-50'
+      default: return 'text-gray-600 bg-[#cfdbe9]'
     }
   }
 
@@ -608,7 +608,7 @@ export default function ChatManagement() {
                 <CardContent className="flex-1 overflow-y-auto p-6">
                   <div className="space-y-6">
                     {/* Original Message */}
-                    <div className="bg-gray-50 rounded-2xl p-6">
+                    <div className="bg-[#cfdbe9] rounded-2xl p-6">
                       <div className="flex items-start space-x-3">
                         <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
                           <User className="h-5 w-5 text-white" />

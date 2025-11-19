@@ -197,7 +197,7 @@ export function NotificationManager({ className = '' }: NotificationManagerProps
                     fontWeight: '500',
                     cursor: 'pointer'
                   }}
-                  className="hover:bg-gray-50"
+                  className="hover:bg-[#cfdbe9]"
                 >
                   稍後再說
                 </button>

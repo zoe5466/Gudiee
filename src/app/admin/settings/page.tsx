@@ -351,7 +351,7 @@ export default function AdminSettingsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-[#cfdbe9] p-6">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="mb-8">
@@ -373,7 +373,7 @@ export default function AdminSettingsPage() {
                       className={`w-full flex items-center px-3 py-2 text-sm rounded-lg transition-colors ${
                         activeTab === tab.id
                           ? 'bg-blue-50 text-blue-700 border-r-2 border-blue-600'
-                          : 'text-gray-600 hover:bg-gray-50'
+                          : 'text-gray-600 hover:bg-[#cfdbe9]'
                       }`}
                     >
                       <Icon className="w-4 h-4 mr-3" />
@@ -396,7 +396,7 @@ export default function AdminSettingsPage() {
                   <div className="flex space-x-3">
                     <button
                       onClick={handleReset}
-                      className="px-4 py-2 text-sm text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50"
+                      className="px-4 py-2 text-sm text-gray-600 border border-gray-300 rounded-lg hover:bg-[#cfdbe9]"
                     >
                       重置
                     </button>

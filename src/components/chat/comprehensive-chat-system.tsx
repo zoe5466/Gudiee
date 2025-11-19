@@ -834,7 +834,7 @@ export function ComprehensiveChatSystem({
                                 cursor: 'pointer',
                                 fontSize: '0.75rem'
                               }}
-                              className="hover:bg-gray-50"
+                              className="hover:bg-[#cfdbe9]"
                             >
                               <Reply style={{ width: '0.75rem', height: '0.75rem', color: '#6b7280' }} />
                             </button>
@@ -1076,7 +1076,7 @@ export function ComprehensiveChatSystem({
                 padding: '0.5rem',
                 borderRadius: '0.375rem',
                 marginBottom: '0.5rem'
-              }} className="hover:bg-white">
+              }} className="hover:bg-[#cfdbe9]">
                 <div style={{ position: 'relative' }}>
                   <div style={{
                     width: '2rem',

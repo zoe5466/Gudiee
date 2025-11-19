@@ -74,7 +74,7 @@ export default function MyBookingsPage() {
       'CANCELLED': 'text-red-600 bg-red-50',
       'COMPLETED': 'text-blue-600 bg-blue-50'
     };
-    return colorMap[status as keyof typeof colorMap] || 'text-gray-600 bg-gray-50';
+    return colorMap[status as keyof typeof colorMap] || 'text-gray-600 bg-[#cfdbe9]';
   };
 
   const getPaymentStatusText = (status: string) => {
@@ -116,7 +116,7 @@ export default function MyBookingsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-[#cfdbe9] py-8">
       <div className="max-w-4xl mx-auto px-4">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">我的預訂</h1>

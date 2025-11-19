@@ -200,7 +200,7 @@ export function AdvancedSearch({ onSearch, onClose, initialFilters = {} }: Advan
               fontSize: '0.875rem',
               cursor: 'pointer'
             }}
-            className="hover:bg-gray-50"
+            className="hover:bg-[#cfdbe9]"
           >
             重設
           </button>
@@ -459,7 +459,7 @@ export function AdvancedSearch({ onSearch, onClose, initialFilters = {} }: Advan
                   alignItems: 'center',
                   gap: '0.25rem'
                 }}
-                className="hover:bg-gray-50"
+                className="hover:bg-[#cfdbe9]"
               >
                 {rating === 0 ? '不限' : (
                   <>
@@ -525,7 +525,7 @@ export function AdvancedSearch({ onSearch, onClose, initialFilters = {} }: Advan
                       fontSize: '0.875rem',
                       cursor: 'pointer'
                     }}
-                    className="hover:bg-gray-50"
+                    className="hover:bg-[#cfdbe9]"
                   >
                     {option.label}
                   </button>
@@ -566,7 +566,7 @@ export function AdvancedSearch({ onSearch, onClose, initialFilters = {} }: Advan
                       alignItems: 'center',
                       gap: '0.5rem'
                     }}
-                    className="hover:bg-gray-50"
+                    className="hover:bg-[#cfdbe9]"
                   >
                     <span>{option.icon}</span>
                     {option.label}
@@ -604,7 +604,7 @@ export function AdvancedSearch({ onSearch, onClose, initialFilters = {} }: Advan
                       fontSize: '0.875rem',
                       cursor: 'pointer'
                     }}
-                    className="hover:bg-gray-50"
+                    className="hover:bg-[#cfdbe9]"
                   >
                     {option.label}
                   </button>
@@ -641,7 +641,7 @@ export function AdvancedSearch({ onSearch, onClose, initialFilters = {} }: Advan
                       fontSize: '0.875rem',
                       cursor: 'pointer'
                     }}
-                    className="hover:bg-gray-50"
+                    className="hover:bg-[#cfdbe9]"
                   >
                     {option.label}
                   </button>

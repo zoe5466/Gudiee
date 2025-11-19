@@ -467,7 +467,7 @@ export default function ProfileSetupPage() {
                   </label>
                   <div className={`
                     relative border-2 border-dashed rounded-lg p-4 sm:p-6 text-center hover:border-blue-400 transition-colors min-h-[160px] flex flex-col justify-center
-                    ${errors.idCardFront ? 'border-red-300 bg-red-50' : 'border-gray-300 hover:bg-gray-50'}
+                    ${errors.idCardFront ? 'border-red-300 bg-red-50' : 'border-gray-300 hover:bg-[#cfdbe9]'}
                   `}>
                     {formData.idCardFront ? (
                       <div className="relative inline-block">
@@ -527,7 +527,7 @@ export default function ProfileSetupPage() {
                   </label>
                   <div className={`
                     relative border-2 border-dashed rounded-lg p-4 sm:p-6 text-center hover:border-blue-400 transition-colors min-h-[160px] flex flex-col justify-center
-                    ${errors.idCardBack ? 'border-red-300 bg-red-50' : 'border-gray-300 hover:bg-gray-50'}
+                    ${errors.idCardBack ? 'border-red-300 bg-red-50' : 'border-gray-300 hover:bg-[#cfdbe9]'}
                   `}>
                     {formData.idCardBack ? (
                       <div className="relative inline-block">
@@ -811,7 +811,7 @@ export default function ProfileSetupPage() {
                   className="max-w-full max-h-[70vh] object-contain mx-auto rounded"
                 />
               </div>
-              <div className="p-4 border-t bg-gray-50">
+              <div className="bg-white">
                 <button
                   onClick={closePreview}
                   className="w-full bg-gray-600 text-white py-2 px-4 rounded-lg hover:bg-gray-700 transition-colors"

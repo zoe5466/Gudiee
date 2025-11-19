@@ -221,7 +221,7 @@ export default function KYCPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
+    <div className="min-h-screen bg-[#cfdbe9] py-12">
       <div className="container max-w-4xl">
         <div className="bg-white rounded-xl shadow-sm overflow-hidden">
           {/* Header */}
@@ -233,7 +233,7 @@ export default function KYCPage() {
           </div>
 
           {/* Progress Bar */}
-          <div className="px-6 py-4 bg-gray-50">
+          <div className="bg-white">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm font-medium text-gray-700">驗證進度</span>
               <span className="text-sm text-gray-500">第 {currentStep} 步，共 {user?.role === 'guide' ? 4 : 3} 步</span>

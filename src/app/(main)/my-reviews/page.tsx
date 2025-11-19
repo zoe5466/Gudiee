@@ -254,7 +254,7 @@ export default function MyReviewsPage() {
 
                 {/* 回覆 */}
                 {review.response && (
-                  <div className="mt-4 p-4 bg-gray-50 rounded-lg">
+                  <div className="mt-4 p-4 bg-[#cfdbe9] rounded-lg">
                     <div className="flex items-center mb-2">
                       <span className="font-medium text-gray-900">地陪回覆</span>
                       <span className="ml-2 text-sm text-gray-500">

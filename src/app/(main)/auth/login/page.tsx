@@ -412,7 +412,7 @@ export default function LoginPage() {
               cursor: 'pointer',
               transition: 'all 0.2s'
             }}
-            className="hover:bg-gray-50"
+            className="hover:bg-[#cfdbe9]"
           >
             <div style={{
               width: '1.25rem',
@@ -448,7 +448,7 @@ export default function LoginPage() {
               cursor: 'pointer',
               transition: 'all 0.2s'
             }}
-            className="hover:bg-gray-50"
+            className="hover:bg-[#cfdbe9]"
           >
             <div style={{
               width: '1.25rem',

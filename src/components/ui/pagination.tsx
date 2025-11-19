@@ -76,7 +76,7 @@ export function Pagination({
             'flex items-center justify-center w-8 h-8 rounded-lg border transition-colors',
             currentPage === 1
               ? 'border-gray-200 text-gray-400 cursor-not-allowed'
-              : 'border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400'
+              : 'border-gray-300 text-gray-700 hover:bg-[#cfdbe9] hover:border-gray-400'
           )}
         >
           <ChevronLeft className="w-4 h-4" />
@@ -97,7 +97,7 @@ export function Pagination({
                     'flex items-center justify-center w-8 h-8 rounded-lg border text-sm font-medium transition-colors',
                     currentPage === page
                       ? 'border-[#002C56] bg-[#002C56] text-white'
-                      : 'border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400'
+                      : 'border-gray-300 text-gray-700 hover:bg-[#cfdbe9] hover:border-gray-400'
                   )}
                 >
                   {page}
@@ -115,7 +115,7 @@ export function Pagination({
             'flex items-center justify-center w-8 h-8 rounded-lg border transition-colors',
             currentPage === totalPages
               ? 'border-gray-200 text-gray-400 cursor-not-allowed'
-              : 'border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400'
+              : 'border-gray-300 text-gray-700 hover:bg-[#cfdbe9] hover:border-gray-400'
           )}
         >
           <ChevronRight className="w-4 h-4" />

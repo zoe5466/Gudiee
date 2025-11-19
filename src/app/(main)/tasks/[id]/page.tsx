@@ -222,7 +222,7 @@ export default function TaskDetailPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-[#cfdbe9] flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
           <p className="text-gray-600">載入中...</p>
@@ -233,7 +233,7 @@ export default function TaskDetailPage() {
 
   if (error || !task) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-[#cfdbe9] flex items-center justify-center">
         <div className="text-center">
           <AlertCircle className="w-12 h-12 text-gray-400 mx-auto mb-4" />
           <h2 className="text-xl font-semibold text-gray-900 mb-2">任務不存在</h2>
@@ -255,7 +255,7 @@ export default function TaskDetailPage() {
                    !task.applicants.some(app => app.workerId === user?.id);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="bg-white">
       <div className="max-w-6xl mx-auto px-4 py-8">
         {/* Back Button */}
         <button
@@ -422,7 +422,7 @@ export default function TaskDetailPage() {
                         </button>
                         <button
                           onClick={() => setShowApplyForm(false)}
-                          className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                          className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-[#cfdbe9] transition-colors"
                         >
                           取消
                         </button>

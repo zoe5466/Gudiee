@@ -200,7 +200,7 @@ export default function NotificationCenter({ isOpen, onClose, className = '' }: 
       case 'low':
         return 'border-l-blue-500 bg-blue-50';
       default:
-        return 'border-l-gray-500 bg-gray-50';
+        return 'border-l-gray-500 bg-[#cfdbe9]';
     }
   };
 
@@ -273,7 +273,7 @@ export default function NotificationCenter({ isOpen, onClose, className = '' }: 
 
         {/* Actions */}
         {unreadCount > 0 && (
-          <div className="px-6 py-3 bg-gray-50 border-b border-gray-200">
+          <div className="px-6 py-3 bg-[#cfdbe9] border-b border-gray-200">
             <button
               onClick={markAllAsRead}
               className="flex items-center space-x-2 text-sm text-blue-600 hover:text-blue-700 font-medium"
@@ -313,7 +313,7 @@ export default function NotificationCenter({ isOpen, onClose, className = '' }: 
               {filteredNotifications.map(notification => (
                 <div
                   key={notification.id}
-                  className={`relative p-4 hover:bg-gray-50 transition-colors cursor-pointer border-l-4 ${
+                  className={`relative p-4 hover:bg-[#cfdbe9] transition-colors cursor-pointer border-l-4 ${
                     !notification.isRead ? 'bg-blue-50' : 'bg-white'
                   } ${getPriorityColor(notification.priority)}`}
                   onClick={() => {
@@ -382,7 +382,7 @@ export default function NotificationCenter({ isOpen, onClose, className = '' }: 
         </div>
 
         {/* Footer */}
-        <div className="bg-gray-50 px-6 py-3 border-t border-gray-200">
+        <div className="bg-[#cfdbe9] px-6 py-3 border-t border-gray-200">
           <div className="flex justify-between items-center">
             <span className="text-sm text-gray-500">
               {filteredNotifications.length} 則通知

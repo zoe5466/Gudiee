@@ -13,7 +13,7 @@ export function ModeSwitcher() {
   };
 
   return (
-    <div className="flex items-center space-x-3 bg-gray-50 rounded-full px-3 py-2">
+    <div className="flex items-center space-x-3 bg-[#cfdbe9] rounded-full px-3 py-2">
       <div className="flex items-center space-x-2">
         <MapPin className={`w-4 h-4 ${mode === 'traveler' ? 'text-amber-600' : 'text-gray-400'}`} />
         <span className={`text-xs font-medium ${mode === 'traveler' ? 'text-gray-900' : 'text-gray-500'}`}>

@@ -239,7 +239,7 @@ export function PopularServices() {
   ];
 
   return (
-    <section className="py-24 bg-white">
+    <section className="py-24 bg-[#cfdbe9]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* 區段標題和描述 */}
         <div className="text-center mb-16">

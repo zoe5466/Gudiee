@@ -448,7 +448,7 @@ export default function TravelerDashboard({ className = '' }: TravelerDashboardP
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <Link 
             href="/search"
-            className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+            className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-[#cfdbe9] transition-colors"
           >
             <MapPin className="h-6 w-6 text-blue-600 mr-3" />
             <div>
@@ -459,7 +459,7 @@ export default function TravelerDashboard({ className = '' }: TravelerDashboardP
 
           <Link 
             href="/bookings"
-            className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+            className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-[#cfdbe9] transition-colors"
           >
             <Calendar className="h-6 w-6 text-green-600 mr-3" />
             <div>
@@ -470,7 +470,7 @@ export default function TravelerDashboard({ className = '' }: TravelerDashboardP
 
           <Link 
             href="/favorites"
-            className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+            className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-[#cfdbe9] transition-colors"
           >
             <Heart className="h-6 w-6 text-red-600 mr-3" />
             <div>
@@ -481,7 +481,7 @@ export default function TravelerDashboard({ className = '' }: TravelerDashboardP
 
           <Link 
             href="/messages"
-            className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+            className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-[#cfdbe9] transition-colors"
           >
             <MessageCircle className="h-6 w-6 text-purple-600 mr-3" />
             <div>

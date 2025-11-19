@@ -109,7 +109,7 @@ export function GuideSidebar() {
                     "flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-200",
                     isActive
                       ? "bg-red-50 text-red-700 border-r-2 border-[#002C56]"
-                      : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+                      : "text-gray-600 hover:text-gray-900 hover:bg-[#cfdbe9]"
                   )}
                   onClick={() => setIsOpen(false)}
                 >
@@ -122,7 +122,7 @@ export function GuideSidebar() {
 
           {/* User Section */}
           <div className="p-4 border-t border-gray-200">
-            <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
+            <div className="flex items-center space-x-3 p-3 bg-[#cfdbe9] rounded-lg">
               <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
                 <User className="w-4 h-4 text-gray-600" />
               </div>

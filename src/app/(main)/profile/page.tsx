@@ -305,7 +305,7 @@ export default function ProfilePage() {
               <div className="space-y-3">
                 <button 
                   onClick={() => router.push('/my-bookings')}
-                  className="w-full flex items-center gap-3 p-3 text-left hover:bg-gray-50 rounded-lg transition-colors"
+                  className="w-full flex items-center gap-3 p-3 text-left hover:bg-[#cfdbe9] rounded-lg transition-colors"
                 >
                   <History className="w-5 h-5 text-gray-400" />
                   <span>預訂歷史</span>
@@ -321,21 +321,21 @@ export default function ProfilePage() {
                 )}
                 <button 
                   onClick={() => router.push('/my-favorites')}
-                  className="w-full flex items-center gap-3 p-3 text-left hover:bg-gray-50 rounded-lg transition-colors"
+                  className="w-full flex items-center gap-3 p-3 text-left hover:bg-[#cfdbe9] rounded-lg transition-colors"
                 >
                   <Heart className="w-5 h-5 text-gray-400" />
                   <span>我的收藏</span>
                 </button>
                 <button 
                   onClick={() => router.push('/my-reviews')}
-                  className="w-full flex items-center gap-3 p-3 text-left hover:bg-gray-50 rounded-lg transition-colors"
+                  className="w-full flex items-center gap-3 p-3 text-left hover:bg-[#cfdbe9] rounded-lg transition-colors"
                 >
                   <Star className="w-5 h-5 text-gray-400" />
                   <span>我的評價</span>
                 </button>
                 <button 
                   onClick={() => router.push('/payment-methods')}
-                  className="w-full flex items-center gap-3 p-3 text-left hover:bg-gray-50 rounded-lg transition-colors"
+                  className="w-full flex items-center gap-3 p-3 text-left hover:bg-[#cfdbe9] rounded-lg transition-colors"
                 >
                   <CreditCard className="w-5 h-5 text-gray-400" />
                   <span>付款方式</span>
@@ -349,28 +349,28 @@ export default function ProfilePage() {
               <div className="space-y-3">
                 <button 
                   onClick={() => router.push('/settings/notifications')}
-                  className="w-full flex items-center gap-3 p-3 text-left hover:bg-gray-50 rounded-lg transition-colors"
+                  className="w-full flex items-center gap-3 p-3 text-left hover:bg-[#cfdbe9] rounded-lg transition-colors"
                 >
                   <Bell className="w-5 h-5 text-gray-400" />
                   <span>通知設定</span>
                 </button>
                 <button 
                   onClick={() => router.push('/settings/privacy')}
-                  className="w-full flex items-center gap-3 p-3 text-left hover:bg-gray-50 rounded-lg transition-colors"
+                  className="w-full flex items-center gap-3 p-3 text-left hover:bg-[#cfdbe9] rounded-lg transition-colors"
                 >
                   <Shield className="w-5 h-5 text-gray-400" />
                   <span>隱私設定</span>
                 </button>
                 <button 
                   onClick={() => router.push('/settings/language')}
-                  className="w-full flex items-center gap-3 p-3 text-left hover:bg-gray-50 rounded-lg transition-colors"
+                  className="w-full flex items-center gap-3 p-3 text-left hover:bg-[#cfdbe9] rounded-lg transition-colors"
                 >
                   <Globe className="w-5 h-5 text-gray-400" />
                   <span>語言設定</span>
                 </button>
                 <button 
                   onClick={() => router.push('/settings/account')}
-                  className="w-full flex items-center gap-3 p-3 text-left hover:bg-gray-50 rounded-lg transition-colors"
+                  className="w-full flex items-center gap-3 p-3 text-left hover:bg-[#cfdbe9] rounded-lg transition-colors"
                 >
                   <Settings className="w-5 h-5 text-gray-400" />
                   <span>帳戶設定</span>
@@ -437,7 +437,7 @@ export default function ProfilePage() {
               <input
                 type="email"
                 value={user.email}
-                className="input bg-gray-50 w-full"
+                className="input bg-[#cfdbe9] w-full"
                 disabled
               />
             </div>

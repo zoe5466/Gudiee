@@ -219,7 +219,7 @@ export default function CreateTaskPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-[#cfdbe9] py-8">
       <div className="max-w-4xl mx-auto px-4">
         {/* Progress Bar */}
         <div className="mb-8">
@@ -605,7 +605,7 @@ export default function CreateTaskPage() {
             <div className="space-y-6">
               <h2 className="text-2xl font-bold text-gray-900 mb-6">發佈確認</h2>
               
-              <div className="bg-gray-50 rounded-lg p-6">
+              <div className="bg-[#cfdbe9] rounded-lg p-6">
                 <h3 className="text-lg font-semibold mb-4">任務摘要</h3>
                 <div className="space-y-3">
                   <div>
@@ -662,7 +662,7 @@ export default function CreateTaskPage() {
             <button
               type="button"
               onClick={() => step > 1 ? setStep(step - 1) : router.back()}
-              className="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+              className="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-[#cfdbe9] transition-colors"
             >
               {step > 1 ? '上一步' : '取消'}
             </button>

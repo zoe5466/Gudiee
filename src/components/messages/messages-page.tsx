@@ -27,7 +27,7 @@ export default function MessagesPage({
   };
 
   return (
-    <div className={`flex h-screen bg-gray-50 ${className}`}>
+    <div className={`flex h-screen bg-[#cfdbe9] ${className}`}>
       {/* 對話列表 - 桌面版固定顯示，手機版可切換 */}
       <div className={`w-80 border-r border-gray-200 ${
         selectedConversationId ? 'hidden lg:block' : 'block'
@@ -45,7 +45,7 @@ export default function MessagesPage({
         selectedConversationId ? 'block' : 'hidden lg:block'
       }`}>
         {selectedConversationId ? (
-          <div className="h-full bg-white">
+          <div className="bg-white">
             {/* Chat interface will be loaded based on selectedConversationId */}
             <div className="flex items-center justify-center h-full">
               <p className="text-gray-500">Loading conversation...</p>

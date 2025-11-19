@@ -278,7 +278,7 @@ export function FeaturedServices() {
                     transition: 'all 0.2s',
                     touchAction: 'manipulation'
                   }}
-                  className="hover:bg-white"
+                  className="hover:bg-[#cfdbe9]"
                 >
                   <Heart 
                     style={{

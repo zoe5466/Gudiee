@@ -22,7 +22,7 @@ export function DualLayout({ children }: DualLayoutProps) {
 
   if (mode === 'guide') {
     return (
-      <div className="flex min-h-screen bg-gray-50">
+      <div className="bg-white">
         <GuideSidebar />
         <main className="flex-1 lg:ml-80">
           <div className="min-h-screen">
@@ -48,7 +48,7 @@ export function DualLayout({ children }: DualLayoutProps) {
 
   // 其他頁面使用標準布局
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="bg-white">
       <Header />
       <main className="min-h-screen pt-16">
         {children}

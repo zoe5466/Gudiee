@@ -247,7 +247,7 @@ export default function SearchBar({
                   value={searchParams.guests}
                   onChange={(e) => handleInputChange('guests', parseInt(e.target.value))}
                   onFocus={() => setActiveField('guests')}
-                  className="w-full pl-10 pr-4 py-3 text-gray-900 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent appearance-none cursor-pointer bg-white"
+                  className="w-full pl-10 pr-4 py-3 text-gray-900 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent appearance-none cursor-pointer bg-[#cfdbe9]"
                 >
                   {[1, 2, 3, 4, 5, 6, 7, 8].map(num => (
                     <option key={num} value={num}>
@@ -286,7 +286,7 @@ export default function SearchBar({
                   key={index}
                   type="button"
                   onClick={() => handleSuggestionClick(suggestion)}
-                  className="w-full px-4 py-3 text-left hover:bg-gray-50 flex items-center space-x-3"
+                  className="w-full px-4 py-3 text-left hover:bg-[#cfdbe9] flex items-center space-x-3"
                 >
                   <div className="flex-shrink-0">
                     {suggestion.image ? (

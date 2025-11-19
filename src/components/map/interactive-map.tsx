@@ -372,7 +372,7 @@ export function InteractiveMap({
                 cursor: 'pointer',
                 boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
               }}
-              className="hover:bg-gray-50"
+              className="hover:bg-[#cfdbe9]"
             >
               <Plus style={{ width: '1rem', height: '1rem', color: '#374151' }} />
             </button>
@@ -390,7 +390,7 @@ export function InteractiveMap({
                 cursor: 'pointer',
                 boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
               }}
-              className="hover:bg-gray-50"
+              className="hover:bg-[#cfdbe9]"
             >
               <Minus style={{ width: '1rem', height: '1rem', color: '#374151' }} />
             </button>
@@ -416,7 +416,7 @@ export function InteractiveMap({
                 boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
                 zIndex: 20
               }}
-              className="hover:bg-gray-50"
+              className="hover:bg-[#cfdbe9]"
             >
               <Locate style={{ width: '1rem', height: '1rem', color: '#374151' }} />
             </button>
