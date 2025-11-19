@@ -328,7 +328,7 @@ export function DatePicker({
                     transition: 'all 0.2s',
                     fontWeight: isSelected ? '600' : isToday ? '500' : '400',
                     backgroundColor: isSelected 
-                      ? '#FF5A5F' 
+                      ? '#002C56' 
                       : isToday 
                       ? '#f3f4f6' 
                       : 'transparent',
@@ -361,7 +361,7 @@ export function DatePicker({
                 width: '100%',
                 textAlign: 'center',
                 fontSize: '0.875rem',
-                color: '#FF5A5F',
+                color: '#002C56',
                 fontWeight: '500',
                 padding: '0.5rem',
                 borderRadius: '0.5rem',

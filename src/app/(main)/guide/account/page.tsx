@@ -300,7 +300,7 @@ export default function GuideAccountPage() {
                       onClick={() => setActiveTab(tab.id)}
                       className={`w-full flex items-center px-3 py-2 text-left rounded-lg transition-colors ${
                         activeTab === tab.id
-                          ? 'bg-[#FF5A5F] text-white'
+                          ? 'bg-[#002C56] text-white'
                           : 'text-gray-700 hover:bg-gray-100'
                       }`}
                     >
@@ -328,7 +328,7 @@ export default function GuideAccountPage() {
                       className="w-16 h-16 rounded-full object-cover"
                     />
                     <div>
-                      <button className="flex items-center px-4 py-2 text-sm border border-gray-300 rounded-lg hover:border-[#FF5A5F] transition-colors">
+                      <button className="flex items-center px-4 py-2 text-sm border border-gray-300 rounded-lg hover:border-[#002C56] transition-colors">
                         <Camera className="w-4 h-4 mr-2" />
                         更換頭像
                       </button>
@@ -344,7 +344,7 @@ export default function GuideAccountPage() {
                         type="text"
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FF5A5F] focus:border-[#FF5A5F]"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#002C56] focus:border-[#002C56]"
                       />
                     </div>
                     
@@ -354,7 +354,7 @@ export default function GuideAccountPage() {
                         type="email"
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FF5A5F] focus:border-[#FF5A5F]"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#002C56] focus:border-[#002C56]"
                       />
                     </div>
                     
@@ -364,7 +364,7 @@ export default function GuideAccountPage() {
                         type="tel"
                         value={formData.phone}
                         onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FF5A5F] focus:border-[#FF5A5F]"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#002C56] focus:border-[#002C56]"
                       />
                     </div>
                     
@@ -374,7 +374,7 @@ export default function GuideAccountPage() {
                         type="text"
                         value={formData.location}
                         onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FF5A5F] focus:border-[#FF5A5F]"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#002C56] focus:border-[#002C56]"
                       />
                     </div>
                   </div>
@@ -386,7 +386,7 @@ export default function GuideAccountPage() {
                       value={formData.bio}
                       onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
                       rows={4}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FF5A5F] focus:border-[#FF5A5F]"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#002C56] focus:border-[#002C56]"
                       placeholder="介紹您的專業背景和服務特色..."
                     />
                   </div>
@@ -398,12 +398,12 @@ export default function GuideAccountPage() {
                       {formData.languages.map((lang, index) => (
                         <span
                           key={index}
-                          className="px-3 py-1 bg-[#FF5A5F] text-white rounded-full text-sm"
+                          className="px-3 py-1 bg-[#002C56] text-white rounded-full text-sm"
                         >
                           {lang}
                         </span>
                       ))}
-                      <button className="px-3 py-1 border border-gray-300 rounded-full text-sm hover:border-[#FF5A5F] transition-colors">
+                      <button className="px-3 py-1 border border-gray-300 rounded-full text-sm hover:border-[#002C56] transition-colors">
                         + 新增語言
                       </button>
                     </div>
@@ -421,7 +421,7 @@ export default function GuideAccountPage() {
                           {specialty}
                         </span>
                       ))}
-                      <button className="px-3 py-1 border border-gray-300 rounded-full text-sm hover:border-[#FF5A5F] transition-colors">
+                      <button className="px-3 py-1 border border-gray-300 rounded-full text-sm hover:border-[#002C56] transition-colors">
                         + 新增專業
                       </button>
                     </div>
@@ -432,7 +432,7 @@ export default function GuideAccountPage() {
                     <button
                       onClick={handleSaveProfile}
                       disabled={isSaving}
-                      className="flex items-center px-6 py-3 bg-[#FF5A5F] text-white rounded-lg hover:bg-[#E1464A] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="flex items-center px-6 py-3 bg-[#002C56] text-white rounded-lg hover:bg-[#001f3f] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       {isSaving ? (
                         <Loading size="sm" className="mr-2" />
@@ -452,7 +452,7 @@ export default function GuideAccountPage() {
                   <h2 className="text-xl font-semibold text-gray-900">服務管理</h2>
                   <button
                     onClick={() => router.push('/guide/services/create')}
-                    className="flex items-center px-4 py-2 bg-[#FF5A5F] text-white rounded-lg hover:bg-[#E1464A] transition-colors"
+                    className="flex items-center px-4 py-2 bg-[#002C56] text-white rounded-lg hover:bg-[#001f3f] transition-colors"
                   >
                     <Plus className="w-4 h-4 mr-2" />
                     新增服務
@@ -500,7 +500,7 @@ export default function GuideAccountPage() {
                               {service.rating}
                             </span>
                             <span>{service.totalBookings} 次預訂</span>
-                            <span className="font-medium text-[#FF5A5F]">NT$ {service.price.toLocaleString()}</span>
+                            <span className="font-medium text-[#002C56]">NT$ {service.price.toLocaleString()}</span>
                           </div>
                         </div>
                       </div>
@@ -514,7 +514,7 @@ export default function GuideAccountPage() {
               <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                 <div className="flex items-center justify-between mb-6">
                   <h2 className="text-xl font-semibold text-gray-900">證照認證</h2>
-                  <button className="flex items-center px-4 py-2 bg-[#FF5A5F] text-white rounded-lg hover:bg-[#E1464A] transition-colors">
+                  <button className="flex items-center px-4 py-2 bg-[#002C56] text-white rounded-lg hover:bg-[#001f3f] transition-colors">
                     <Plus className="w-4 h-4 mr-2" />
                     新增證照
                   </button>
@@ -564,7 +564,7 @@ export default function GuideAccountPage() {
                       </div>
                       <label className="relative inline-flex items-center cursor-pointer">
                         <input type="checkbox" className="sr-only peer" defaultChecked />
-                        <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#FF5A5F]/25 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#FF5A5F]"></div>
+                        <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#002C56]/25 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#002C56]"></div>
                       </label>
                     </div>
                     
@@ -575,7 +575,7 @@ export default function GuideAccountPage() {
                       </div>
                       <label className="relative inline-flex items-center cursor-pointer">
                         <input type="checkbox" className="sr-only peer" defaultChecked />
-                        <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#FF5A5F]/25 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#FF5A5F]"></div>
+                        <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-[#002C56]/25 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#002C56]"></div>
                       </label>
                     </div>
                   </div>
@@ -593,7 +593,7 @@ export default function GuideAccountPage() {
                             <p className="text-sm text-gray-600">玉山銀行 ****1234</p>
                           </div>
                         </div>
-                        <button className="text-sm text-[#FF5A5F] hover:text-[#E1464A]">
+                        <button className="text-sm text-[#002C56] hover:text-[#001f3f]">
                           編輯
                         </button>
                       </div>
@@ -613,7 +613,7 @@ export default function GuideAccountPage() {
                       <div className="relative">
                         <input
                           type={showPassword ? 'text' : 'password'}
-                          className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FF5A5F] focus:border-[#FF5A5F]"
+                          className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#002C56] focus:border-[#002C56]"
                         />
                         <button
                           type="button"
@@ -633,7 +633,7 @@ export default function GuideAccountPage() {
                       <label className="block text-sm font-medium text-gray-700 mb-2">新密碼</label>
                       <input
                         type="password"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FF5A5F] focus:border-[#FF5A5F]"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#002C56] focus:border-[#002C56]"
                       />
                     </div>
                     
@@ -641,11 +641,11 @@ export default function GuideAccountPage() {
                       <label className="block text-sm font-medium text-gray-700 mb-2">確認新密碼</label>
                       <input
                         type="password"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FF5A5F] focus:border-[#FF5A5F]"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#002C56] focus:border-[#002C56]"
                       />
                     </div>
                     
-                    <button className="w-full py-2 bg-[#FF5A5F] text-white rounded-lg hover:bg-[#E1464A] transition-colors">
+                    <button className="w-full py-2 bg-[#002C56] text-white rounded-lg hover:bg-[#001f3f] transition-colors">
                       更新密碼
                     </button>
                   </div>
@@ -675,7 +675,7 @@ export default function GuideAccountPage() {
                           <p className="text-sm text-gray-600">未啟用</p>
                         </div>
                       </div>
-                      <button className="text-sm text-[#FF5A5F] hover:text-[#E1464A]">
+                      <button className="text-sm text-[#002C56] hover:text-[#001f3f]">
                         設定
                       </button>
                     </div>

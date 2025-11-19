@@ -320,7 +320,7 @@ export default function MessagesPage() {
                     placeholder="搜尋對話..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-[#FF5A5F] focus:border-[#FF5A5F]"
+                    className="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-[#002C56] focus:border-[#002C56]"
                   />
                 </div>
               </div>
@@ -337,7 +337,7 @@ export default function MessagesPage() {
                           loadMessages(conversation.id);
                         }}
                         className={`p-4 cursor-pointer hover:bg-gray-50 transition-colors ${
-                          activeConversation === conversation.id ? 'bg-blue-50 border-r-2 border-[#FF5A5F]' : ''
+                          activeConversation === conversation.id ? 'bg-blue-50 border-r-2 border-[#002C56]' : ''
                         }`}
                       >
                         <div className="flex items-center space-x-3">
@@ -366,7 +366,7 @@ export default function MessagesPage() {
                                   </span>
                                 )}
                                 {conversation.unreadCount > 0 && (
-                                  <div className="bg-[#FF5A5F] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                                  <div className="bg-[#002C56] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
                                     {conversation.unreadCount}
                                   </div>
                                 )}
@@ -437,7 +437,7 @@ export default function MessagesPage() {
                       >
                         <div className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
                           message.senderId === user?.id
-                            ? 'bg-[#FF5A5F] text-white'
+                            ? 'bg-[#002C56] text-white'
                             : 'bg-gray-100 text-gray-900'
                         }`}>
                           <p className="text-sm">{message.content}</p>
@@ -473,7 +473,7 @@ export default function MessagesPage() {
                           onChange={(e) => setNewMessage(e.target.value)}
                           onKeyPress={handleKeyPress}
                           placeholder="輸入訊息..."
-                          className="w-full px-4 py-2 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-[#FF5A5F] focus:border-[#FF5A5F]"
+                          className="w-full px-4 py-2 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-[#002C56] focus:border-[#002C56]"
                           rows={1}
                           style={{ minHeight: '40px', maxHeight: '100px' }}
                         />
@@ -484,7 +484,7 @@ export default function MessagesPage() {
                       <button
                         onClick={handleSendMessage}
                         disabled={!newMessage.trim() || isSending}
-                        className="p-2 bg-[#FF5A5F] text-white rounded-lg hover:bg-[#E1464A] disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="p-2 bg-[#002C56] text-white rounded-lg hover:bg-[#001f3f] disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         <Send className="w-5 h-5" />
                       </button>

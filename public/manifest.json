@@ -4,19 +4,19 @@
   "description": "連接在地地陪與旅客的雙邊媒合平台",
   "start_url": "/",
   "display": "standalone",
-  "theme_color": "#2C4A7C",
-  "background_color": "#ffffff",
+  "theme_color": "#002C56",
+  "background_color": "#EAF28C",
   "icons": [
     {
-      "src": "/logo.jpg",
+      "src": "/logo.png",
       "sizes": "512x512",
-      "type": "image/jpeg",
+      "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/logo.jpg",
+      "src": "/favicon.png",
       "sizes": "512x512",
-      "type": "image/jpeg",
+      "type": "image/png",
       "purpose": "maskable"
     }
   ]

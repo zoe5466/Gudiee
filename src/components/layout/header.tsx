@@ -66,7 +66,7 @@ export function Header() {
                   />
                 </div>
                 {/* 品牌名稱（在小螢幕隱藏） */}
-                <span className="ml-2 text-xl sm:text-2xl font-bold text-[#2C4A7C] hidden xs:block">Guidee</span>
+                <span className="ml-2 text-xl sm:text-2xl font-bold text-[#002C56] hidden xs:block">Guidee</span>
               </div>
             </Link>
 

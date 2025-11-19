@@ -80,7 +80,7 @@ export function GuideSidebar() {
           {/* Header */}
           <div className="p-6 border-b border-gray-200">
             <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-gradient-to-br from-[#FF5A5F] to-[#E1464A] rounded-lg flex items-center justify-center">
+              <div className="w-8 h-8 bg-gradient-to-br from-[#002C56] to-[#001f3f] rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-sm">R</span>
               </div>
               <div>
@@ -108,7 +108,7 @@ export function GuideSidebar() {
                   className={cn(
                     "flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-200",
                     isActive
-                      ? "bg-red-50 text-red-700 border-r-2 border-[#FF5A5F]"
+                      ? "bg-red-50 text-red-700 border-r-2 border-[#002C56]"
                       : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
                   )}
                   onClick={() => setIsOpen(false)}

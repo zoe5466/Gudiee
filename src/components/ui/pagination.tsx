@@ -96,7 +96,7 @@ export function Pagination({
                   className={cn(
                     'flex items-center justify-center w-8 h-8 rounded-lg border text-sm font-medium transition-colors',
                     currentPage === page
-                      ? 'border-[#FF5A5F] bg-[#FF5A5F] text-white'
+                      ? 'border-[#002C56] bg-[#002C56] text-white'
                       : 'border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400'
                   )}
                 >
@@ -129,7 +129,7 @@ export function Pagination({
           <select
             value={pageSize}
             onChange={(e) => onPageSizeChange(Number(e.target.value))}
-            className="border border-gray-300 rounded-lg px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-[#FF5A5F] focus:border-[#FF5A5F]"
+            className="border border-gray-300 rounded-lg px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-[#002C56] focus:border-[#002C56]"
           >
             {pageSizeOptions.map((size) => (
               <option key={size} value={size}>

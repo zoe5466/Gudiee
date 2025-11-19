@@ -97,6 +97,8 @@ module.exports = {
         },
         // Guidee 品牌色彩
         guidee: {
+          primary: '#002C56',
+          background: '#EAF28C',
           orange: '#ed7411',
           blue: '#0ea5e9',
           green: '#10b981',

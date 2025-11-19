@@ -138,7 +138,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
         {rating >= 4.8 && (
           <div style={{ position: 'absolute', top: '0.75rem', left: '0.75rem' }}>
             <span style={{
-              backgroundColor: '#FF5A5F',
+              backgroundColor: '#002C56',
               color: 'white',
               fontSize: '0.75rem',
               fontWeight: '500',
@@ -580,7 +580,7 @@ export default function SearchPage() {
                     placeholder="搜尋地陪、景點或服務..."
                     value={filters.query}
                     onChange={(e) => updateFilters({ query: e.target.value })}
-                    className="pl-12 pr-4 py-3 rounded-xl border-gray-300 focus:ring-2 focus:ring-[#FF5A5F] focus:border-[#FF5A5F] w-full"
+                    className="pl-12 pr-4 py-3 rounded-xl border-gray-300 focus:ring-2 focus:ring-[#002C56] focus:border-[#002C56] w-full"
                     onKeyPress={(e) => {
                       if (e.key === 'Enter') {
                         performSearch(filters, 1);
@@ -595,17 +595,17 @@ export default function SearchPage() {
                 <Button
                   variant="outline"
                   onClick={() => setShowFilters(!showFilters)}
-                  className="flex items-center gap-2 border-gray-300 hover:border-[#FF5A5F] w-full sm:w-auto justify-center"
+                  className="flex items-center gap-2 border-gray-300 hover:border-[#002C56] w-full sm:w-auto justify-center"
                 >
                   <SlidersHorizontal className="w-4 h-4" />
                   <span className="sm:inline">基本篩選</span>
-                  {Object.values(filters).some(v => v && v !== '' && v !== 0 && v !== 'relevance') && <span className="text-[#FF5A5F]">●</span>}
+                  {Object.values(filters).some(v => v && v !== '' && v !== 0 && v !== 'relevance') && <span className="text-[#002C56]">●</span>}
                 </Button>
                 
                 <Button
                   variant={showAdvancedSearch ? 'default' : 'outline'}
                   onClick={() => setShowAdvancedSearch(!showAdvancedSearch)}
-                  className="flex items-center gap-2 border-gray-300 hover:border-[#FF5A5F] w-full sm:w-auto justify-center"
+                  className="flex items-center gap-2 border-gray-300 hover:border-[#002C56] w-full sm:w-auto justify-center"
                 >
                   <Filter className="w-4 h-4" />
                   <span className="sm:inline">進階搜尋</span>
@@ -628,7 +628,7 @@ export default function SearchPage() {
                       updateFilters({ guests: filter.value as number });
                     }
                   }}
-                  className="px-3 py-1 rounded-full border border-gray-300 text-sm text-gray-600 hover:border-[#FF5A5F] hover:text-[#FF5A5F] transition-colors"
+                  className="px-3 py-1 rounded-full border border-gray-300 text-sm text-gray-600 hover:border-[#002C56] hover:text-[#002C56] transition-colors"
                 >
                   {filter.label}
                 </button>
@@ -645,7 +645,7 @@ export default function SearchPage() {
                     <select
                       value={filters.location}
                       onChange={(e) => updateFilters({ location: e.target.value })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FF5A5F] focus:border-[#FF5A5F]"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#002C56] focus:border-[#002C56]"
                     >
                       <option value="">所有地點</option>
                       <option value="台北市">台北市</option>
@@ -676,7 +676,7 @@ export default function SearchPage() {
                     <select
                       value={filters.guests}
                       onChange={(e) => updateFilters({ guests: parseInt(e.target.value) })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FF5A5F] focus:border-[#FF5A5F]"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#002C56] focus:border-[#002C56]"
                     >
                       {[1, 2, 3, 4, 5, 6, 7, 8].map(num => (
                         <option key={num} value={num}>{num} 位</option>
@@ -690,7 +690,7 @@ export default function SearchPage() {
                     <select
                       value={filters.sortBy}
                       onChange={(e) => updateFilters({ sortBy: e.target.value as SearchFilters['sortBy'] })}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FF5A5F] focus:border-[#FF5A5F]"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#002C56] focus:border-[#002C56]"
                     >
                       <option value="relevance">相關性</option>
                       <option value="price_low">價格由低到高</option>
@@ -742,8 +742,8 @@ export default function SearchPage() {
                         onClick={() => updateFilters({ minRating: filters.minRating === rating ? 0 : rating })}
                         className={`px-4 py-2 rounded-lg border text-sm transition-colors ${
                           filters.minRating === rating
-                            ? 'bg-[#FF5A5F] text-white border-[#FF5A5F]'
-                            : 'bg-white text-gray-700 border-gray-300 hover:border-[#FF5A5F] hover:text-[#FF5A5F]'
+                            ? 'bg-[#002C56] text-white border-[#002C56]'
+                            : 'bg-white text-gray-700 border-gray-300 hover:border-[#002C56] hover:text-[#002C56]'
                         }`}
                       >
                         {rating === 0 ? '全部' : `${rating}+`} 
@@ -1066,7 +1066,7 @@ export default function SearchPage() {
                                 style={{
                                   width: '100%',
                                   padding: '0.5rem',
-                                  backgroundColor: '#FF5A5F',
+                                  backgroundColor: '#002C56',
                                   color: 'white',
                                   border: 'none',
                                   borderRadius: '0.375rem',

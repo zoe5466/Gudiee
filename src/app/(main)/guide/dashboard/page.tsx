@@ -235,7 +235,7 @@ export default function GuideDashboardPage() {
             <select
               value={selectedTimeRange}
               onChange={(e) => setSelectedTimeRange(e.target.value as any)}
-              className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-[#FF5A5F] focus:border-[#FF5A5F]"
+              className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-[#002C56] focus:border-[#002C56]"
             >
               <option value="today">今日</option>
               <option value="week">本週</option>
@@ -252,7 +252,7 @@ export default function GuideDashboardPage() {
             
             <button
               onClick={() => router.push('/guide/services/create')}
-              className="flex items-center gap-2 px-4 py-2 bg-[#FF5A5F] text-white rounded-lg hover:bg-[#E1464A] transition-colors"
+              className="flex items-center gap-2 px-4 py-2 bg-[#002C56] text-white rounded-lg hover:bg-[#001f3f] transition-colors"
             >
               <Plus className="w-4 h-4" />
               新增服務
@@ -334,7 +334,7 @@ export default function GuideDashboardPage() {
                 <AlertCircle className="w-5 h-5 text-orange-500 mr-2" />
                 待處理事項 ({pendingActions.length})
               </h3>
-              <button className="text-sm text-[#FF5A5F] hover:text-[#E1464A] transition-colors">
+              <button className="text-sm text-[#002C56] hover:text-[#001f3f] transition-colors">
                 查看全部
               </button>
             </div>
@@ -353,7 +353,7 @@ export default function GuideDashboardPage() {
                       {new Date(action.createdAt).toLocaleString('zh-TW')}
                     </p>
                   </div>
-                  <button className="ml-4 px-3 py-1 text-sm bg-[#FF5A5F] text-white rounded hover:bg-[#E1464A] transition-colors">
+                  <button className="ml-4 px-3 py-1 text-sm bg-[#002C56] text-white rounded hover:bg-[#001f3f] transition-colors">
                     處理
                   </button>
                 </div>
@@ -369,12 +369,12 @@ export default function GuideDashboardPage() {
             <div className="bg-white rounded-lg shadow-sm border border-gray-200">
               <div className="flex items-center justify-between p-6 border-b border-gray-200">
                 <h3 className="text-lg font-semibold text-gray-900 flex items-center">
-                  <Calendar className="w-5 h-5 text-[#FF5A5F] mr-2" />
+                  <Calendar className="w-5 h-5 text-[#002C56] mr-2" />
                   今日行程
                 </h3>
                 <button
                   onClick={() => router.push('/guide/orders')}
-                  className="text-sm text-[#FF5A5F] hover:text-[#E1464A] transition-colors flex items-center gap-1"
+                  className="text-sm text-[#002C56] hover:text-[#001f3f] transition-colors flex items-center gap-1"
                 >
                   查看全部
                   <ArrowUpRight className="w-4 h-4" />
@@ -401,7 +401,7 @@ export default function GuideDashboardPage() {
                               <MapPin className="w-4 h-4 mr-1" />
                               {schedule.location}
                             </span>
-                            <span className="text-sm font-medium text-[#FF5A5F]">
+                            <span className="text-sm font-medium text-[#002C56]">
                               NT$ {schedule.price.toLocaleString()}
                             </span>
                           </div>
@@ -417,7 +417,7 @@ export default function GuideDashboardPage() {
                     <Calendar className="w-12 h-12 text-gray-400 mx-auto mb-4" />
                     <h4 className="text-lg font-medium text-gray-900 mb-2">今日暫無行程</h4>
                     <p className="text-gray-600 mb-4">享受一個輕鬆的日子，或者查看明日安排</p>
-                    <button className="text-[#FF5A5F] hover:text-[#E1464A] transition-colors">
+                    <button className="text-[#002C56] hover:text-[#001f3f] transition-colors">
                       查看明日行程
                     </button>
                   </div>
@@ -435,7 +435,7 @@ export default function GuideDashboardPage() {
                   <Star className="w-5 h-5 text-yellow-500 mr-2 fill-current" />
                   最新評價
                 </h3>
-                <button className="text-sm text-[#FF5A5F] hover:text-[#E1464A] transition-colors">
+                <button className="text-sm text-[#002C56] hover:text-[#001f3f] transition-colors">
                   查看全部
                 </button>
               </div>
@@ -490,7 +490,7 @@ export default function GuideDashboardPage() {
               <div className="space-y-3">
                 <button
                   onClick={() => router.push('/guide/messages')}
-                  className="w-full flex items-center justify-between p-3 text-left border border-gray-200 rounded-lg hover:border-[#FF5A5F] hover:bg-gray-50 transition-colors"
+                  className="w-full flex items-center justify-between p-3 text-left border border-gray-200 rounded-lg hover:border-[#002C56] hover:bg-gray-50 transition-colors"
                 >
                   <div className="flex items-center">
                     <MessageCircle className="w-5 h-5 text-gray-600 mr-3" />
@@ -501,7 +501,7 @@ export default function GuideDashboardPage() {
                 
                 <button
                   onClick={() => router.push('/guide/orders')}
-                  className="w-full flex items-center justify-between p-3 text-left border border-gray-200 rounded-lg hover:border-[#FF5A5F] hover:bg-gray-50 transition-colors"
+                  className="w-full flex items-center justify-between p-3 text-left border border-gray-200 rounded-lg hover:border-[#002C56] hover:bg-gray-50 transition-colors"
                 >
                   <div className="flex items-center">
                     <Calendar className="w-5 h-5 text-gray-600 mr-3" />
@@ -512,7 +512,7 @@ export default function GuideDashboardPage() {
                 
                 <button
                   onClick={() => router.push('/guide/account')}
-                  className="w-full flex items-center justify-between p-3 text-left border border-gray-200 rounded-lg hover:border-[#FF5A5F] hover:bg-gray-50 transition-colors"
+                  className="w-full flex items-center justify-between p-3 text-left border border-gray-200 rounded-lg hover:border-[#002C56] hover:bg-gray-50 transition-colors"
                 >
                   <div className="flex items-center">
                     <Settings className="w-5 h-5 text-gray-600 mr-3" />
@@ -523,7 +523,7 @@ export default function GuideDashboardPage() {
                 
                 <button
                   onClick={() => router.push('/guide/analytics')}
-                  className="w-full flex items-center justify-between p-3 text-left border border-gray-200 rounded-lg hover:border-[#FF5A5F] hover:bg-gray-50 transition-colors"
+                  className="w-full flex items-center justify-between p-3 text-left border border-gray-200 rounded-lg hover:border-[#002C56] hover:bg-gray-50 transition-colors"
                 >
                   <div className="flex items-center">
                     <BarChart3 className="w-5 h-5 text-gray-600 mr-3" />

@@ -8,11 +8,11 @@
 /* CSS Variables */
 :root {
   /* Colors */
-  --color-primary: #FF5A5F;
-  --color-primary-dark: #E1464A;
-  --color-primary-light: #FF7E82;
-  --color-secondary: #00A699;
-  --color-accent: #FC642D;
+  --color-primary: #002C56;
+  --color-primary-dark: #001f3f;
+  --color-primary-light: #0a4a8f;
+  --color-secondary: #EAF28C;
+  --color-accent: #002C56;
   
   /* Grays */
   --color-gray-50: #F9FAFB;

@@ -67,7 +67,7 @@ export function GuideListings() {
       <div className="container">
         <div className="flex items-center justify-between mb-8">
           <h2 className="heading-2">精選地陪</h2>
-          <button className="btn btn-ghost text-[#FF5A5F] hover:bg-red-50">
+          <button className="btn btn-ghost text-[#002C56] hover:bg-red-50">
             查看全部
           </button>
         </div>

@@ -59,13 +59,13 @@ export function TravelerBottomNav() {
                 <Icon className={cn(
                   "w-5 h-5 mb-1",
                   isActive 
-                    ? "text-[#FF5A5F]" 
+                    ? "text-[#002C56]" 
                     : "text-gray-400"
                 )} />
                 <span className={cn(
                   "text-xs font-medium",
                   isActive 
-                    ? "text-[#FF5A5F]" 
+                    ? "text-[#002C56]" 
                     : "text-gray-500"
                 )}>
                   {item.title}

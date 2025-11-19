@@ -210,7 +210,7 @@ export default function FavoritesPage() {
 
                   {/* Instant Book Badge */}
                   {service.isInstantBook && (
-                    <div className="absolute top-3 left-3 bg-[#FF5A5F] text-white px-2 py-1 rounded text-xs font-medium">
+                    <div className="absolute top-3 left-3 bg-[#002C56] text-white px-2 py-1 rounded text-xs font-medium">
                       即時預訂
                     </div>
                   )}
@@ -229,7 +229,7 @@ export default function FavoritesPage() {
 
                   {/* Title */}
                   <Link href={`/services/${service.id}`}>
-                    <h3 className="font-semibold text-gray-900 mb-2 hover:text-[#FF5A5F] transition-colors line-clamp-2">
+                    <h3 className="font-semibold text-gray-900 mb-2 hover:text-[#002C56] transition-colors line-clamp-2">
                       {service.title}
                     </h3>
                   </Link>

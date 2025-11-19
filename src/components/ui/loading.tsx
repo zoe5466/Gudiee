@@ -33,7 +33,7 @@ export function Loading({
       <div className={cn('flex flex-col items-center justify-center', className)}>
         <div 
           className={cn(
-            'animate-spin rounded-full border-2 border-gray-300 border-t-[#FF5A5F]',
+            'animate-spin rounded-full border-2 border-gray-300 border-t-[#002C56]',
             sizeClasses[size]
           )}
         />
@@ -54,7 +54,7 @@ export function Loading({
             <div
               key={i}
               className={cn(
-                'bg-[#FF5A5F] rounded-full animate-pulse',
+                'bg-[#002C56] rounded-full animate-pulse',
                 size === 'sm' ? 'w-2 h-2' : size === 'md' ? 'w-3 h-3' : 'w-4 h-4'
               )}
               style={{
@@ -78,7 +78,7 @@ export function Loading({
       <div className={cn('flex flex-col items-center justify-center', className)}>
         <div 
           className={cn(
-            'bg-[#FF5A5F] rounded-full animate-pulse',
+            'bg-[#002C56] rounded-full animate-pulse',
             sizeClasses[size]
           )}
         />

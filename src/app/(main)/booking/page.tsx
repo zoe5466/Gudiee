@@ -236,7 +236,7 @@ export default function BookingPage() {
               display: 'flex', 
               alignItems: 'center', 
               gap: '0.25rem', 
-              color: bookingStep === 'details' ? '#FF5A5F' : '#9ca3af',
+              color: bookingStep === 'details' ? '#002C56' : '#9ca3af',
               fontSize: '0.875rem'
             }} className="sm:gap-2 sm:text-base">
               <div style={{
@@ -248,7 +248,7 @@ export default function BookingPage() {
                 justifyContent: 'center',
                 fontSize: '0.75rem',
                 fontWeight: '500',
-                backgroundColor: bookingStep === 'details' ? '#FF5A5F' : '#e5e7eb',
+                backgroundColor: bookingStep === 'details' ? '#002C56' : '#e5e7eb',
                 color: bookingStep === 'details' ? 'white' : '#6b7280'
               }} className="sm:w-8 sm:h-8 sm:text-sm">
                 1
@@ -258,13 +258,13 @@ export default function BookingPage() {
             <div style={{ 
               width: '2rem', 
               height: '2px', 
-              backgroundColor: bookingStep !== 'details' ? '#FF5A5F' : '#e5e7eb' 
+              backgroundColor: bookingStep !== 'details' ? '#002C56' : '#e5e7eb' 
             }} className="sm:w-16"></div>
             <div style={{ 
               display: 'flex', 
               alignItems: 'center', 
               gap: '0.25rem', 
-              color: bookingStep === 'payment' ? '#FF5A5F' : '#9ca3af',
+              color: bookingStep === 'payment' ? '#002C56' : '#9ca3af',
               fontSize: '0.875rem'
             }} className="sm:gap-2 sm:text-base">
               <div style={{
@@ -276,7 +276,7 @@ export default function BookingPage() {
                 justifyContent: 'center',
                 fontSize: '0.75rem',
                 fontWeight: '500',
-                backgroundColor: bookingStep === 'payment' ? '#FF5A5F' : '#e5e7eb',
+                backgroundColor: bookingStep === 'payment' ? '#002C56' : '#e5e7eb',
                 color: bookingStep === 'payment' ? 'white' : '#6b7280'
               }} className="sm:w-8 sm:h-8 sm:text-sm">
                 2
@@ -286,13 +286,13 @@ export default function BookingPage() {
             <div style={{ 
               width: '2rem', 
               height: '2px', 
-              backgroundColor: bookingStep === 'confirmation' ? '#FF5A5F' : '#e5e7eb' 
+              backgroundColor: bookingStep === 'confirmation' ? '#002C56' : '#e5e7eb' 
             }} className="sm:w-16"></div>
             <div style={{ 
               display: 'flex', 
               alignItems: 'center', 
               gap: '0.25rem', 
-              color: bookingStep === 'confirmation' ? '#FF5A5F' : '#9ca3af',
+              color: bookingStep === 'confirmation' ? '#002C56' : '#9ca3af',
               fontSize: '0.875rem'
             }} className="sm:gap-2 sm:text-base">
               <div style={{
@@ -304,7 +304,7 @@ export default function BookingPage() {
                 justifyContent: 'center',
                 fontSize: '0.75rem',
                 fontWeight: '500',
-                backgroundColor: bookingStep === 'confirmation' ? '#FF5A5F' : '#e5e7eb',
+                backgroundColor: bookingStep === 'confirmation' ? '#002C56' : '#e5e7eb',
                 color: bookingStep === 'confirmation' ? 'white' : '#6b7280'
               }} className="sm:w-8 sm:h-8 sm:text-sm">
                 3
@@ -594,7 +594,7 @@ export default function BookingPage() {
                     disabled={!contactInfo.name || !contactInfo.email || !contactInfo.phone}
                     style={{
                       padding: '0.75rem 2rem',
-                      backgroundColor: (!contactInfo.name || !contactInfo.email || !contactInfo.phone) ? '#d1d5db' : '#FF5A5F',
+                      backgroundColor: (!contactInfo.name || !contactInfo.email || !contactInfo.phone) ? '#d1d5db' : '#002C56',
                       color: 'white',
                       border: 'none',
                       borderRadius: '0.5rem',
@@ -642,7 +642,7 @@ export default function BookingPage() {
                       style={{
                         width: '100%',
                         padding: '1rem',
-                        backgroundColor: isCreating ? '#d1d5db' : '#FF5A5F',
+                        backgroundColor: isCreating ? '#d1d5db' : '#002C56',
                         color: 'white',
                         border: 'none',
                         borderRadius: '0.5rem',
@@ -762,7 +762,7 @@ export default function BookingPage() {
                       onClick={() => router.push('/search')}
                       style={{
                         padding: '0.75rem 1.5rem',
-                        backgroundColor: '#FF5A5F',
+                        backgroundColor: '#002C56',
                         color: 'white',
                         border: 'none',
                         borderRadius: '0.5rem',

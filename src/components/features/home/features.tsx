@@ -45,7 +45,7 @@ export function Features() {
       value: '全台 20+',
       subtitle: '個城市',
       description: '覆蓋台灣主要旅遊景點',
-      color: 'text-[#FF5A5F]'
+      color: 'text-[#002C56]'
     },
     {
       icon: Users,

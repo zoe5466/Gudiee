@@ -226,7 +226,7 @@ export default function ProfilePage() {
                   <div className="flex items-center gap-2 mt-3">
                     <span className={`px-3 py-1 rounded-full text-xs font-medium ${
                       user.role === 'guide' 
-                        ? 'bg-[#FF5A5F] text-white' 
+                        ? 'bg-[#002C56] text-white' 
                         : 'bg-blue-100 text-blue-800'
                     }`}>
                       {user.role === 'guide' ? '地陪' : '旅客'}

@@ -115,7 +115,7 @@ export function UserMenu() {
             console.log('Register button clicked'); // 調試日誌
             router.push('/auth/register');
           }}
-          className="text-sm font-medium bg-[#FF5A5F] text-white hover:bg-[#E1464A] px-4 py-2 rounded-full transition-colors cursor-pointer"
+          className="text-sm font-medium bg-[#002C56] text-white hover:bg-[#001f3f] px-4 py-2 rounded-full transition-colors cursor-pointer"
           style={{ pointerEvents: 'auto', zIndex: 10 }}
         >
           註冊

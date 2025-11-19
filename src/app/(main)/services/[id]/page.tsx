@@ -280,7 +280,7 @@ export default function ServiceDetailPage({ params }: { params: { id: string } }
             onClick={() => router.push('/search')}
             style={{
               padding: '0.75rem 1.5rem',
-              backgroundColor: '#FF5A5F',
+              backgroundColor: '#002C56',
               color: 'white',
               borderRadius: '0.5rem',
               border: 'none',
@@ -576,7 +576,7 @@ export default function ServiceDetailPage({ params }: { params: { id: string } }
                         <div style={{ 
                           width: '0.5rem', 
                           height: '0.5rem', 
-                          backgroundColor: '#FF5A5F', 
+                          backgroundColor: '#002C56', 
                           borderRadius: '50%' 
                         }}></div>
                         <span style={{ color: '#374151' }}>{highlight}</span>
@@ -676,7 +676,7 @@ export default function ServiceDetailPage({ params }: { params: { id: string } }
                         style={{
                           width: '100%',
                           padding: '1rem',
-                          backgroundColor: service?.isAvailable ? '#FF5A5F' : '#d1d5db',
+                          backgroundColor: service?.isAvailable ? '#002C56' : '#d1d5db',
                           color: 'white',
                           border: 'none',
                           borderRadius: '0.5rem',
@@ -727,11 +727,11 @@ export default function ServiceDetailPage({ params }: { params: { id: string } }
                       color: '#6b7280' 
                     }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                        <Shield style={{ width: '1rem', height: '1rem', color: '#FF5A5F' }} />
+                        <Shield style={{ width: '1rem', height: '1rem', color: '#002C56' }} />
                         <span>安全保障</span>
                       </div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                        <Award style={{ width: '1rem', height: '1rem', color: '#FF5A5F' }} />
+                        <Award style={{ width: '1rem', height: '1rem', color: '#002C56' }} />
                         <span>品質保證</span>
                       </div>
                     </div>

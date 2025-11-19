@@ -53,7 +53,7 @@ export function HomePageLayout({ children }: HomePageLayoutProps) {
                   className="object-contain"
                 />
               </div>
-              <span className="ml-2 text-2xl font-bold text-[#2C4A7C] hidden sm:inline">Guidee</span>
+              <span className="ml-2 text-2xl font-bold text-[#002C56] hidden sm:inline">Guidee</span>
             </div>
 
             {/* Center Search (when scrolled) */}
@@ -68,7 +68,7 @@ export function HomePageLayout({ children }: HomePageLayoutProps) {
             <div className="flex items-center space-x-4">
               <button 
                 onClick={() => router.push('/favorites')}
-                className="hidden md:flex items-center text-gray-700 hover:text-[#FF5A5F] transition-colors"
+                className="hidden md:flex items-center text-gray-700 hover:text-[#002C56] transition-colors"
               >
                 <Heart className="w-5 h-5 mr-1" />
                 <span className="text-sm">收藏</span>
@@ -76,13 +76,13 @@ export function HomePageLayout({ children }: HomePageLayoutProps) {
               
               <button 
                 onClick={() => router.push('/history')}
-                className="hidden md:flex items-center text-gray-700 hover:text-[#FF5A5F] transition-colors"
+                className="hidden md:flex items-center text-gray-700 hover:text-[#002C56] transition-colors"
               >
                 <MessageCircle className="w-5 h-5 mr-1" />
                 <span className="text-sm">訂單</span>
               </button>
 
-              <button className="text-gray-700 hover:text-[#FF5A5F] transition-colors">
+              <button className="text-gray-700 hover:text-[#002C56] transition-colors">
                 <Globe className="w-5 h-5" />
               </button>
 
@@ -91,7 +91,7 @@ export function HomePageLayout({ children }: HomePageLayoutProps) {
                 className="flex items-center bg-gray-100 hover:bg-gray-200 rounded-full p-2 transition-colors"
               >
                 <Menu className="w-4 h-4 text-gray-600 mr-2" />
-                <div className="w-6 h-6 bg-[#FF5A5F] rounded-full flex items-center justify-center">
+                <div className="w-6 h-6 bg-[#002C56] rounded-full flex items-center justify-center">
                   <User className="w-3 h-3 text-white" />
                 </div>
               </button>

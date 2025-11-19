@@ -225,7 +225,7 @@ export default function KYCPage() {
       <div className="container max-w-4xl">
         <div className="bg-white rounded-xl shadow-sm overflow-hidden">
           {/* Header */}
-          <div className="bg-gradient-to-r from-[#FF5A5F] to-[#E1464A] px-6 py-8">
+          <div className="bg-gradient-to-r from-[#002C56] to-[#001f3f] px-6 py-8">
             <h1 className="text-3xl font-bold text-white">身分驗證 (KYC)</h1>
             <p className="text-red-100 mt-2">
               為了確保平台安全，請完成身分驗證程序
@@ -240,7 +240,7 @@ export default function KYCPage() {
             </div>
             <div className="w-full bg-gray-200 rounded-full h-2">
               <div 
-                className="bg-[#FF5A5F] h-2 rounded-full transition-all duration-300"
+                className="bg-[#002C56] h-2 rounded-full transition-all duration-300"
                 style={{ width: getProgressWidth() }}
               ></div>
             </div>

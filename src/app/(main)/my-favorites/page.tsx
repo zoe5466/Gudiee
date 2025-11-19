@@ -188,7 +188,7 @@ export default function MyFavoritesPage() {
                 placeholder="搜尋收藏的服務..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FF5A5F] focus:border-[#FF5A5F]"
+                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#002C56] focus:border-[#002C56]"
               />
             </div>
 
@@ -197,7 +197,7 @@ export default function MyFavoritesPage() {
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#FF5A5F] focus:border-[#FF5A5F]"
+                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#002C56] focus:border-[#002C56]"
               >
                 <option value="all">所有分類</option>
                 <option value="歷史文化">歷史文化</option>
@@ -289,7 +289,7 @@ export default function MyFavoritesPage() {
                 {/* 服務資訊 */}
                 <div className="p-4 flex-1">
                   <h3 
-                    className="text-lg font-semibold text-gray-900 mb-2 cursor-pointer hover:text-[#FF5A5F] transition-colors"
+                    className="text-lg font-semibold text-gray-900 mb-2 cursor-pointer hover:text-[#002C56] transition-colors"
                     onClick={() => router.push(`/services/${item.serviceId}`)}
                   >
                     {item.title}
