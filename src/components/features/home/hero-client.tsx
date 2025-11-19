@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import Image from 'next/image'
 import { Search, MapPin, Calendar, Users, ChevronDown, Globe, LogIn, UserPlus } from 'lucide-react'
 import { DatePicker } from '@/components/ui/date-picker'
 import { useAuth } from '@/store/auth'
@@ -97,16 +98,26 @@ export function HeroClient() {
         }}
       >
         {/* Logo */}
-        <div 
+        <div
           style={{
-            fontSize: '1.5rem',
-            fontWeight: '700',
-            color: '#2563eb',
-            cursor: 'pointer'
+            cursor: 'pointer',
+            height: '48px',
+            display: 'flex',
+            alignItems: 'center'
           }}
           onClick={() => router.push('/')}
         >
-          Guidee
+          <Image
+            src="/logo-navbar.png"
+            alt="Guidee Logo"
+            width={216}
+            height={86}
+            style={{
+              height: '48px',
+              width: 'auto',
+              objectFit: 'contain'
+            }}
+          />
         </div>
 
         {/* 右側按鈕組 */}
