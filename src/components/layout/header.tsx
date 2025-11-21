@@ -50,12 +50,12 @@ export function Header() {
       <div className="relative">
         {/* 主要頭部區域 */}
         <div className="px-4 sm:px-6 lg:px-10 xl:px-20">
-          <div className="flex items-center justify-between h-16 sm:h-20">
+          <div className="flex items-center justify-between h-24 sm:h-32">
             {/* 品牌 Logo 區域 */}
             <Link href="/" className="flex items-center hover:opacity-80 transition-opacity">
               <div className="flex items-center">
                 {/* Logo 導航欄版本（圖標 + 文字） */}
-                <div className="h-16 sm:h-20 flex items-center justify-center flex-shrink-0">
+                <div className="h-24 sm:h-32 flex items-center justify-center flex-shrink-0">
                   <Image
                     src="/logo-navbar.png"
                     alt="Guidee Logo"

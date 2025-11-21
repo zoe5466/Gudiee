@@ -113,7 +113,7 @@ export function HeroClient() {
             width={450}
             height={450}
             style={{
-              height: '48px',
+              height: '100px',
               width: 'auto',
               objectFit: 'contain'
             }}

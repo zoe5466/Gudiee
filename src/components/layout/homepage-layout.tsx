@@ -43,7 +43,7 @@ export function HomePageLayout({ children }: HomePageLayoutProps) {
               className="flex items-center cursor-pointer hover:opacity-80 transition-opacity"
               onClick={() => router.push('/')}
             >
-              <div className="h-16 flex items-center justify-center flex-shrink-0">
+              <div className="h-24 flex items-center justify-center flex-shrink-0">
                 <Image
                   src="/logo-navbar.png"
                   alt="Guidee Logo"
