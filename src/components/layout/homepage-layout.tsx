@@ -47,7 +47,7 @@ export function HomePageLayout({ children }: HomePageLayoutProps) {
                 <Image
                   src="/logo-navbar.png"
                   alt="Guidee Logo"
-                  width={216}
+                  width={86}
                   height={86}
                   priority
                   className="object-contain h-full w-auto"

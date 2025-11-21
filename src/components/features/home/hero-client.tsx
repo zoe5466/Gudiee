@@ -110,7 +110,7 @@ export function HeroClient() {
           <Image
             src="/logo-navbar.png"
             alt="Guidee Logo"
-            width={216}
+            width={86}
             height={86}
             style={{
               height: '48px',
