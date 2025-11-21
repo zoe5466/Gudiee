@@ -59,8 +59,8 @@ export function Header() {
                   <Image
                     src="/logo-navbar.png"
                     alt="Guidee Logo"
-                    width={150}
-                    height={100}
+                    width={200}
+                    height={200}
                     priority
                     className="object-contain h-full w-auto"
                   />
