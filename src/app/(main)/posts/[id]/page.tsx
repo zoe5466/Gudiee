@@ -70,7 +70,10 @@ export default async function PostPage({ params }: PostPageProps) {
           title={post.title}
           content={post.content}
           coverImage={post.coverImage || undefined}
-          author={post.author}
+          author={{
+            ...post.author,
+            avatar: post.author.avatar || undefined,
+          }}
           category={post.category}
           tags={post.tags}
           location={post.location || undefined}
