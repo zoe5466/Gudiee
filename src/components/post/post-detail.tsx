@@ -236,7 +236,7 @@ export function PostDetail({
 
                   {embed.customText && (
                     <p className="text-gray-700 text-sm mt-4 p-3 bg-gray-50 rounded italic">
-                      "{embed.customText}"
+                      &quot;{embed.customText}&quot;
                     </p>
                   )}
 
