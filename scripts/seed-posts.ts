@@ -248,10 +248,14 @@ async function main() {
     const createdPosts = await Promise.all(
       mockPosts.map((post, index) => {
         const author = users[index % users.length]!
+        // 根據用戶角色決定 authorType
+        const authorType = author.role === 'GUIDE' ? 'guide' : 'consumer'
+
         return prisma.post.create({
           data: {
             ...post,
             authorId: author.id,
+            authorType, // 添加 authorType
             publishedAt: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000), // 隨機過去30天
             isPublished: true,
             status: 'published',

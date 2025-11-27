@@ -231,6 +231,7 @@ async function seedPosts() {
         body: JSON.stringify({
           ...post,
           status: 'published',
+          authorType: 'guide', // API 需要此字段
         }),
       })
 
