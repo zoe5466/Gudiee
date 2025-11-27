@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import { Menu, X, User, MessageCircle, CheckSquare, Heart, Home, Search, ShoppingBag, FileText } from 'lucide-react';
+import { Menu, X, User, MessageCircle, CheckSquare, Heart, Home, Search, ShoppingBag, FileText, Newspaper } from 'lucide-react';
 import { useAuth } from '@/store/auth';
 
 export function HomeSidebar() {
@@ -10,7 +10,7 @@ export function HomeSidebar() {
   const router = useRouter();
   const pathname = usePathname();
   const { isAuthenticated } = useAuth();
-  
+
   // 檢查是否為首頁
   const isHomePage = pathname === '/';
 
@@ -19,7 +19,13 @@ export function HomeSidebar() {
       icon: <Home className="w-5 h-5" />,
       label: '首頁',
       path: '/',
-      description: '回到首頁搜尋服務'
+      description: '探索精彩的旅遊故事'
+    },
+    {
+      icon: <Newspaper className="w-5 h-5" />,
+      label: '貼文',
+      path: '/feed',
+      description: '查看更多地陪和旅客的貼文'
     },
     {
       icon: <Search className="w-5 h-5" />,
