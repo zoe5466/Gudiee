@@ -54,6 +54,7 @@ export function PostDetail({
   const [isLiked, setIsLiked] = useState(false)
   const [isBookmarked, setIsBookmarked] = useState(false)
   const [currentLikeCount, setCurrentLikeCount] = useState(likeCount)
+  const [error, setError] = useState<string | null>(null)
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('zh-TW', {
@@ -67,36 +68,52 @@ export function PostDetail({
 
   const handleLike = async () => {
     try {
+      setError(null)
       const response = await fetch(`/api/posts/${id}/likes`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ likeType: 'like' }),
       })
 
+      if (response.status === 401) {
+        setError('請先登入以讚好貼文')
+        return
+      }
+
       if (response.ok) {
         const { data } = await response.json()
         setIsLiked(data.isLiked)
         setCurrentLikeCount((prev) => (data.isLiked ? prev + 1 : prev - 1))
+      } else {
+        setError('無法讚好貼文，請稍後重試')
       }
     } catch (err) {
-      console.error('Like error:', err)
+      setError(err instanceof Error ? err.message : 'Error liking post')
     }
   }
 
   const handleBookmark = async () => {
     try {
+      setError(null)
       const response = await fetch(`/api/posts/${id}/likes`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ likeType: 'bookmark' }),
       })
 
+      if (response.status === 401) {
+        setError('請先登入以收藏貼文')
+        return
+      }
+
       if (response.ok) {
         const { data } = await response.json()
         setIsBookmarked(data.isLiked)
+      } else {
+        setError('無法收藏貼文，請稍後重試')
       }
     } catch (err) {
-      console.error('Bookmark error:', err)
+      setError(err instanceof Error ? err.message : 'Error bookmarking post')
     }
   }
 
@@ -116,6 +133,13 @@ export function PostDetail({
       )}
 
       <div className="p-8">
+        {/* 錯誤提示 */}
+        {error && (
+          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
+            {error}
+          </div>
+        )}
+
         {/* 標題 */}
         <h1 className="text-4xl font-bold mb-4 text-gray-900">{title}</h1>
 

@@ -95,6 +95,13 @@ export function PostFeed({
     fetchPosts(1, true)
   }, [fetchPosts])
 
+  // 搜尋查詢改變時重新查詢
+  useEffect(() => {
+    if (searchQuery.trim()) {
+      fetchPosts(1, true)
+    }
+  }, [searchQuery])
+
   // 加載更多
   const loadMore = () => {
     if (!loading && hasMore) {
@@ -111,6 +118,11 @@ export function PostFeed({
         body: JSON.stringify({ likeType: 'like' }),
       })
 
+      if (response.status === 401) {
+        setError('請先登入以讚好貼文')
+        return
+      }
+
       if (!response.ok) throw new Error('Failed to like post')
 
       const { data } = await response.json()
@@ -125,7 +137,7 @@ export function PostFeed({
         })
       }
     } catch (err) {
-      console.error('Like error:', err)
+      setError(err instanceof Error ? err.message : 'Error liking post')
     }
   }
 
@@ -137,6 +149,11 @@ export function PostFeed({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ likeType: 'bookmark' }),
       })
+
+      if (response.status === 401) {
+        setError('請先登入以收藏貼文')
+        return
+      }
 
       if (!response.ok) throw new Error('Failed to bookmark post')
 
@@ -152,6 +169,7 @@ export function PostFeed({
         })
       }
     } catch (err) {
+      setError(err instanceof Error ? err.message : 'Error bookmarking post')
       console.error('Bookmark error:', err)
     }
   }
