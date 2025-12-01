@@ -8,8 +8,7 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-  // Required for some cloud databases like Vercel Postgres or Supabase
-  // directUrl  = env("DIRECT_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 // 用戶相關模型
