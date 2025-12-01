@@ -6,9 +6,13 @@ import { User } from '@prisma/client';
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
+// Ensure JWT_SECRET is set at runtime
 if (!JWT_SECRET) {
   throw new Error('JWT_SECRET environment variable is not set');
 }
+
+// Type assertion - we've already checked it exists above
+const VALIDATED_JWT_SECRET: string = JWT_SECRET;
 
 export interface JWTPayload {
   userId: string;
@@ -33,14 +37,14 @@ export function generateToken(user: User): string {
     email: user.email,
     role: user.role
   };
-  
-  return jwt.sign(payload, JWT_SECRET, { expiresIn: '7d' });
+
+  return jwt.sign(payload, VALIDATED_JWT_SECRET, { expiresIn: '7d' });
 }
 
 // 驗證 JWT Token
 export function verifyToken(token: string): JWTPayload | null {
   try {
-    return jwt.verify(token, JWT_SECRET) as JWTPayload;
+    return jwt.verify(token, VALIDATED_JWT_SECRET) as JWTPayload;
   } catch (error) {
     return null;
   }
