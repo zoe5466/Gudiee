@@ -3,6 +3,16 @@ import jwt from 'jsonwebtoken';
 
 export async function POST(request: NextRequest) {
   try {
+    const jwtSecret = process.env.JWT_SECRET;
+    const jwtRefreshSecret = process.env.JWT_REFRESH_SECRET;
+
+    if (!jwtSecret || !jwtRefreshSecret) {
+      return NextResponse.json(
+        { error: '伺服器設定錯誤' },
+        { status: 500 }
+      );
+    }
+
     const body = await request.json();
     const { refreshToken } = body;
 
@@ -14,25 +24,21 @@ export async function POST(request: NextRequest) {
     }
 
     // 驗證 refresh token
-    const decoded = jwt.verify(
-      refreshToken, 
-      process.env.JWT_REFRESH_SECRET || 'fallback-refresh-secret'
-    ) as any;
+    const decoded = jwt.verify(refreshToken, jwtRefreshSecret) as any;
 
     // 生成新的 access token
     const newToken = jwt.sign(
-      { 
+      {
         userId: decoded.userId,
-        // 注意：這裡可能需要從數據庫重新獲取用戶信息
       },
-      process.env.JWT_SECRET || 'fallback-secret',
+      jwtSecret,
       { expiresIn: '24h' }
     );
 
     // 生成新的 refresh token
     const newRefreshToken = jwt.sign(
       { userId: decoded.userId },
-      process.env.JWT_REFRESH_SECRET || 'fallback-refresh-secret',
+      jwtRefreshSecret,
       { expiresIn: '7d' }
     );
 
@@ -42,7 +48,6 @@ export async function POST(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error('Token refresh error:', error);
     return NextResponse.json(
       { error: 'Token 無效或已過期' },
       { status: 401 }

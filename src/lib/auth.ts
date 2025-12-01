@@ -4,7 +4,11 @@ import { cookies } from 'next/headers';
 import { prisma } from './prisma';
 import { User } from '@prisma/client';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your-fallback-secret';
+const JWT_SECRET = process.env.JWT_SECRET;
+
+if (!JWT_SECRET) {
+  throw new Error('JWT_SECRET environment variable is not set');
+}
 
 export interface JWTPayload {
   userId: string;
@@ -66,7 +70,6 @@ export async function getCurrentUser(): Promise<User | null> {
     
     return user;
   } catch (error) {
-    console.error('Error getting current user:', error);
     return null;
   }
 }

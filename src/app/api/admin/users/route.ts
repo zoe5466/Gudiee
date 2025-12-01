@@ -5,14 +5,13 @@ import { createApiResponse } from '@/lib/api-response'
 
 export async function GET(request: NextRequest) {
   try {
-    // 暫時跳過認證檢查來讓用戶能看到功能
-    // const user = await getCurrentUser()
-    // if (!user || (user.role !== 'GUIDE')) {
-    //   return NextResponse.json(
-    //     createApiResponse(null, false, '無權限訪問', 'UNAUTHORIZED'),
-    //     { status: 403 }
-    //   )
-    // }
+    const user = await getCurrentUser()
+    if (!user || user.role !== 'ADMIN') {
+      return NextResponse.json(
+        createApiResponse(null, false, '無權限訪問', 'UNAUTHORIZED'),
+        { status: 403 }
+      )
+    }
 
     // 獲取所有用戶資料
     const users = await prisma.user.findMany({

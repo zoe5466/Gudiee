@@ -24,27 +24,30 @@ export async function POST(request: NextRequest) {
     });
 
     // 檢查用戶是否存在且為管理員
-    if (!user || (user.role !== 'GUIDE')) {
-      console.log('Admin login failed - user not found or not admin:', { email, userRole: user?.role });
+    if (!user || user.role !== 'ADMIN') {
       return errorResponse('無效的管理員憑證', 401);
     }
 
     // 驗證密碼
     const isValidPassword = await bcrypt.compare(password, user.passwordHash);
     if (!isValidPassword) {
-      console.log('Admin login failed - invalid password for user:', email);
       return errorResponse('無效的管理員憑證', 401);
     }
 
     // 生成 JWT token
+    const jwtSecret = process.env.JWT_SECRET;
+    if (!jwtSecret) {
+      return errorResponse('伺服器設定錯誤', 500);
+    }
+
     const token = jwt.sign(
-      { 
-        userId: user.id, 
-        email: user.email, 
+      {
+        userId: user.id,
+        email: user.email,
         role: user.role,
         isAdmin: true
       },
-      process.env.JWT_SECRET || 'your-secret-key',
+      jwtSecret,
       { expiresIn: '24h' }
     );
 
@@ -52,8 +55,6 @@ export async function POST(request: NextRequest) {
 
     // 準備返回的用戶數據（不包含密碼）
     const { passwordHash, ...userWithoutPassword } = user;
-
-    console.log('Admin login successful:', { email, userId: user.id, role: user.role });
 
     // 創建響應並設置 HTTP-only cookie
     const response = successResponse({
@@ -74,7 +75,6 @@ export async function POST(request: NextRequest) {
     return response;
 
   } catch (error) {
-    console.error('Admin login error:', error);
     return errorResponse('登入失敗，請稍後重試', 500);
   }
 }

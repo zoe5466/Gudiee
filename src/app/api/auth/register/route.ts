@@ -1,14 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 export async function POST(request: NextRequest) {
   try {
-    console.log('Register API called');
-    
     const body = await request.json();
     const { email, password, name, phone, userType = 'customer', subscribeNewsletter = false } = body;
-
-    console.log('Registration attempt for:', email);
 
     // 驗證必填欄位
     if (!email || !password || !name) {
@@ -67,16 +64,23 @@ export async function POST(request: NextRequest) {
     });
 
     // 生成 token
-    const token = btoa(JSON.stringify({
+    const jwtSecret = process.env.JWT_SECRET;
+    if (!jwtSecret) {
+      return NextResponse.json({
+        success: false,
+        error: '伺服器設定錯誤'
+      }, { status: 500 });
+    }
+
+    const token = jwt.sign({
       id: newUser.id,
       email: newUser.email,
       name: newUser.name,
       role: newUser.role,
       phone: newUser.phone,
       isKYCVerified: newUser.isKycVerified,
-      isCriminalRecordVerified: newUser.isCriminalRecordVerified,
-      exp: Date.now() + (7 * 24 * 60 * 60 * 1000)
-    }));
+      isCriminalRecordVerified: newUser.isCriminalRecordVerified
+    }, jwtSecret, { expiresIn: '7d' });
 
     // 準備回應資料（移除密碼）
     const { passwordHash, ...userWithoutPassword } = newUser;
@@ -97,10 +101,6 @@ export async function POST(request: NextRequest) {
       sameSite: 'lax',
       maxAge: 7 * 24 * 60 * 60
     });
-
-    console.log('Registration successful for:', email);
-    console.log('Generated user:', newUser);
-    console.log('Generated token:', token);
 
     return response;
 

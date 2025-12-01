@@ -2,29 +2,33 @@ import { NextRequest } from 'next/server';
 import { cookies } from 'next/headers';
 import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 
-// 簡化的 JWT 生成
+// JWT 生成函數
 function generateToken(user: any): string {
-  // 臨時簡化：返回一個包含用戶資訊的字串
-  return btoa(JSON.stringify({
-    id: user.id,
-    email: user.email,
-    name: user.name,
-    role: user.role,
-    isKYCVerified: user.isKycVerified,
-    isCriminalRecordVerified: user.isCriminalRecordVerified,
-    exp: Date.now() + (7 * 24 * 60 * 60 * 1000) // 7天後過期
-  }));
+  const jwtSecret = process.env.JWT_SECRET;
+  if (!jwtSecret) {
+    throw new Error('JWT_SECRET is not set');
+  }
+
+  return jwt.sign(
+    {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      role: user.role,
+      isKYCVerified: user.isKycVerified,
+      isCriminalRecordVerified: user.isCriminalRecordVerified
+    },
+    jwtSecret,
+    { expiresIn: '7d' }
+  );
 }
 
 export async function POST(request: NextRequest) {
   try {
-    console.log('Login API called');
-    
     const body = await request.json();
     const { email, password } = body;
-
-    console.log('Login attempt for:', email);
 
     // 驗證必填欄位
     if (!email || !password) {
@@ -43,7 +47,6 @@ export async function POST(request: NextRequest) {
     });
     
     if (!user) {
-      console.log('User not found:', email);
       return Response.json({
         success: false,
         error: 'Email 或密碼錯誤'
@@ -53,7 +56,6 @@ export async function POST(request: NextRequest) {
     // 驗證密碼
     const isValidPassword = await bcrypt.compare(password, user.passwordHash);
     if (!isValidPassword) {
-      console.log('Invalid password for:', email);
       return Response.json({
         success: false,
         error: 'Email 或密碼錯誤'
@@ -74,8 +76,6 @@ export async function POST(request: NextRequest) {
 
     // 準備回應資料（移除密碼）
     const { passwordHash, ...userWithoutPassword } = user;
-
-    console.log('Login successful for:', email);
 
     return Response.json({
       success: true,
