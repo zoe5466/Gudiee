@@ -2,7 +2,7 @@
 // 功能：處理服務預訂流程，包含預訂詳情確認、聯絡資訊填寫、付款處理等
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { ChevronLeft, Calendar, Users, Clock, MapPin, CreditCard, Shield, Check, AlertCircle } from 'lucide-react';
 import { useOrder } from '@/store/order';
@@ -16,7 +16,7 @@ type BookingStep = 'details' | 'payment' | 'confirmation';
 
 /**
  * 預訂頁面主組件
- * 
+ *
  * 功能：
  * - 用戶身份驗證檢查
  * - 顯示預訂服務詳情
@@ -25,7 +25,7 @@ type BookingStep = 'details' | 'payment' | 'confirmation';
  * - 整合付款流程
  * - 預訂確認和創建
  */
-export default function BookingPage() {
+function BookingPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { isAuthenticated, user } = useAuth();
@@ -874,4 +874,12 @@ export default function BookingPage() {
       </div>
     </div>
   )
+}
+
+export default function BookingPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <BookingPageContent />
+    </Suspense>
+  );
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { CheckCircle, Calendar, Clock, Users, MapPin, Phone, Mail, CreditCard, ArrowLeft, Download, Share2, MessageSquare } from 'lucide-react';
 import { useAuth } from '@/store/auth';
@@ -31,7 +31,7 @@ interface BookingDetails {
   };
 }
 
-export default function BookingConfirmationPage() {
+function BookingConfirmationContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { user } = useAuth();
@@ -705,5 +705,13 @@ export default function BookingConfirmationPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function BookingConfirmationPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <BookingConfirmationContent />
+    </Suspense>
   );
 }

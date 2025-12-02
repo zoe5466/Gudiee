@@ -2,7 +2,7 @@
 // 功能：顯示服務搜尋結果、提供篩選和排序、支援格子檢視和地圖檢視、智能推薦等
 'use client';
 
-import { useState, useEffect, useCallback } from 'react'; // React Hooks
+import { useState, useEffect, useCallback, Suspense } from 'react'; // React Hooks
 import { useRouter, useSearchParams } from 'next/navigation'; // Next.js 路由和查詢參數
 import { Search, MapPin, Filter, Star, Clock, Users, Heart, Loader2, SlidersHorizontal, Map, Grid3X3, Sparkles, TrendingUp } from 'lucide-react'; // 圖標組件
 import { Button } from '@/components/ui/button'; // 按鈕組件
@@ -205,7 +205,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
 
 /**
  * 搜尋結果頁面主組件
- * 
+ *
  * 功能：
  * - 顯示搜尋結果列表或地圖檢視
  * - 提供篩選和排序功能
@@ -214,7 +214,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
  * - 分頁載入更多結果
  * - URL 參數管理
  */
-export default function SearchPage() {
+function SearchPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams(); // 從 URL 獲取查詢參數
   const { error } = useToast(); // 錯誤提示功能
@@ -1144,4 +1144,12 @@ export default function SearchPage() {
       <Footer />
     </div>
   )
+}
+
+export default function SearchPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <SearchPageContent />
+    </Suspense>
+  );
 } 
