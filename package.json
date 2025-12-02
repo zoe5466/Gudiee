@@ -17,7 +17,7 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "cross-env NEXT_TELEMETRY_DISABLED=1 DISABLE_FILE_TRACING=true prisma generate && cross-env NEXT_TELEMETRY_DISABLED=1 DISABLE_FILE_TRACING=true next build",
+    "build": "prisma generate && next build",
     "postbuild": "npx prisma db push --skip-generate || true",
     "start": "next start",
     "lint": "next lint",
