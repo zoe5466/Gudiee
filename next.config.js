@@ -19,11 +19,6 @@ const nextConfig = {
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
   },
 
-  // Disable static generation to avoid Next.js 14 build trace stack overflow
-  experimental: {
-    isrMemoryCacheSize: 0,
-  },
-
   headers: async () => {
     return [
       {

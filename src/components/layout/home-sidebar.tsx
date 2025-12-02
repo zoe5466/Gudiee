@@ -65,7 +65,11 @@ export function HomeSidebar() {
     }
   ];
 
-  const handleItemClick = (path: string) => {
+  const handleItemClick = (path: string, e?: React.MouseEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     if (!isAuthenticated) {
       router.push('/auth/login');
       return;
@@ -134,8 +138,8 @@ export function HomeSidebar() {
             {menuItems.map((item, index) => (
               <button
                 key={index}
-                onClick={() => handleItemClick(item.path)}
-                className="w-full flex items-start p-3 sm:p-4 rounded-lg hover:bg-[#cfdbe9] active:bg-gray-100 transition-colors duration-150 text-left group touch-manipulation"
+                onClick={(e) => handleItemClick(item.path, e)}
+                className="w-full flex items-start p-3 sm:p-4 rounded-lg hover:bg-[#cfdbe9] active:bg-gray-100 transition-colors duration-150 text-left group touch-manipulation cursor-pointer"
                 style={{ minHeight: '64px' }}
               >
                 <div className="flex-shrink-0 mt-0.5 text-gray-600 group-hover:text-blue-600 transition-colors">
@@ -160,8 +164,8 @@ export function HomeSidebar() {
               如果您有任何問題，請聯繫我們的客服團隊。
             </p>
             <button
-              onClick={() => handleItemClick('/support')}
-              className="text-xs font-medium text-blue-600 hover:text-blue-700"
+              onClick={(e) => handleItemClick('/support', e)}
+              className="text-xs font-medium text-blue-600 hover:text-blue-700 cursor-pointer"
             >
               聯繫客服 →
             </button>
