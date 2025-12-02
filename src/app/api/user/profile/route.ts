@@ -4,6 +4,8 @@ import { NextRequest } from 'next/server';
 import { cookies } from 'next/headers';
 import { successResponse, errorResponse, unauthorizedResponse } from '@/lib/api-response';
 
+export const dynamic = 'force-dynamic';
+
 // 用戶資料介面定義
 interface UserProfile {
   phone?: string;

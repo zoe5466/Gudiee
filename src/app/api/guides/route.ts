@@ -2,6 +2,8 @@ import { NextRequest } from 'next/server';
 import { guideStorage } from '@/lib/mock-guides';
 import { successResponse, errorResponse } from '@/lib/api-response';
 
+export const dynamic = 'force-dynamic';
+
 // GET /api/guides - 取得嚮導列表
 export async function GET(request: NextRequest) {
   try {

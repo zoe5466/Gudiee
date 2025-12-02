@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { emailService } from '@/lib/email';
 
+export const dynamic = 'force-dynamic';
+
 interface NotificationData {
   type: 'booking_confirmed' | 'new_message' | 'payment_success' | 'review_request' | 'guide_new_booking';
   userId: string;

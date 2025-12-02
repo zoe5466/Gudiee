@@ -4,6 +4,8 @@ import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
+export const dynamic = 'force-dynamic';
+
 // JWT 生成函數
 function generateToken(user: any): string {
   const jwtSecret = process.env.JWT_SECRET;

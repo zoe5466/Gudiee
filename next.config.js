@@ -20,7 +20,12 @@ const nextConfig = {
   },
 
   // Increase timeout for static page generation
-  staticPageGenerationTimeout: 120,
+  staticPageGenerationTimeout: 240,
+
+  // Configure redirects for dynamic routes
+  redirects: async () => {
+    return [];
+  },
 
   headers: async () => {
     return [

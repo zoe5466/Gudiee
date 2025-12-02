@@ -4,6 +4,8 @@
 import { NextRequest } from 'next/server';
 import { taskStorage } from '@/lib/mock-tasks';
 
+export const dynamic = 'force-dynamic';
+
 /**
  * GET /api/tasks - 獲取任務列表
  */

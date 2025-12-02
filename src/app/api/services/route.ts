@@ -2,6 +2,9 @@ import { NextRequest } from 'next/server';
 import { Decimal } from '@prisma/client/runtime/library';
 import { prisma } from '@/lib/prisma';
 import { getCurrentUser } from '@/lib/auth';
+
+export const dynamic = 'force-dynamic';
+
 import {
   successResponse,
   errorResponse,

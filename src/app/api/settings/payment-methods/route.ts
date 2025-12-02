@@ -2,6 +2,8 @@ import { NextRequest } from 'next/server';
 import { settingsStorage } from '@/lib/mock-settings';
 import { successResponse, errorResponse } from '@/lib/api-response';
 
+export const dynamic = 'force-dynamic';
+
 // GET /api/settings/payment-methods - 獲取付款方式
 export async function GET(request: NextRequest) {
   try {

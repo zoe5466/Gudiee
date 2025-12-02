@@ -3,6 +3,8 @@
 import { NextRequest } from 'next/server';
 import { serviceStorage } from '@/lib/mock-services';
 
+export const dynamic = 'force-dynamic';
+
 /**
  * GET /api/services/search - 服務搜尋和篩選 API
  * 

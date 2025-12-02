@@ -1,6 +1,8 @@
 import { NextRequest } from 'next/server';
 import { cookies } from 'next/headers';
 
+export const dynamic = 'force-dynamic';
+
 // 模擬用戶數據（與登入 API 保持一致）
 const mockUsers = [
   {

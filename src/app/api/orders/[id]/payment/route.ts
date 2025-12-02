@@ -3,6 +3,8 @@
 import { NextRequest } from 'next/server';
 import { cookies } from 'next/headers';
 import { OrderResponse } from '@/types/order';
+
+export const dynamic = 'force-dynamic';
 import { orderStorage } from '@/lib/mock-orders';
 import { notificationService } from '@/lib/notification-service';
 
