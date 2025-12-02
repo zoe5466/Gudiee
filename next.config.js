@@ -19,12 +19,10 @@ const nextConfig = {
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
   },
 
-  // Increase timeout for static page generation
-  staticPageGenerationTimeout: 240,
-
-  // Configure redirects for dynamic routes
-  redirects: async () => {
-    return [];
+  // Disable static generation to avoid Next.js 14 build trace stack overflow
+  experimental: {
+    isrMemoryCacheSize: 0,
+    preloadEntriesOnStart: false,
   },
 
   headers: async () => {
