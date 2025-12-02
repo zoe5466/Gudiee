@@ -1,34 +1,23 @@
-# Vercel deployment exclusions to prevent micromatch overflow
+# Vercel deployment exclusions
 
 # Development files
-*.backup
-*.tmp
-*.temp
 .vscode/
 .idea/
 .DS_Store
 
-# Large directories that could overwhelm micromatch
+# Large directories
 coverage/
 docs/
 tests/
 cypress/
-node_modules/.cache/
 
 # Log files
 *.log
 logs/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
 
 # Cache directories
 .cache/
 .parcel-cache/
-.next/cache/
-
-# Source maps in production
-*.map
 
 # Development configuration
 .env.development
@@ -44,12 +33,8 @@ yarn-error.log*
 typedoc/
 storybook-static/
 
-# Build artifacts that might cause issues
+# Build artifacts
 .turbo/
-*.tsbuildinfo
-
-# Scripts that might contain complex patterns
-scripts/deployment-doctor.js.broken
 
 # Large asset directories
 public/images/temp/
@@ -59,7 +44,3 @@ uploads/
 *.swp
 *.swo
 *~
-
-# OS generated files
-Thumbs.db
-ehthumbs.db
