@@ -2,6 +2,8 @@ import { ReactNode } from 'react'
 import { notFound } from 'next/navigation'
 import PostPageClient from './page-client'
 
+export const revalidate = 0  // Disable caching for post detail pages
+
 interface Post {
   id: string
   title: string

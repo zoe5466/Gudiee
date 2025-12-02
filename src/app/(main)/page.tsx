@@ -1,8 +1,8 @@
-'use client'
-
 import { PostFeed } from '@/components/post/post-feed'
 import Link from 'next/link'
 import { ArrowRight, Plus, Compass, Users, MapPin, Sparkles } from 'lucide-react'
+
+export const revalidate = 0  // Disable caching
 
 export default function HomePage() {
   return (
