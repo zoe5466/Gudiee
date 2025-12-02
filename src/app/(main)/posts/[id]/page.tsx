@@ -25,7 +25,14 @@ interface Post {
 
 async function getPost(id: string): Promise<Post | null> {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
+    // Build absolute URL for server-side fetch
+    let baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
+
+    // In Vercel deployment, use the deployment URL
+    if (process.env.VERCEL_URL && !process.env.NEXT_PUBLIC_APP_URL) {
+      baseUrl = `https://${process.env.VERCEL_URL}`
+    }
+
     const response = await fetch(`${baseUrl}/api/posts/${id}`, {
       cache: 'no-store',
     })
