@@ -17,7 +17,7 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "prisma generate && NEXT_SKIP_BUILD_TRACES=1 next build",
+    "build": "prisma generate && next build",
     "postbuild": "echo 'Skipping database migration in build phase' || true",
     "start": "next start",
     "lint": "next lint",
