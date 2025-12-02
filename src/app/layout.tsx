@@ -6,9 +6,6 @@ import { Providers } from '@/components/providers'
 import { Toaster } from '@/components/ui/toaster'
 import { DualLayout } from '@/components/layout/dual-layout'
 
-// Force dynamic rendering to prevent static generation issues in Vercel
-export const dynamic = 'force-dynamic'
-
 const inter = Inter({
   subsets: ['latin'],
   variable: '--font-inter',
