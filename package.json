@@ -18,7 +18,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "prisma generate && NEXT_SKIP_BUILD_TRACES=1 next build",
-    "postbuild": "npx prisma db push --skip-generate || true",
+    "postbuild": "echo 'Skipping database migration in build phase' || true",
     "start": "next start",
     "lint": "next lint",
     "lint:fix": "next lint --fix",
