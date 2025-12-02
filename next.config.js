@@ -22,7 +22,6 @@ const nextConfig = {
   // Disable static generation to avoid Next.js 14 build trace stack overflow
   experimental: {
     isrMemoryCacheSize: 0,
-    preloadEntriesOnStart: false,
   },
 
   headers: async () => {

@@ -17,7 +17,7 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "prisma generate && next build",
+    "build": "prisma generate && NEXT_SKIP_BUILD_TRACES=1 next build",
     "postbuild": "npx prisma db push --skip-generate || true",
     "start": "next start",
     "lint": "next lint",
