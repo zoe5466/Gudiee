@@ -48,6 +48,8 @@ export function PostCard({
   isBookmarked = false,
 }: PostCardProps) {
   const [hovering, setHovering] = useState(false)
+  const [imageLoading, setImageLoading] = useState(true)
+  const [imageError, setImageError] = useState(false)
 
   return (
     <Link href={`/posts/${id}`}>
@@ -69,10 +71,17 @@ export function PostCard({
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
               className={`object-cover transition-transform duration-500 ${
                 hovering ? 'scale-105' : 'scale-100'
-              }`}
+              } ${imageLoading ? 'opacity-0' : 'opacity-100'}`}
               priority={false}
               loading="lazy"
+              onLoadingComplete={() => setImageLoading(false)}
+              onError={() => setImageError(true)}
             />
+
+            {/* Loading skeleton */}
+            {imageLoading && (
+              <div className="absolute inset-0 bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 animate-pulse" />
+            )}
 
             {/* 分類徽章 - 左上角 */}
             <div className="absolute top-2 left-2 z-10">
