@@ -48,140 +48,122 @@ export function PostCard({
   isBookmarked = false,
 }: PostCardProps) {
   const [hovering, setHovering] = useState(false)
-  const [showOverlay, setShowOverlay] = useState(false)
-
-  // 格式化日期
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString)
-    const now = new Date()
-    const diffHours = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60))
-
-    if (diffHours < 1) return '剛剛'
-    if (diffHours < 24) return `${diffHours}小時前`
-    if (diffHours < 168) return `${Math.floor(diffHours / 24)}天前`
-
-    return date.toLocaleDateString('zh-TW')
-  }
 
   return (
     <Link href={`/posts/${id}`}>
       <div
-        className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer border border-gray-100 break-inside-avoid"
-        onMouseEnter={() => {
-          setHovering(true)
-          setShowOverlay(true)
-        }}
-        onMouseLeave={() => {
-          setHovering(false)
-          setShowOverlay(false)
-        }}
+        className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer border border-gray-100 break-inside-avoid"
+        onMouseEnter={() => setHovering(true)}
+        onMouseLeave={() => setHovering(false)}
       >
-        {/* 封面圖片區 - 占主要空間 */}
+        {/* 封面圖片區 - 占 75% 的空間 */}
         {coverImage && (
-          <div className="relative w-full bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden" style={{ aspectRatio: '3/4' }}>
+          <div
+            className="relative w-full overflow-hidden bg-gradient-to-br from-gray-200 to-gray-300"
+            style={{ aspectRatio: '3/4' }}
+          >
             <Image
               src={coverImage}
               alt={title}
               fill
-              className={`object-cover transition-transform duration-500 ${hovering ? 'scale-110' : 'scale-100'}`}
+              className={`object-cover transition-transform duration-500 ${
+                hovering ? 'scale-105' : 'scale-100'
+              }`}
               priority
             />
 
-            {/* 分類徽章 */}
-            <div className="absolute top-3 left-3">
-              <span className="inline-block bg-[#002C56] text-white px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide">
+            {/* 分類徽章 - 左上角 */}
+            <div className="absolute top-2 left-2 z-10">
+              <span className="inline-block bg-[#002C56]/90 backdrop-blur-sm text-white px-2 py-1 rounded-full text-xs font-bold">
                 {category}
               </span>
             </div>
 
-            {/* 懸停時的疊加層 - 更新的互動設計 */}
-            {showOverlay && (
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex flex-col justify-between p-4 opacity-100 transition-opacity">
-                {/* 頂部：互動按鈕 */}
-                <div className="flex justify-end gap-2">
-                  <button
-                    onClick={(e) => {
-                      e.preventDefault()
-                      onBookmark?.(id)
-                    }}
-                    className={`p-2 rounded-full backdrop-blur-sm transition-all ${
-                      isBookmarked
-                        ? 'bg-yellow-400/90 text-white'
-                        : 'bg-white/20 text-white hover:bg-white/40'
-                    }`}
-                  >
-                    <Bookmark size={20} fill={isBookmarked ? 'currentColor' : 'none'} />
-                  </button>
-                  <button
-                    onClick={(e) => {
-                      e.preventDefault()
-                      onLike?.(id)
-                    }}
-                    className={`p-2 rounded-full backdrop-blur-sm transition-all ${
-                      isLiked
-                        ? 'bg-red-500/90 text-white'
-                        : 'bg-white/20 text-white hover:bg-white/40'
-                    }`}
-                  >
-                    <Heart size={20} fill={isLiked ? 'currentColor' : 'none'} />
-                  </button>
-                </div>
-
-                {/* 底部：貼文摘要 */}
-                <div className="text-white">
-                  <h3 className="font-bold text-lg mb-2 line-clamp-2 drop-shadow-lg">{title}</h3>
-                  {location && (
-                    <p className="text-xs text-gray-100 flex items-center gap-1">
-                      📍 {location}
-                    </p>
-                  )}
-                </div>
+            {/* Hover 疊加層 - 底部漸層 + 交互按鈕 */}
+            <div
+              className={`absolute inset-0 bg-gradient-to-t from-black/50 via-black/20 to-transparent transition-opacity duration-300 ${
+                hovering ? 'opacity-100' : 'opacity-0'
+              } flex flex-col justify-between p-3`}
+            >
+              {/* 頂部：互動按鈕 */}
+              <div className="flex justify-end gap-2">
+                <button
+                  onClick={(e) => {
+                    e.preventDefault()
+                    onBookmark?.(id)
+                  }}
+                  className={`p-2 rounded-full backdrop-blur-md transition-all ${
+                    isBookmarked ? 'bg-yellow-400' : 'bg-white/30 hover:bg-white/50'
+                  }`}
+                  title="收藏"
+                >
+                  <Bookmark
+                    size={18}
+                    fill={isBookmarked ? 'currentColor' : 'none'}
+                    className="text-white"
+                  />
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.preventDefault()
+                    onLike?.(id)
+                  }}
+                  className={`p-2 rounded-full backdrop-blur-md transition-all ${
+                    isLiked ? 'bg-red-500' : 'bg-white/30 hover:bg-white/50'
+                  }`}
+                  title="按讚"
+                >
+                  <Heart
+                    size={18}
+                    fill={isLiked ? 'currentColor' : 'none'}
+                    className="text-white"
+                  />
+                </button>
               </div>
-            )}
+
+              {/* 底部：簡短信息 */}
+              <div className="text-white">
+                <h3 className="font-bold text-sm line-clamp-2 drop-shadow-md">{title}</h3>
+                {location && (
+                  <p className="text-xs text-gray-100 mt-1 flex items-center gap-1">
+                    📍 {location}
+                  </p>
+                )}
+              </div>
+            </div>
           </div>
         )}
 
-        {/* 卡片底部資訊區 - 簡潔設計 */}
-        <div className="p-3 space-y-2">
-          {/* 作者信息 - 簡化版本 */}
-          <div className="flex items-center gap-2">
+        {/* 卡片底部資訊區 - 非常簡潔 */}
+        <div className="p-2.5 space-y-1.5">
+          {/* 標題 */}
+          <h4 className="font-semibold text-sm text-gray-900 line-clamp-2 leading-snug">
+            {title}
+          </h4>
+
+          {/* 作者信息 - 超簡潔 */}
+          <div className="flex items-center gap-1.5 text-xs">
             {author.avatar ? (
               <Image
                 src={author.avatar}
                 alt={author.name}
-                width={24}
-                height={24}
-                className="w-6 h-6 rounded-full"
+                width={20}
+                height={20}
+                className="w-5 h-5 rounded-full"
               />
             ) : (
-              <div className="w-6 h-6 rounded-full bg-[#cfdbe9] flex items-center justify-center">
+              <div className="w-5 h-5 rounded-full bg-[#cfdbe9] flex items-center justify-center flex-shrink-0">
                 <span className="text-xs font-bold text-[#002C56]">{author.name[0]}</span>
               </div>
             )}
-            <div className="flex-1 min-w-0">
-              <p className="text-xs font-medium text-gray-900 truncate">{author.name}</p>
-              {author.role === 'GUIDE' && (
-                <p className="text-xs text-[#002C56] font-bold">✓ 認證地陪</p>
-              )}
-            </div>
+            <span className="text-gray-700 font-medium truncate">{author.name}</span>
+            {author.role === 'GUIDE' && (
+              <span className="text-[#002C56] font-bold">✓</span>
+            )}
           </div>
 
-          {/* 標籤 - 簡化顯示 */}
-          {tags.length > 0 && (
-            <div className="flex gap-1 flex-wrap">
-              {tags.slice(0, 2).map((tag) => (
-                <span
-                  key={tag}
-                  className="text-xs font-medium text-[#002C56] bg-[#cfdbe9]/40 px-2 py-0.5 rounded-full"
-                >
-                  #{tag}
-                </span>
-              ))}
-            </div>
-          )}
-
-          {/* 互動統計 - 最小化 */}
-          <div className="flex gap-3 pt-1 text-gray-600 text-xs">
+          {/* 互動數據 - 最小化 */}
+          <div className="flex gap-2 text-gray-600 text-xs">
             <span>💬 {commentCount}</span>
             <span>❤️ {likeCount}</span>
           </div>

@@ -1,79 +1,94 @@
 import { PostFeed } from '@/components/post/post-feed'
 import Link from 'next/link'
-import { Plus } from 'lucide-react'
+import { Plus, Search } from 'lucide-react'
 
 export const revalidate = 0  // Disable caching
 
 export default function HomePage() {
   return (
     <div className="min-h-screen bg-white">
-      {/* 導航 Header - 簡約設計 */}
-      <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-sm border-b border-gray-100">
-        <div className="container mx-auto px-4 py-3 flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-[#002C56]">Guidee</h1>
-            <p className="text-xs text-gray-500">發現精彩的旅遊故事</p>
+      {/* 頂部導航 - 簡約精致 */}
+      <div className="sticky top-0 z-50 bg-white border-b border-gray-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <h1 className="text-3xl font-bold text-[#002C56]">Guidee</h1>
           </div>
           <Link
             href="/posts/create"
-            className="flex items-center gap-2 px-4 py-2 bg-[#002C56] text-white rounded-lg hover:bg-[#001f3f] transition-all duration-200 font-medium"
+            className="flex items-center gap-2 px-4 py-2 bg-[#002C56] text-white rounded-lg hover:bg-[#001f3f] transition-all duration-200 font-medium text-sm"
           >
             <Plus size={18} />
-            <span className="hidden sm:inline">新貼文</span>
+            <span className="hidden sm:inline">發佈故事</span>
           </Link>
         </div>
       </div>
 
-      {/* 簡約 Banner 區域 */}
-      <div className="bg-gradient-to-b from-[#cfdbe9]/20 to-white py-8 sm:py-12">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-3 leading-tight">
-              探索地陪和旅客的故事
-            </h2>
-            <p className="text-gray-600 text-base sm:text-lg mb-6">
-              發現世界各地的精彩故事，與旅遊愛好者連接、分享冒險經歷
-            </p>
+      {/* 大 Banner 區域 - 形象圖+短標語 */}
+      <div className="relative w-full h-64 sm:h-80 md:h-96 overflow-hidden bg-gradient-to-r from-[#002C56] to-[#0a4a8f]">
+        {/* 背景圖片（示意） */}
+        <div className="absolute inset-0 bg-gradient-to-br from-[#002C56]/90 to-[#0a4a8f]/90">
+          {/* 装饰背景图案 */}
+          <div className="absolute top-0 right-0 w-96 h-96 bg-[#cfdbe9]/10 rounded-full -mr-48 -mt-48"></div>
+          <div className="absolute bottom-0 left-0 w-72 h-72 bg-[#cfdbe9]/10 rounded-full -ml-36 -mb-36"></div>
+        </div>
+
+        {/* Banner 文字內容 */}
+        <div className="relative h-full flex flex-col items-center justify-center text-center px-4">
+          <h2 className="text-4xl sm:text-5xl font-bold text-white mb-4 leading-tight">
+            探索世界的故事
+          </h2>
+          <p className="text-lg sm:text-xl text-[#cfdbe9] mb-8 max-w-2xl">
+            與旅遊愛好者、地陪分享冒險經歷
+          </p>
+          <Link
+            href="/posts/create"
+            className="px-8 py-3 bg-white text-[#002C56] rounded-lg font-bold hover:bg-[#cfdbe9] transition-all duration-200"
+          >
+            開始分享
+          </Link>
+        </div>
+      </div>
+
+      {/* 搜尋區域 - 簡約風格 */}
+      <div className="sticky top-20 z-40 bg-white/95 backdrop-blur-sm border-b border-gray-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <div className="relative max-w-xl mx-auto">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+            <input
+              type="text"
+              placeholder="搜尋故事..."
+              className="w-full pl-12 pr-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#002C56] focus:border-transparent"
+            />
           </div>
         </div>
       </div>
 
-      {/* 搜尋和篩選區域 - 可選 */}
-      <div className="container mx-auto px-4 py-4 border-b border-gray-100">
-        <div className="flex gap-2 flex-wrap items-center justify-center">
-          <input
-            type="text"
-            placeholder="搜尋故事..."
-            className="px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#002C56] focus:border-transparent"
-          />
+      {/* 貼文牆區域 - 小紅書風格瀑布流 */}
+      <div className="bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          {/* 區域標題 */}
+          <div className="mb-8">
+            <h3 className="text-2xl sm:text-3xl font-bold text-gray-900">最新故事</h3>
+            <div className="h-1 w-12 bg-[#002C56] rounded-full mt-3"></div>
+          </div>
+
+          {/* 瀑布流貼文 */}
+          <PostFeed displayMode="grid" />
         </div>
       </div>
 
-      {/* 主要內容區域 - 貼文牆 */}
-      <div className="container mx-auto px-4 py-12">
-        <div className="mb-6">
-          <h3 className="text-2xl font-bold text-gray-900">最新故事</h3>
-          <p className="text-sm text-gray-600 mt-1">瀏覽社區最新分享的旅遊冒險</p>
-        </div>
-        {/* 貼文牆 - 瀑布流佈局 */}
-        <PostFeed displayMode="grid" />
-      </div>
-
-      {/* 底部 CTA - 簡約版本 */}
-      <div className="bg-[#cfdbe9]/30 py-12 mt-12">
-        <div className="container mx-auto px-4 text-center">
-          <h3 className="text-2xl font-bold text-gray-900 mb-3">
-            開始分享你的旅遊故事
+      {/* 底部 CTA - 簡約風格 */}
+      <div className="bg-[#cfdbe9]/15 border-t border-gray-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
+          <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">
+            準備分享你的旅遊故事？
           </h3>
-          <p className="text-gray-600 mb-6">
-            加入我們的社區，與世界各地的旅客和導遊分享你的見聞
-          </p>
           <Link
             href="/posts/create"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-[#002C56] text-white rounded-lg hover:bg-[#001f3f] transition-all duration-200 font-medium"
+            className="inline-flex items-center gap-2 px-8 py-3 bg-[#002C56] text-white rounded-lg hover:bg-[#001f3f] transition-all duration-200 font-medium"
           >
-            <Plus size={18} />
-            撰寫新貼文
+            <Plus size={20} />
+            發佈新故事
           </Link>
         </div>
       </div>
