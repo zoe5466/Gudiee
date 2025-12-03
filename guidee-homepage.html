@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guidee - 找到完美地陪體驗 | 旅遊媒合平台</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* 自訂字體 */
+        * {
+            font-family: 'Inter', 'Noto Sans TC', system-ui, sans-serif;
+        }
+
+        /* 入場動畫 */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.6s ease-out forwards;
+            opacity: 0;
+        }
+
+        .animate-slide-up {
+            animation: slideUp 0.7s ease-out forwards;
+            opacity: 0;
+        }
+
+        .animate-scale-in {
+            animation: scaleIn 0.6s ease-out forwards;
+            opacity: 0;
+        }
+
+        /* 延遲動畫 */
+        .delay-100 { animation-delay: 0.1s; }
+        .delay-200 { animation-delay: 0.2s; }
+        .delay-300 { animation-delay: 0.3s; }
+        .delay-400 { animation-delay: 0.4s; }
+        .delay-500 { animation-delay: 0.5s; }
+
+        /* 毛玻璃效果 */
+        .glass {
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        /* 卡片懸停浮起效果 */
+        .card-hover {
+            transition: all 0.3s ease-out;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15);
+        }
+
+        /* 圖片懸停縮放 */
+        .image-scale {
+            transition: transform 0.5s ease-out;
+            overflow: hidden;
+        }
+
+        .image-scale:hover {
+            transform: scale(1.05);
+        }
+
+        /* 漸層背景 */
+        .gradient-hero {
+            background: linear-gradient(135deg, #002C56 0%, #0a4a8f 100%);
+        }
+
+        /* 動態背景漸層 */
+        .gradient-accent {
+            background: linear-gradient(135deg, #ed7411 0%, #f59e0b 100%);
+        }
+
+        /* 自訂 Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* 文字截斷 */
+        .line-clamp-1 {
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 1;
+        }
+
+        .line-clamp-2 {
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+        }
+
+        /* 按鈕動畫 */
+        .btn-primary {
+            transition: all 0.3s ease-out;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(237, 116, 17, 0.3);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        /* 輸入框焦點效果 */
+        input:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0, 44, 86, 0.1);
+        }
+
+        /* 響應式網格 */
+        .grid-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        @media (max-width: 768px) {
+            .grid-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .grid-cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1025px) {
+            .grid-cards {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+    </style>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        guidee: {
+                            primary: '#002C56',
+                            'primary-dark': '#001f3f',
+                            'primary-light': '#0a4a8f',
+                            accent: '#ed7411',
+                            'accent-light': '#f59e0b',
+                            highlight: '#EAF28C',
+                            background: '#f9fafb',
+                            text: '#1f2937',
+                            'text-light': '#6b7280',
+                            border: '#e5e7eb',
+                            white: '#ffffff',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'Noto Sans TC', 'system-ui', 'sans-serif'],
+                    },
+                    spacing: {
+                        '128': '32rem',
+                    },
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-guidee-background">
+    <!-- 導覽列 -->
+    <nav class="fixed top-0 left-0 right-0 z-50 glass bg-white/80 border-b border-guidee-border">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo -->
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-guidee-primary to-guidee-primary-light flex items-center justify-center text-white font-bold text-xl">
+                        G
+                    </div>
+                    <span class="text-xl font-bold text-guidee-primary hidden sm:inline">Guidee</span>
+                </div>
+
+                <!-- 導航連結 (桌面) -->
+                <div class="hidden md:flex items-center gap-8">
+                    <a href="#" class="text-guidee-text hover:text-guidee-primary transition-colors duration-200 font-medium">找地陪</a>
+                    <a href="#" class="text-guidee-text hover:text-guidee-primary transition-colors duration-200 font-medium">成為嚮導</a>
+                </div>
+
+                <!-- 右側按鈕 -->
+                <div class="flex items-center gap-3">
+                    <button class="hidden sm:inline-block px-4 py-2 text-guidee-primary font-medium hover:bg-guidee-highlight/20 rounded-lg transition-colors duration-200">
+                        登入
+                    </button>
+                    <button class="btn-primary px-6 py-2 bg-gradient-accent text-white font-semibold rounded-lg text-sm">
+                        註冊
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="gradient-hero pt-24 pb-16 md:pt-32 md:pb-24 relative overflow-hidden">
+        <!-- 背景裝飾 -->
+        <div class="absolute top-0 right-0 w-96 h-96 bg-guidee-primary-light/20 rounded-full -mr-48 -mt-48 blur-3xl"></div>
+        <div class="absolute bottom-0 left-0 w-72 h-72 bg-guidee-accent/20 rounded-full -ml-36 -mb-36 blur-3xl"></div>
+
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <!-- 標題 -->
+            <div class="text-center mb-8 md:mb-12">
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 animate-fade-in" style="animation-delay: 0.1s;">
+                    找到完美地陪體驗
+                </h1>
+                <p class="text-lg md:text-xl text-white/90 max-w-2xl mx-auto animate-fade-in" style="animation-delay: 0.2s;">
+                    探索世界各地，與在地嚮導一起創造難忘的旅程。從城市漫步到自然探險，所有體驗盡在指尖
+                </p>
+            </div>
+
+            <!-- 搜尋框 -->
+            <div class="animate-scale-in" style="animation-delay: 0.3s;">
+                <div class="max-w-2xl mx-auto bg-white rounded-2xl shadow-xl p-4 md:p-6">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-3 md:gap-4">
+                        <!-- 目的地 -->
+                        <div>
+                            <label class="block text-sm font-medium text-guidee-text mb-2">目的地</label>
+                            <input type="text" placeholder="京都、東京、巴黎..." class="w-full px-4 py-2 border border-guidee-border rounded-lg text-guidee-text placeholder-guidee-text-light focus:border-guidee-primary">
+                        </div>
+
+                        <!-- 出發日期 -->
+                        <div>
+                            <label class="block text-sm font-medium text-guidee-text mb-2">出發日期</label>
+                            <input type="date" class="w-full px-4 py-2 border border-guidee-border rounded-lg text-guidee-text">
+                        </div>
+
+                        <!-- 人數 -->
+                        <div>
+                            <label class="block text-sm font-medium text-guidee-text mb-2">人數</label>
+                            <select class="w-full px-4 py-2 border border-guidee-border rounded-lg text-guidee-text">
+                                <option>1 人</option>
+                                <option>2-4 人</option>
+                                <option>5+ 人</option>
+                            </select>
+                        </div>
+
+                        <!-- 搜尋按鈕 -->
+                        <div class="flex items-end">
+                            <button class="btn-primary w-full bg-gradient-accent text-white font-semibold py-2 rounded-lg">
+                                搜尋
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 精選行程卡片區塊 -->
+    <section class="py-16 md:py-24 bg-guidee-background">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- 區塊標題 -->
+            <div class="text-center mb-12 md:mb-16 animate-fade-in" style="animation-delay: 0.1s;">
+                <h2 class="text-3xl md:text-4xl font-bold text-guidee-primary mb-3">
+                    精選行程
+                </h2>
+                <p class="text-lg text-guidee-text-light max-w-xl mx-auto">
+                    由資深地陪精心設計的體驗行程，讓你快速發現最適合的旅遊方式
+                </p>
+            </div>
+
+            <!-- 卡片網格 -->
+            <div class="grid-cards">
+                <!-- 卡片 1: 京都傳統文化之旅 -->
+                <div class="card-hover animate-slide-up delay-100">
+                    <div class="bg-white rounded-lg overflow-hidden border border-guidee-border h-full flex flex-col">
+                        <!-- 圖片區域 -->
+                        <div class="relative h-48 md:h-56 overflow-hidden image-scale bg-gray-200">
+                            <img src="https://images.unsplash.com/photo-1522383150241-6e1ef14f3e4e?w=600&h=600&fit=crop" alt="京都" class="w-full h-full object-cover">
+                            <!-- 城市標籤 -->
+                            <div class="absolute top-3 left-3 bg-guidee-primary/90 backdrop-blur-sm text-white px-3 py-1 rounded-full text-xs font-semibold">
+                                京都
+                            </div>
+                            <!-- 價格標籤 -->
+                            <div class="absolute top-3 right-3 bg-guidee-accent text-white px-3 py-1 rounded-full text-xs font-bold">
+                                ¥3,500
+                            </div>
+                        </div>
+
+                        <!-- 內容區域 -->
+                        <div class="flex-1 p-4 md:p-5 flex flex-col">
+                            <!-- 標題 -->
+                            <h3 class="text-lg font-bold text-guidee-primary mb-2 line-clamp-1">
+                                京都傳統文化之旅
+                            </h3>
+
+                            <!-- 描述 -->
+                            <p class="text-sm text-guidee-text-light mb-4 line-clamp-2">
+                                探訪古寺神社、穿著和服，體驗最道地的京都文化與美食
+                            </p>
+
+                            <!-- 評分 -->
+                            <div class="flex items-center gap-1 mb-4">
+                                <span class="text-yellow-400">★★★★★</span>
+                                <span class="text-xs text-guidee-text-light">(428 評價)</span>
+                            </div>
+
+                            <!-- 底部: 導遊資訊 -->
+                            <div class="flex items-center gap-3 mt-auto pt-4 border-t border-guidee-border">
+                                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=guide1" alt="導遊" class="w-10 h-10 rounded-full">
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-sm font-semibold text-guidee-text">田中美咲</p>
+                                    <p class="text-xs text-guidee-text-light">5.0 · 8 年經驗</p>
+                                </div>
+                                <button class="px-3 py-1 bg-guidee-highlight text-guidee-primary text-xs font-semibold rounded-lg hover:bg-guidee-accent hover:text-white transition-all duration-200">
+                                    預訂
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 卡片 2: 東京現代美食探險 -->
+                <div class="card-hover animate-slide-up delay-200">
+                    <div class="bg-white rounded-lg overflow-hidden border border-guidee-border h-full flex flex-col">
+                        <div class="relative h-48 md:h-56 overflow-hidden image-scale bg-gray-200">
+                            <img src="https://images.unsplash.com/photo-1540959375944-7049f642e9a9?w=600&h=600&fit=crop" alt="東京" class="w-full h-full object-cover">
+                            <div class="absolute top-3 left-3 bg-guidee-primary/90 backdrop-blur-sm text-white px-3 py-1 rounded-full text-xs font-semibold">
+                                東京
+                            </div>
+                            <div class="absolute top-3 right-3 bg-guidee-accent text-white px-3 py-1 rounded-full text-xs font-bold">
+                                ¥2,800
+                            </div>
+                        </div>
+
+                        <div class="flex-1 p-4 md:p-5 flex flex-col">
+                            <h3 class="text-lg font-bold text-guidee-primary mb-2 line-clamp-1">
+                                東京現代美食探險
+                            </h3>
+                            <p class="text-sm text-guidee-text-light mb-4 line-clamp-2">
+                                造訪米其林餐廳、傳統市場與街邊小吃，感受東京飲食文化
+                            </p>
+                            <div class="flex items-center gap-1 mb-4">
+                                <span class="text-yellow-400">★★★★☆</span>
+                                <span class="text-xs text-guidee-text-light">(312 評價)</span>
+                            </div>
+
+                            <div class="flex items-center gap-3 mt-auto pt-4 border-t border-guidee-border">
+                                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=guide2" alt="導遊" class="w-10 h-10 rounded-full">
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-sm font-semibold text-guidee-text">佐藤健一</p>
+                                    <p class="text-xs text-guidee-text-light">4.9 · 6 年經驗</p>
+                                </div>
+                                <button class="px-3 py-1 bg-guidee-highlight text-guidee-primary text-xs font-semibold rounded-lg hover:bg-guidee-accent hover:text-white transition-all duration-200">
+                                    預訂
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 卡片 3: 峇里島海灘度假 -->
+                <div class="card-hover animate-slide-up delay-300">
+                    <div class="bg-white rounded-lg overflow-hidden border border-guidee-border h-full flex flex-col">
+                        <div class="relative h-48 md:h-56 overflow-hidden image-scale bg-gray-200">
+                            <img src="https://images.unsplash.com/photo-1537225228614-b4fad34a0b19?w=600&h=600&fit=crop" alt="峇里島" class="w-full h-full object-cover">
+                            <div class="absolute top-3 left-3 bg-guidee-primary/90 backdrop-blur-sm text-white px-3 py-1 rounded-full text-xs font-semibold">
+                                峇里島
+                            </div>
+                            <div class="absolute top-3 right-3 bg-guidee-accent text-white px-3 py-1 rounded-full text-xs font-bold">
+                                ¥1,950
+                            </div>
+                        </div>
+
+                        <div class="flex-1 p-4 md:p-5 flex flex-col">
+                            <h3 class="text-lg font-bold text-guidee-primary mb-2 line-clamp-1">
+                                峇里島海灘度假
+                            </h3>
+                            <p class="text-sm text-guidee-text-light mb-4 line-clamp-2">
+                                享受夕陽海灘、傳統寺廟與水療中心，體驗島嶼悠閒生活
+                            </p>
+                            <div class="flex items-center gap-1 mb-4">
+                                <span class="text-yellow-400">★★★★★</span>
+                                <span class="text-xs text-guidee-text-light">(567 評價)</span>
+                            </div>
+
+                            <div class="flex items-center gap-3 mt-auto pt-4 border-t border-guidee-border">
+                                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=guide3" alt="導遊" class="w-10 h-10 rounded-full">
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-sm font-semibold text-guidee-text">I Putu Budi</p>
+                                    <p class="text-xs text-guidee-text-light">5.0 · 9 年經驗</p>
+                                </div>
+                                <button class="px-3 py-1 bg-guidee-highlight text-guidee-primary text-xs font-semibold rounded-lg hover:bg-guidee-accent hover:text-white transition-all duration-200">
+                                    預訂
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 卡片 4: 紐約時尚體驗 -->
+                <div class="card-hover animate-slide-up delay-100">
+                    <div class="bg-white rounded-lg overflow-hidden border border-guidee-border h-full flex flex-col">
+                        <div class="relative h-48 md:h-56 overflow-hidden image-scale bg-gray-200">
+                            <img src="https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?w=600&h=600&fit=crop" alt="紐約" class="w-full h-full object-cover">
+                            <div class="absolute top-3 left-3 bg-guidee-primary/90 backdrop-blur-sm text-white px-3 py-1 rounded-full text-xs font-semibold">
+                                紐約
+                            </div>
+                            <div class="absolute top-3 right-3 bg-guidee-accent text-white px-3 py-1 rounded-full text-xs font-bold">
+                                ¥4,200
+                            </div>
+                        </div>
+
+                        <div class="flex-1 p-4 md:p-5 flex flex-col">
+                            <h3 class="text-lg font-bold text-guidee-primary mb-2 line-clamp-1">
+                                紐約時尚體驗
+                            </h3>
+                            <p class="text-sm text-guidee-text-light mb-4 line-clamp-2">
+                                逛紐約時裝周、時尚精品區，與業內人士探討設計與風格
+                            </p>
+                            <div class="flex items-center gap-1 mb-4">
+                                <span class="text-yellow-400">★★★★★</span>
+                                <span class="text-xs text-guidee-text-light">(289 評價)</span>
+                            </div>
+
+                            <div class="flex items-center gap-3 mt-auto pt-4 border-t border-guidee-border">
+                                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=guide4" alt="導遊" class="w-10 h-10 rounded-full">
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-sm font-semibold text-guidee-text">Sarah Johnson</p>
+                                    <p class="text-xs text-guidee-text-light">4.95 · 7 年經驗</p>
+                                </div>
+                                <button class="px-3 py-1 bg-guidee-highlight text-guidee-primary text-xs font-semibold rounded-lg hover:bg-guidee-accent hover:text-white transition-all duration-200">
+                                    預訂
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 卡片 5: 巴黎藝術漫步 -->
+                <div class="card-hover animate-slide-up delay-200">
+                    <div class="bg-white rounded-lg overflow-hidden border border-guidee-border h-full flex flex-col">
+                        <div class="relative h-48 md:h-56 overflow-hidden image-scale bg-gray-200">
+                            <img src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=600&h=600&fit=crop" alt="巴黎" class="w-full h-full object-cover">
+                            <div class="absolute top-3 left-3 bg-guidee-primary/90 backdrop-blur-sm text-white px-3 py-1 rounded-full text-xs font-semibold">
+                                巴黎
+                            </div>
+                            <div class="absolute top-3 right-3 bg-guidee-accent text-white px-3 py-1 rounded-full text-xs font-bold">
+                                ¥3,800
+                            </div>
+                        </div>
+
+                        <div class="flex-1 p-4 md:p-5 flex flex-col">
+                            <h3 class="text-lg font-bold text-guidee-primary mb-2 line-clamp-1">
+                                巴黎藝術漫步
+                            </h3>
+                            <p class="text-sm text-guidee-text-light mb-4 line-clamp-2">
+                                造訪羅浮宮、聖母院、蒙馬特藝術區，體驗法國文藝氣息
+                            </p>
+                            <div class="flex items-center gap-1 mb-4">
+                                <span class="text-yellow-400">★★★★☆</span>
+                                <span class="text-xs text-guidee-text-light">(451 評價)</span>
+                            </div>
+
+                            <div class="flex items-center gap-3 mt-auto pt-4 border-t border-guidee-border">
+                                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=guide5" alt="導遊" class="w-10 h-10 rounded-full">
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-sm font-semibold text-guidee-text">Marie Dupont</p>
+                                    <p class="text-xs text-guidee-text-light">4.9 · 8 年經驗</p>
+                                </div>
+                                <button class="px-3 py-1 bg-guidee-highlight text-guidee-primary text-xs font-semibold rounded-lg hover:bg-guidee-accent hover:text-white transition-all duration-200">
+                                    預訂
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 卡片 6: 台北夜市美食 -->
+                <div class="card-hover animate-slide-up delay-300">
+                    <div class="bg-white rounded-lg overflow-hidden border border-guidee-border h-full flex flex-col">
+                        <div class="relative h-48 md:h-56 overflow-hidden image-scale bg-gray-200">
+                            <img src="https://images.unsplash.com/photo-1567521464027-f127ff144326?w=600&h=600&fit=crop" alt="台北" class="w-full h-full object-cover">
+                            <div class="absolute top-3 left-3 bg-guidee-primary/90 backdrop-blur-sm text-white px-3 py-1 rounded-full text-xs font-semibold">
+                                台北
+                            </div>
+                            <div class="absolute top-3 right-3 bg-guidee-accent text-white px-3 py-1 rounded-full text-xs font-bold">
+                                ¥1,500
+                            </div>
+                        </div>
+
+                        <div class="flex-1 p-4 md:p-5 flex flex-col">
+                            <h3 class="text-lg font-bold text-guidee-primary mb-2 line-clamp-1">
+                                台北夜市美食
+                            </h3>
+                            <p class="text-sm text-guidee-text-light mb-4 line-clamp-2">
+                                逛遍士林、寧夏、饒河夜市，品嚐最道地的台灣小吃與美食
+                            </p>
+                            <div class="flex items-center gap-1 mb-4">
+                                <span class="text-yellow-400">★★★★★</span>
+                                <span class="text-xs text-guidee-text-light">(623 評價)</span>
+                            </div>
+
+                            <div class="flex items-center gap-3 mt-auto pt-4 border-t border-guidee-border">
+                                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=guide6" alt="導遊" class="w-10 h-10 rounded-full">
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-sm font-semibold text-guidee-text">陳宣蓉</p>
+                                    <p class="text-xs text-guidee-text-light">5.0 · 10 年經驗</p>
+                                </div>
+                                <button class="px-3 py-1 bg-guidee-highlight text-guidee-primary text-xs font-semibold rounded-lg hover:bg-guidee-accent hover:text-white transition-all duration-200">
+                                    預訂
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 查看更多按鈕 -->
+            <div class="text-center mt-12 animate-fade-in" style="animation-delay: 0.6s;">
+                <button class="btn-primary px-8 py-3 bg-gradient-accent text-white font-semibold rounded-lg text-base">
+                    瀏覽所有行程 →
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="gradient-hero py-16 md:py-20 relative overflow-hidden">
+        <div class="absolute inset-0 opacity-10">
+            <div class="absolute top-0 right-1/4 w-80 h-80 bg-white rounded-full blur-3xl"></div>
+        </div>
+
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center animate-fade-in" style="animation-delay: 0.2s;">
+            <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">
+                準備開啟你的旅程了嗎？
+            </h2>
+            <p class="text-lg text-white/90 mb-8 max-w-2xl mx-auto">
+                加入數千位旅客，與當地嚮導創造獨一無二的旅遊回憶
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <button class="btn-primary px-8 py-3 bg-white text-guidee-primary font-semibold rounded-lg hover:bg-guidee-highlight">
+                    立即探索
+                </button>
+                <button class="btn-primary px-8 py-3 border-2 border-white text-white font-semibold rounded-lg hover:bg-white/10">
+                    成為導遊
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-guidee-primary text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <h3 class="font-bold mb-4">Guidee</h3>
+                    <ul class="space-y-2 text-sm text-white/80">
+                        <li><a href="#" class="hover:text-white transition-colors">關於我們</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">聯絡我們</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">部落格</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-bold mb-4">旅客</h3>
+                    <ul class="space-y-2 text-sm text-white/80">
+                        <li><a href="#" class="hover:text-white transition-colors">找行程</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">我的預訂</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">評論</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-bold mb-4">嚮導</h3>
+                    <ul class="space-y-2 text-sm text-white/80">
+                        <li><a href="#" class="hover:text-white transition-colors">成為嚮導</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">資源中心</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">社群</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="font-bold mb-4">支援</h3>
+                    <ul class="space-y-2 text-sm text-white/80">
+                        <li><a href="#" class="hover:text-white transition-colors">幫助中心</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">安全與隱私</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">服務條款</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t border-white/20 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-white/70">
+                <p>&copy; 2024 Guidee. 保留所有權利。</p>
+                <div class="flex gap-6 mt-4 md:mt-0">
+                    <a href="#" class="hover:text-white transition-colors">Facebook</a>
+                    <a href="#" class="hover:text-white transition-colors">Instagram</a>
+                    <a href="#" class="hover:text-white transition-colors">Twitter</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 平滑滾動
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // 導覽列背景顏色動態效果
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('nav');
+            if (window.scrollY > 50) {
+                navbar.classList.add('shadow-lg');
+            } else {
+                navbar.classList.remove('shadow-lg');
+            }
+        });
+    </script>
+</body>
+</html>
