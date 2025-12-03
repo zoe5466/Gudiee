@@ -3,6 +3,8 @@ import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
+export const dynamic = 'force-dynamic';
+
 // GET - 獲取管理員通知
 export async function GET(request: NextRequest) {
   try {

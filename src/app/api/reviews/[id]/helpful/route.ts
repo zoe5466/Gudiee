@@ -1,11 +1,13 @@
 import { NextRequest } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getCurrentUser } from '@/lib/auth';
-import { 
-  successResponse, 
-  errorResponse, 
-  unauthorizedResponse 
+import {
+  successResponse,
+  errorResponse,
+  unauthorizedResponse
 } from '@/lib/api-response';
+
+export const dynamic = 'force-dynamic';
 
 // POST /api/reviews/[id]/helpful - 標記評論為有用
 export async function POST(

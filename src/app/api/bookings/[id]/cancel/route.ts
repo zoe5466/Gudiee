@@ -1,13 +1,15 @@
 import { NextRequest } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getCurrentUser } from '@/lib/auth';
-import { 
-  successResponse, 
-  errorResponse, 
+import {
+  successResponse,
+  errorResponse,
   unauthorizedResponse,
   notFoundResponse,
-  validationErrorResponse 
+  validationErrorResponse
 } from '@/lib/api-response';
+
+export const dynamic = 'force-dynamic';
 
 interface RouteParams {
   params: { id: string };

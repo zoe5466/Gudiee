@@ -5,6 +5,8 @@ import { getCurrentUser } from '@/lib/auth'; // 用戶認證工具
 import { prisma } from '@/lib/prisma'; // 資料庫連接
 import { successResponse, errorResponse } from '@/lib/api-response'; // 統一 API 回應格式
 
+export const dynamic = 'force-dynamic'
+
 /**
  * GET /api/admin/dashboard - 管理員儀表板數據 API
  * 

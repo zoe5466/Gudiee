@@ -3,6 +3,8 @@ import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
+export const dynamic = 'force-dynamic';
+
 // POST - 創建示例客服對話資料
 export async function POST(request: NextRequest) {
   try {

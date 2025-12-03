@@ -1,11 +1,13 @@
 import { NextRequest } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getCurrentUser } from '@/lib/auth';
-import { 
-  successResponse, 
-  errorResponse, 
-  unauthorizedResponse 
+import {
+  successResponse,
+  errorResponse,
+  unauthorizedResponse
 } from '@/lib/api-response';
+
+export const dynamic = 'force-dynamic';
 
 // GET /api/conversations/[id] - 獲取對話詳情
 export async function GET(

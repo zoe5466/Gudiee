@@ -4,6 +4,8 @@ import { getCurrentUser } from '@/lib/auth'
 
 const prisma = new PrismaClient()
 
+export const dynamic = 'force-dynamic';
+
 // GET - 獲取特定對話詳情
 export async function GET(
   request: NextRequest,

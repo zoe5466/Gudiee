@@ -1,12 +1,14 @@
 import { NextRequest } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getCurrentUser } from '@/lib/auth';
-import { 
-  successResponse, 
-  errorResponse, 
+import {
+  successResponse,
+  errorResponse,
   unauthorizedResponse,
-  validationErrorResponse 
+  validationErrorResponse
 } from '@/lib/api-response';
+
+export const dynamic = 'force-dynamic';
 
 // GET /api/reviews/[id] - 取得單個評論詳情
 export async function GET(

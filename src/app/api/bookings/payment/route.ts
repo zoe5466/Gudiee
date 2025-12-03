@@ -1,12 +1,14 @@
 import { NextRequest } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getCurrentUser } from '@/lib/auth';
-import { 
-  successResponse, 
-  errorResponse, 
+import {
+  successResponse,
+  errorResponse,
   unauthorizedResponse,
-  validationErrorResponse 
+  validationErrorResponse
 } from '@/lib/api-response';
+
+export const dynamic = 'force-dynamic';
 
 // POST /api/bookings/payment - 處理支付
 export async function POST(request: NextRequest) {
