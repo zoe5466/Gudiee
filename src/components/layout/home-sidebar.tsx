@@ -82,14 +82,19 @@ export function HomeSidebar() {
     <>
       {/* 觸發按鈕 */}
       <button
-        onClick={() => setIsOpen(true)}
-        className={`fixed z-50 bg-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 border border-gray-200 hover:bg-[#cfdbe9] touch-manipulation ${
+        onClick={(e) => {
+          e.preventDefault()
+          e.stopPropagation()
+          setIsOpen(true)
+        }}
+        type="button"
+        className={`fixed z-50 bg-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 border border-gray-200 hover:bg-[#cfdbe9] touch-manipulation cursor-pointer ${
           isHomePage ? 'top-1/2 left-3 sm:left-4 transform -translate-y-1/2' : 'top-20 sm:top-24 left-3 sm:left-4'
         }`}
         style={{ minWidth: '48px', minHeight: '48px', padding: '12px' }}
         aria-label="打開選單"
       >
-        <Menu className="w-5 h-5 text-gray-700" />
+        <Menu className="w-5 h-5 text-gray-700 pointer-events-none" />
       </button>
 
       {/* 遮罩層 */}

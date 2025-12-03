@@ -66,10 +66,12 @@ export function PostCard({
               src={coverImage}
               alt={title}
               fill
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
               className={`object-cover transition-transform duration-500 ${
                 hovering ? 'scale-105' : 'scale-100'
               }`}
-              priority
+              priority={false}
+              loading="lazy"
             />
 
             {/* 分類徽章 - 左上角 */}
