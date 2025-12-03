@@ -1,8 +1,8 @@
+'use client'
+
 import { PostCard } from '@/components/post/post-card'
 import Link from 'next/link'
 import { Plus, Search } from 'lucide-react'
-
-export const revalidate = 0  // Disable caching
 
 // Mock posts data for homepage display
 const MOCK_POSTS = [

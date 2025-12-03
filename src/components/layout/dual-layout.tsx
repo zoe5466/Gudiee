@@ -2,6 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 import { useUserMode } from '@/store/user-mode';
+import { useEffect, useState } from 'react';
 import { GuideSidebar } from './guide-sidebar';
 import { Header } from './header';
 import { HomeSidebar } from './home-sidebar';
@@ -16,9 +17,20 @@ interface DualLayoutProps {
 export function DualLayout({ children }: DualLayoutProps) {
   const { mode } = useUserMode();
   const pathname = usePathname();
-  
+  const [isHydrated, setIsHydrated] = useState(false);
+
   // 檢查是否為首頁
   const isHomePage = pathname === '/';
+
+  // 確保只在客戶端渲染，避免hydration不匹配
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
+
+  // 在hydration完成前，使用最小化的渲染避免不匹配
+  if (!isHydrated) {
+    return <>{children}</>;
+  }
 
   if (mode === 'guide') {
     return (

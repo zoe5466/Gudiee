@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '@/store/auth';
 
@@ -12,8 +12,16 @@ export function ProfileSetupGuard({ children }: ProfileSetupGuardProps) {
   const router = useRouter();
   const pathname = usePathname();
   const { user, isAuthenticated } = useAuth();
+  const [isHydrated, setIsHydrated] = useState(false);
+
+  // 只在客戶端hydration完成後執行邏輯，避免不匹配
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
 
   useEffect(() => {
+    if (!isHydrated) return;
+
     // 如果用戶未登入，不需要檢查
     if (!isAuthenticated || !user) {
       return;
@@ -35,7 +43,8 @@ export function ProfileSetupGuard({ children }: ProfileSetupGuardProps) {
     if (!user.isKYCVerified && !isAllowedPath) {
       router.push('/profile/setup');
     }
-  }, [isAuthenticated, user, pathname, router]);
+  }, [isHydrated, isAuthenticated, user, pathname, router]);
 
+  // 在hydration完成前不執行任何邏輯，直接返回子組件
   return <>{children}</>;
 }
