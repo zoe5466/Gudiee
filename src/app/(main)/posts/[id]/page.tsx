@@ -35,17 +35,24 @@ async function getPost(id: string): Promise<Post | null> {
       baseUrl = `https://${process.env.VERCEL_URL}`
     }
 
+    console.log(`[Post Fetch] URL: ${baseUrl}/api/posts/${id}, VERCEL_URL: ${process.env.VERCEL_URL}`)
+
     const response = await fetch(`${baseUrl}/api/posts/${id}`, {
       cache: 'no-store',
     })
 
+    console.log(`[Post Fetch] Response status: ${response.status}`)
+
     if (!response.ok) {
+      const errorText = await response.text()
+      console.error(`[Post Fetch] Error response: ${errorText}`)
       return null
     }
 
     const data = await response.json()
 
     if (!data.success || !data.data) {
+      console.error(`[Post Fetch] Invalid data structure:`, data)
       return null
     }
 
