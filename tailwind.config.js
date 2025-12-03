@@ -7,6 +7,7 @@ module.exports = {
     './app/**/*.{js,ts,jsx,tsx,mdx}',
     './src/**/*.{js,ts,jsx,tsx,mdx}',
   ],
+  important: true,
   theme: {
     container: {
       center: true,
@@ -154,14 +155,6 @@ module.exports = {
       }
     },
   },
-  safelist: [
-    // Responsive grid columns - explicitly ensure these are generated
-    'md:grid-cols-2',
-    'lg:grid-cols-3',
-    'xl:grid-cols-4',
-    'md:h-96',
-    'lg:px-8',
-  ],
   plugins: [
     require("tailwindcss-animate"),
     require("@tailwindcss/forms"),
