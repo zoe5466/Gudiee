@@ -15,7 +15,6 @@ module.exports = {
     'lg:grid-cols-3',
     'xl:grid-cols-4',
     'gap-6',
-    'auto-rows-max',
     'max-w-7xl',
     'mx-auto',
     'px-4',

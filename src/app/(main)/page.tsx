@@ -153,7 +153,7 @@ export default function HomePage() {
           </div>
 
           {/* 貼文網格 - 使用 Grid 而不是 Columns 以獲得更好的相容性 */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 auto-rows-max">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {MOCK_POSTS.map((post) => (
               <PostCard
                 key={post.id}
