@@ -54,14 +54,14 @@ export function PostCard({
   return (
     <Link href={`/posts/${id}`}>
       <div
-        className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer border border-gray-100 break-inside-avoid"
+        className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer border border-gray-100 h-full flex flex-col"
         onMouseEnter={() => setHovering(true)}
         onMouseLeave={() => setHovering(false)}
       >
-        {/* 封面圖片區 - 占 75% 的空間 */}
+        {/* 封面圖片區 */}
         {coverImage && (
           <div
-            className="relative w-full overflow-hidden bg-gradient-to-br from-gray-200 to-gray-300"
+            className="relative w-full overflow-hidden bg-gradient-to-br from-gray-200 to-gray-300 flex-shrink-0"
             style={{ aspectRatio: '3/4' }}
           >
             <Image
@@ -90,7 +90,7 @@ export function PostCard({
               </span>
             </div>
 
-            {/* Hover 疊加層 - 底部漸層 + 交互按鈕 */}
+            {/* Hover 疊加層 */}
             <div
               className={`absolute inset-0 bg-gradient-to-t from-black/50 via-black/20 to-transparent transition-opacity duration-300 ${
                 hovering ? 'opacity-100' : 'opacity-0'
@@ -145,14 +145,14 @@ export function PostCard({
           </div>
         )}
 
-        {/* 卡片底部資訊區 - 非常簡潔 */}
-        <div className="p-2.5 space-y-1.5">
+        {/* 卡片底部資訊區 */}
+        <div className="p-2.5 space-y-1.5 flex-1 flex flex-col justify-between">
           {/* 標題 */}
           <h4 className="font-semibold text-sm text-gray-900 line-clamp-2 leading-snug">
             {title}
           </h4>
 
-          {/* 作者信息 - 超簡潔 */}
+          {/* 作者信息 */}
           <div className="flex items-center gap-1.5 text-xs">
             {author.avatar ? (
               <Image
@@ -173,7 +173,7 @@ export function PostCard({
             )}
           </div>
 
-          {/* 互動數據 - 最小化 */}
+          {/* 互動數據 */}
           <div className="flex gap-2 text-gray-600 text-xs">
             <span>💬 {commentCount}</span>
             <span>❤️ {likeCount}</span>

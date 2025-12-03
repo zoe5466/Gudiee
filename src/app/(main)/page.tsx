@@ -143,7 +143,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* 貼文牆區域 - 小紅書風格瀑布流 */}
+      {/* 貼文網格區域 - 使用 Grid 佈局 */}
       <div className="bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           {/* 區域標題 */}
@@ -152,8 +152,8 @@ export default function HomePage() {
             <div className="h-1 w-12 bg-[#002C56] rounded-full mt-3"></div>
           </div>
 
-          {/* 瀑布流貼文 - 直接使用 Mock 數據 */}
-          <div className="columns-1 md:columns-2 lg:columns-3 xl:columns-4 gap-6 space-y-6">
+          {/* 貼文網格 - 使用 Grid 而不是 Columns 以獲得更好的相容性 */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 auto-rows-max">
             {MOCK_POSTS.map((post) => (
               <PostCard
                 key={post.id}
