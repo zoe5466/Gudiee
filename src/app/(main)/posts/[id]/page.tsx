@@ -27,38 +27,43 @@ interface Post {
 
 async function getPost(id: string): Promise<Post | null> {
   try {
-    // Build absolute URL for server-side fetch
-    let baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
+    // For server-side rendering, always use absolute URLs
+    // Prefer NEXT_PUBLIC_APP_URL if set, then use VERCEL_URL, then localhost
+    let baseUrl: string
 
-    // In Vercel deployment, use the deployment URL
-    if (process.env.VERCEL_URL && !process.env.NEXT_PUBLIC_APP_URL) {
+    if (process.env.NEXT_PUBLIC_APP_URL) {
+      baseUrl = process.env.NEXT_PUBLIC_APP_URL
+    } else if (process.env.VERCEL_URL) {
       baseUrl = `https://${process.env.VERCEL_URL}`
+    } else {
+      baseUrl = 'http://localhost:3000'
     }
 
-    console.log(`[Post Fetch] URL: ${baseUrl}/api/posts/${id}, VERCEL_URL: ${process.env.VERCEL_URL}`)
+    const url = `${baseUrl}/api/posts/${id}`
+    console.log(`[Post Fetch] Fetching from: ${url}`)
 
-    const response = await fetch(`${baseUrl}/api/posts/${id}`, {
+    const response = await fetch(url, {
       cache: 'no-store',
+      headers: {
+        'Accept': 'application/json',
+      },
     })
 
-    console.log(`[Post Fetch] Response status: ${response.status}`)
-
     if (!response.ok) {
-      const errorText = await response.text()
-      console.error(`[Post Fetch] Error response: ${errorText}`)
+      console.error(`[Post Fetch] Response status: ${response.status}`)
       return null
     }
 
     const data = await response.json()
 
     if (!data.success || !data.data) {
-      console.error(`[Post Fetch] Invalid data structure:`, data)
+      console.error(`[Post Fetch] Invalid response structure`)
       return null
     }
 
     return data.data
   } catch (error) {
-    console.error('Error fetching post:', error)
+    console.error('[Post Fetch] Error:', error instanceof Error ? error.message : String(error))
     return null
   }
 }
