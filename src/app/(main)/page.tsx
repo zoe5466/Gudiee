@@ -1,8 +1,88 @@
-import { PostFeed } from '@/components/post/post-feed'
+import { PostCard } from '@/components/post/post-card'
 import Link from 'next/link'
 import { Plus, Search } from 'lucide-react'
 
 export const revalidate = 0  // Disable caching
+
+// Mock posts data for homepage display
+const MOCK_POSTS = [
+  {
+    id: 'mock-1',
+    title: '台北101不只是地標，更是美食寶庫！',
+    content: '<h2>台北101美食之旅</h2><p>當我們提到台北，誰不想到台北101？但你知道嗎，在這座地標的周圍，隱藏著許多令人垂涎的美食？</p>',
+    coverImage: 'https://images.unsplash.com/photo-1604072143121-27e0fb5c5667?w=800&h=600&fit=crop',
+    author: {
+      id: 'author-1',
+      name: '台北美食家',
+      avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=food-guide',
+      role: 'GUIDE',
+    },
+    category: 'food',
+    tags: ['美食', '台北', '101'],
+    location: '台北市信義區',
+    viewCount: 3420,
+    likeCount: 156,
+    commentCount: 32,
+    publishedAt: '2024-11-20T00:00:00.000Z',
+  },
+  {
+    id: 'mock-2',
+    title: '九份老街尋找千與千尋的場景',
+    content: '<h2>九份懷舊之旅</h2><p>還記得動畫電影《千與千尋》嗎？九份老街就是宮崎駿的靈感來源。</p>',
+    coverImage: 'https://images.unsplash.com/photo-1512453045332-e901b6a8c358?w=800&h=600&fit=crop',
+    author: {
+      id: 'author-2',
+      name: '文化導遊',
+      avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=culture-guide',
+      role: 'GUIDE',
+    },
+    category: 'culture',
+    tags: ['文化', '九份', '老街'],
+    location: '新北市瑞芳區',
+    viewCount: 5890,
+    likeCount: 412,
+    commentCount: 89,
+    publishedAt: '2024-11-18T00:00:00.000Z',
+  },
+  {
+    id: 'mock-3',
+    title: '陽明山花季：台灣北部最壯觀的花海',
+    content: '<h2>陽明山絢爛花季</h2><p>每年春天，陽明山都會被各色花朵染得五彩繽紛。杜鵑花、櫻花和竹子花競相綻放，美不勝收。</p>',
+    coverImage: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop',
+    author: {
+      id: 'author-3',
+      name: '自然探險家',
+      avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=nature-guide',
+      role: 'GUIDE',
+    },
+    category: 'nature',
+    tags: ['自然', '花季', '陽明山'],
+    location: '台北市',
+    viewCount: 7235,
+    likeCount: 523,
+    commentCount: 124,
+    publishedAt: '2024-11-15T00:00:00.000Z',
+  },
+  {
+    id: 'mock-4',
+    title: '野柳地質公園：天然的地球教室',
+    content: '<p>野柳地質公園展示了台灣的地質演化過程，千奇百怪的岩石造型令人嘆為觀止。</p>',
+    coverImage: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop',
+    author: {
+      id: 'author-4',
+      name: '地質愛好者',
+      avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=geology',
+      role: 'GUIDE',
+    },
+    category: 'nature',
+    tags: ['地質', '野柳', '科普'],
+    location: '新北市萬里區',
+    viewCount: 2450,
+    likeCount: 187,
+    commentCount: 45,
+    publishedAt: '2024-11-12T00:00:00.000Z',
+  },
+]
 
 export default function HomePage() {
   return (
@@ -72,8 +152,19 @@ export default function HomePage() {
             <div className="h-1 w-12 bg-[#002C56] rounded-full mt-3"></div>
           </div>
 
-          {/* 瀑布流貼文 */}
-          <PostFeed displayMode="grid" />
+          {/* 瀑布流貼文 - 直接使用 Mock 數據 */}
+          <div className="columns-1 md:columns-2 lg:columns-3 xl:columns-4 gap-6 space-y-6">
+            {MOCK_POSTS.map((post) => (
+              <PostCard
+                key={post.id}
+                {...post}
+                onLike={() => console.log('Liked:', post.id)}
+                onBookmark={() => console.log('Bookmarked:', post.id)}
+                isLiked={false}
+                isBookmarked={false}
+              />
+            ))}
+          </div>
         </div>
       </div>
 
