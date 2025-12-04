@@ -3,6 +3,7 @@
 import { NextRequest } from 'next/server';
 import { cookies } from 'next/headers';
 import { successResponse, errorResponse, unauthorizedResponse } from '@/lib/api-response';
+import { prisma } from '@/lib/prisma';
 
 export const dynamic = 'force-dynamic';
 
@@ -24,10 +25,12 @@ interface MockUser {
   name: string;
   role: string;
   avatar?: string | null;
+  phone?: string | null;
   isEmailVerified: boolean;
   isKycVerified: boolean;
   permissions: string[];
   createdAt: string;
+  updatedAt?: string;
   profile: UserProfile;
 }
 
@@ -152,6 +155,10 @@ function getCurrentUser() {
       // 解析 JWT payload（第二段）
       // 添加必要的 padding 以確保 Base64 正確解碼
       const payload = parts[1];
+      if (!payload) {
+        console.error('JWT payload is missing');
+        return null;
+      }
       const padded = payload + '='.repeat((4 - payload.length % 4) % 4);
       const decoded = Buffer.from(padded, 'base64').toString('utf-8');
       const userData = JSON.parse(decoded);
@@ -237,9 +244,9 @@ export async function GET(request: NextRequest) {
 export async function PUT(request: NextRequest) {
   try {
     console.log('Update user profile API called');
-    
+
     const user = getCurrentUser();
-    
+
     if (!user) {
       console.log('User not authenticated');
       return unauthorizedResponse();
@@ -271,7 +278,7 @@ export async function PUT(request: NextRequest) {
       if (isNaN(birthDate.getTime())) {
         return errorResponse('請輸入有效的出生日期', 400);
       }
-      
+
       // 檢查年齡合理性（18-100歲）
       const age = new Date().getFullYear() - birthDate.getFullYear();
       if (age < 18 || age > 100) {
@@ -279,44 +286,104 @@ export async function PUT(request: NextRequest) {
       }
     }
 
-    // 更新用戶資料（在實際應用中這裡會更新資料庫）
-    const updatedUser = {
-      ...user,
-      name: name.trim(),
-      avatar: avatar || user.avatar,
-      // 更新 KYC 驗證狀態
-      ...(isKYCVerified !== undefined && { isKycVerified: isKYCVerified }),
-      profile: {
-        ...user.profile,
-        phone: profile?.phone || user.profile?.phone,
-        bio: profile?.bio || user.profile?.bio,
-        location: profile?.location || user.profile?.location,
-        birthDate: profile?.birthDate || user.profile?.birthDate,
-        languages: profile?.languages || user.profile?.languages || [],
-        specialties: profile?.specialties || user.profile?.specialties || [],
-        experienceYears: profile?.experienceYears !== undefined ? profile.experienceYears : user.profile?.experienceYears,
-        certifications: profile?.certifications || user.profile?.certifications || []
-      },
-      updatedAt: new Date().toISOString()
+    // 構建更新的資料
+    const profileData = {
+      phone: profile?.phone || user.profile?.phone,
+      bio: profile?.bio || user.profile?.bio,
+      location: profile?.location || user.profile?.location,
+      birthDate: profile?.birthDate || user.profile?.birthDate,
+      languages: profile?.languages || user.profile?.languages || [],
+      specialties: profile?.specialties || user.profile?.specialties || [],
+      experienceYears: profile?.experienceYears !== undefined ? profile.experienceYears : user.profile?.experienceYears,
+      certifications: profile?.certifications || user.profile?.certifications || []
     };
 
-    // 在實際應用中，這裡應該更新資料庫
-    // await updateUserInDatabase(user.id, updatedUser);
+    // 更新用戶資料到資料庫
+    const updatedUser = await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        name: name.trim(),
+        avatar: avatar || user.avatar,
+        phone: profile?.phone || user.phone,
+        profile: profileData,
+        ...(isKYCVerified !== undefined && { isKycVerified: isKYCVerified })
+      }
+    });
 
-    // 暫時更新模擬資料
+    // 如果是導遊，也更新 UserProfile 表
+    if (user.role === 'GUIDE') {
+      try {
+        const userProfileExists = await prisma.userProfile.findUnique({
+          where: { userId: user.id }
+        });
+
+        if (userProfileExists) {
+          await prisma.userProfile.update({
+            where: { userId: user.id },
+            data: {
+              bio: profile?.bio,
+              location: profile?.location,
+              languages: profile?.languages || [],
+              specialties: profile?.specialties || [],
+              experienceYears: profile?.experienceYears,
+              certifications: profile?.certifications || []
+            }
+          });
+        } else {
+          await prisma.userProfile.create({
+            data: {
+              userId: user.id,
+              bio: profile?.bio,
+              location: profile?.location,
+              languages: profile?.languages || [],
+              specialties: profile?.specialties || [],
+              experienceYears: profile?.experienceYears,
+              certifications: profile?.certifications || []
+            }
+          });
+        }
+      } catch (profileError) {
+        console.error('Error updating user profile record:', profileError);
+        // 不要因為 UserProfile 錯誤而失敗，因為主要資料已存儲到 User 表
+      }
+    }
+
+    // 更新模擬資料以保持一致性
     const userIndex = mockUsers.findIndex(u => u.id === user.id);
     if (userIndex !== -1) {
-      mockUsers[userIndex] = updatedUser;
-    } else {
-      // 如果是新用戶，將其添加到 mockUsers 列表中
-      mockUsers.push(updatedUser);
-      console.log('Added new user to mockUsers:', user.email);
+      const mockUser = mockUsers[userIndex]!;
+      mockUsers[userIndex] = {
+        id: mockUser.id,
+        email: mockUser.email,
+        name: name.trim(),
+        avatar: avatar || mockUser.avatar,
+        phone: mockUser.phone,
+        role: mockUser.role,
+        isEmailVerified: mockUser.isEmailVerified,
+        isKycVerified: isKYCVerified !== undefined ? isKYCVerified : mockUser.isKycVerified,
+        permissions: mockUser.permissions,
+        createdAt: mockUser.createdAt,
+        updatedAt: new Date().toISOString(),
+        profile: profileData
+      };
     }
 
     console.log('Profile updated successfully for:', user.email);
 
     return successResponse({
-      user: updatedUser
+      user: {
+        id: updatedUser.id,
+        email: updatedUser.email,
+        name: updatedUser.name,
+        avatar: updatedUser.avatar,
+        role: updatedUser.role,
+        isEmailVerified: updatedUser.isEmailVerified,
+        isKycVerified: updatedUser.isKycVerified,
+        permissions: updatedUser.permissions,
+        createdAt: updatedUser.createdAt,
+        updatedAt: updatedUser.updatedAt,
+        profile: profileData
+      }
     }, '個人資料更新成功');
 
   } catch (error) {
@@ -331,16 +398,16 @@ export async function PUT(request: NextRequest) {
 export async function PATCH(request: NextRequest) {
   try {
     console.log('Partial update user profile API called');
-    
+
     const user = getCurrentUser();
-    
+
     if (!user) {
       console.log('User not authenticated');
       return unauthorizedResponse();
     }
 
     const body = await request.json();
-    
+
     console.log('Partial update for user:', user.email, body);
 
     // 驗證個別欄位
@@ -356,36 +423,95 @@ export async function PATCH(request: NextRequest) {
       return errorResponse('自我介紹不能超過500個字元', 400);
     }
 
-    // 部分更新用戶資料
-    const updatedUser = {
-      ...user,
-      ...(body.name !== undefined && { name: body.name.trim() }),
-      ...(body.avatar !== undefined && { avatar: body.avatar }),
-      profile: {
-        ...user.profile,
-        ...(body.profile?.phone !== undefined && { phone: body.profile.phone }),
-        ...(body.profile?.bio !== undefined && { bio: body.profile.bio }),
-        ...(body.profile?.location !== undefined && { location: body.profile.location }),
-        ...(body.profile?.languages !== undefined && { languages: body.profile.languages }),
-        ...(body.profile?.specialties !== undefined && { specialties: body.profile.specialties })
-      },
-      updatedAt: new Date().toISOString()
-    };
+    // 構建更新數據
+    const updateData: any = {};
 
-    // 暫時更新模擬資料
+    if (body.name !== undefined) {
+      updateData.name = body.name.trim();
+    }
+
+    if (body.avatar !== undefined) {
+      updateData.avatar = body.avatar;
+    }
+
+    if (body.profile) {
+      const currentProfile = user.profile || {};
+      updateData.profile = {
+        ...currentProfile,
+        ...(body.profile.phone !== undefined && { phone: body.profile.phone }),
+        ...(body.profile.bio !== undefined && { bio: body.profile.bio }),
+        ...(body.profile.location !== undefined && { location: body.profile.location }),
+        ...(body.profile.languages !== undefined && { languages: body.profile.languages }),
+        ...(body.profile.specialties !== undefined && { specialties: body.profile.specialties })
+      };
+    }
+
+    // 更新用戶資料到資料庫
+    const updatedUser = await prisma.user.update({
+      where: { id: user.id },
+      data: updateData
+    });
+
+    // 如果是導遊，也更新 UserProfile 表
+    if (user.role === 'GUIDE' && body.profile) {
+      try {
+        const userProfileExists = await prisma.userProfile.findUnique({
+          where: { userId: user.id }
+        });
+
+        const profileUpdateData: any = {};
+        if (body.profile.bio !== undefined) profileUpdateData.bio = body.profile.bio;
+        if (body.profile.location !== undefined) profileUpdateData.location = body.profile.location;
+        if (body.profile.languages !== undefined) profileUpdateData.languages = body.profile.languages;
+        if (body.profile.specialties !== undefined) profileUpdateData.specialties = body.profile.specialties;
+
+        if (userProfileExists && Object.keys(profileUpdateData).length > 0) {
+          await prisma.userProfile.update({
+            where: { userId: user.id },
+            data: profileUpdateData
+          });
+        } else if (!userProfileExists && Object.keys(profileUpdateData).length > 0) {
+          await prisma.userProfile.create({
+            data: {
+              userId: user.id,
+              ...profileUpdateData
+            }
+          });
+        }
+      } catch (profileError) {
+        console.error('Error updating user profile record:', profileError);
+        // 不要因為 UserProfile 錯誤而失敗
+      }
+    }
+
+    // 更新模擬資料以保持一致性
     const userIndex = mockUsers.findIndex(u => u.id === user.id);
     if (userIndex !== -1) {
-      mockUsers[userIndex] = updatedUser;
-    } else {
-      // 如果是新用戶，將其添加到 mockUsers 列表中
-      mockUsers.push(updatedUser);
-      console.log('Added new user to mockUsers:', user.email);
+      mockUsers[userIndex] = {
+        ...mockUsers[userIndex],
+        ...updateData,
+        updatedAt: new Date().toISOString()
+      };
     }
 
     console.log('Profile partially updated successfully for:', user.email);
 
+    const profileData = updateData.profile || user.profile || {};
+
     return successResponse({
-      user: updatedUser
+      user: {
+        id: updatedUser.id,
+        email: updatedUser.email,
+        name: updatedUser.name,
+        avatar: updatedUser.avatar,
+        role: updatedUser.role,
+        isEmailVerified: updatedUser.isEmailVerified,
+        isKycVerified: updatedUser.isKycVerified,
+        permissions: updatedUser.permissions,
+        createdAt: updatedUser.createdAt,
+        updatedAt: updatedUser.updatedAt,
+        profile: profileData
+      }
     }, '個人資料更新成功');
 
   } catch (error) {
