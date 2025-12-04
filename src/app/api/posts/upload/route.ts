@@ -90,6 +90,8 @@ export async function POST(request: NextRequest) {
     for (let i = 0; i < files.length; i++) {
       const file = files[i]
 
+      if (!file) continue
+
       // Determine file type
       const isImage = ALLOWED_IMAGE_TYPES.includes(file.type)
       const isVideo = ALLOWED_VIDEO_TYPES.includes(file.type)
