@@ -9,7 +9,13 @@ import { useAuth } from '@/store/auth';
 function LoginPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { login, isLoading } = useAuth();
+  const { login, isLoading, isAuthenticated } = useAuth();
+
+  // Redirect authenticated users to home page
+  if (isAuthenticated) {
+    router.push('/');
+    return null;
+  }
 
   const [formData, setFormData] = useState({
     email: '',
