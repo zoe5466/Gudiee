@@ -300,7 +300,7 @@ export async function PUT(request: NextRequest) {
 
     // 更新用戶資料到資料庫
     const updatedUser = await prisma.user.update({
-      where: { id: user.id },
+      where: { email: user.email },
       data: {
         name: name.trim(),
         avatar: avatar || user.avatar,
@@ -314,12 +314,12 @@ export async function PUT(request: NextRequest) {
     if (user.role === 'GUIDE') {
       try {
         const userProfileExists = await prisma.userProfile.findUnique({
-          where: { userId: user.id }
+          where: { userId: updatedUser.id }
         });
 
         if (userProfileExists) {
           await prisma.userProfile.update({
-            where: { userId: user.id },
+            where: { userId: updatedUser.id },
             data: {
               bio: profile?.bio,
               location: profile?.location,
@@ -332,7 +332,7 @@ export async function PUT(request: NextRequest) {
         } else {
           await prisma.userProfile.create({
             data: {
-              userId: user.id,
+              userId: updatedUser.id,
               bio: profile?.bio,
               location: profile?.location,
               languages: profile?.languages || [],
@@ -448,7 +448,7 @@ export async function PATCH(request: NextRequest) {
 
     // 更新用戶資料到資料庫
     const updatedUser = await prisma.user.update({
-      where: { id: user.id },
+      where: { email: user.email },
       data: updateData
     });
 
@@ -456,7 +456,7 @@ export async function PATCH(request: NextRequest) {
     if (user.role === 'GUIDE' && body.profile) {
       try {
         const userProfileExists = await prisma.userProfile.findUnique({
-          where: { userId: user.id }
+          where: { userId: updatedUser.id }
         });
 
         const profileUpdateData: any = {};
@@ -467,13 +467,13 @@ export async function PATCH(request: NextRequest) {
 
         if (userProfileExists && Object.keys(profileUpdateData).length > 0) {
           await prisma.userProfile.update({
-            where: { userId: user.id },
+            where: { userId: updatedUser.id },
             data: profileUpdateData
           });
         } else if (!userProfileExists && Object.keys(profileUpdateData).length > 0) {
           await prisma.userProfile.create({
             data: {
-              userId: user.id,
+              userId: updatedUser.id,
               ...profileUpdateData
             }
           });
