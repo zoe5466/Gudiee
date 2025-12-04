@@ -134,48 +134,70 @@ function getCurrentUser() {
   try {
     const cookieStore = cookies();
     const token = cookieStore.get('auth-token')?.value;
-    
+
     if (!token) {
+      console.error('No auth token found');
       return null;
     }
 
-    // 解析 token
-    const userData = JSON.parse(atob(token));
-    
-    // 檢查 token 是否過期
-    if (userData.exp && userData.exp < Date.now()) {
+    // JWT 令牌格式為 header.payload.signature
+    // 我們需要解碼 payload 部分（第二段）
+    const parts = token.split('.');
+    if (parts.length !== 3) {
+      console.error('Invalid token format');
       return null;
     }
 
-    // 從模擬數據中找到用戶
-    let user = mockUsers.find(u => u.id === userData.id);
-    
-    // 如果在預定義用戶中找不到，表示是新註冊的用戶，從 token 中構建用戶資料
-    if (!user && userData.id && userData.email) {
-      user = {
-        id: userData.id,
-        email: userData.email,
-        name: userData.name || '用戶',
-        role: userData.role || 'CUSTOMER',
-        avatar: null,
-        isEmailVerified: true,
-        isKycVerified: false, // 新註冊用戶需要完成 KYC
-        permissions: userData.role === 'GUIDE' ? ['user:read', 'guide:manage'] : ['user:read'],
-        createdAt: new Date().toISOString(),
-        profile: {
-          ...(userData.phone && { phone: userData.phone }),
-          languages: [],
-          specialties: [],
-          experienceYears: 0,
-          certifications: []
-        }
-      };
+    try {
+      // 解析 JWT payload（第二段）
+      // 添加必要的 padding 以確保 Base64 正確解碼
+      const payload = parts[1];
+      const padded = payload + '='.repeat((4 - payload.length % 4) % 4);
+      const decoded = Buffer.from(padded, 'base64').toString('utf-8');
+      const userData = JSON.parse(decoded);
+
+      console.log('Parsed token data:', { id: userData.id, email: userData.email, role: userData.role });
+
+      // 檢查 token 是否過期
+      if (userData.exp && userData.exp * 1000 < Date.now()) {
+        console.error('Token expired');
+        return null;
+      }
+
+      // 從模擬數據中找到用戶
+      let user = mockUsers.find(u => u.id === userData.id);
+
+      // 如果在預定義用戶中找不到，表示是新註冊的用戶，從 token 中構建用戶資料
+      if (!user && userData.id && userData.email) {
+        console.log('Creating new user from token:', userData.email);
+        user = {
+          id: userData.id,
+          email: userData.email,
+          name: userData.name || '用戶',
+          role: userData.role || 'CUSTOMER',
+          avatar: null,
+          isEmailVerified: true,
+          isKycVerified: false, // 新註冊用戶需要完成 KYC
+          permissions: userData.role === 'GUIDE' ? ['user:read', 'guide:manage'] : ['user:read'],
+          createdAt: new Date().toISOString(),
+          profile: {
+            ...(userData.phone && { phone: userData.phone }),
+            languages: [],
+            specialties: [],
+            experienceYears: 0,
+            certifications: []
+          }
+        };
+      }
+
+      return user || null;
+    } catch (parseError) {
+      console.error('Failed to parse JWT payload:', parseError);
+      return null;
     }
-    
-    return user || null;
 
   } catch (error) {
-    console.error('Parse token error:', error);
+    console.error('Get current user error:', error);
     return null;
   }
 }
