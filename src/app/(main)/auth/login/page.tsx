@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, Suspense } from 'react';
+import { useState, Suspense, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Eye, EyeOff, Mail, Lock, ArrowLeft, AlertCircle } from 'lucide-react';
@@ -10,12 +10,15 @@ function LoginPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { login, isLoading, isAuthenticated } = useAuth();
+  const [isReady, setIsReady] = useState(false);
 
   // Redirect authenticated users to home page
-  if (isAuthenticated) {
-    router.push('/');
-    return null;
-  }
+  useEffect(() => {
+    setIsReady(true);
+    if (isAuthenticated) {
+      router.push('/');
+    }
+  }, [isAuthenticated, router]);
 
   const [formData, setFormData] = useState({
     email: '',
@@ -24,6 +27,11 @@ function LoginPageContent() {
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loginAttempts, setLoginAttempts] = useState(0);
+
+  // Don't render the login form until we've checked authentication
+  if (!isReady) {
+    return <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Loading...</div>;
+  }
 
   const redirectUrl = searchParams.get('redirect') || '/';
 
