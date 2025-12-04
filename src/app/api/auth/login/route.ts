@@ -42,10 +42,7 @@ export async function POST(request: NextRequest) {
 
     // 從資料庫查找用戶
     const user = await prisma.user.findUnique({
-      where: { email: email.toLowerCase() },
-      include: {
-        userProfile: true
-      }
+      where: { email: email.toLowerCase() }
     });
     
     if (!user) {
