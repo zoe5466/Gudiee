@@ -6,7 +6,6 @@ import { useEffect, useState } from 'react';
 import { GuideSidebar } from './guide-sidebar';
 import { Header } from './header';
 import { HomeSidebar } from './home-sidebar';
-import { CustomerSupportChat } from '@/components/chat';
 import { NotificationManager } from '@/components/notifications/notification-manager';
 import { cn } from '@/lib/utils';
 
@@ -42,7 +41,6 @@ export function DualLayout({ children }: DualLayoutProps) {
           </div>
         </main>
         <HomeSidebar />
-        <CustomerSupportChat />
         <NotificationManager />
       </div>
     );
@@ -66,7 +64,6 @@ export function DualLayout({ children }: DualLayoutProps) {
         {children}
       </main>
       <HomeSidebar />
-      <CustomerSupportChat />
       <NotificationManager />
     </div>
   );
