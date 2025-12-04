@@ -7,7 +7,6 @@ module.exports = {
     './app/**/*.{js,ts,jsx,tsx,mdx}',
     './src/**/*.{js,ts,jsx,tsx,mdx}',
   ],
-  important: true,
   theme: {
     container: {
       center: true,
