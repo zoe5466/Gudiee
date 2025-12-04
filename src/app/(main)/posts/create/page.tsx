@@ -3,8 +3,18 @@
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, Plus, X } from 'lucide-react'
+import { ArrowLeft, Plus, X, Upload, Image as ImageIcon, Video as VideoIcon, Trash2 } from 'lucide-react'
 import { useAuth } from '@/hooks/use-auth'
+
+interface MediaFile {
+  id: string
+  name: string
+  url: string
+  type: 'image' | 'video'
+  size: number
+  mimeType: string
+  file?: File
+}
 
 interface CreatePostFormData {
   title: string
@@ -19,6 +29,7 @@ interface CreatePostFormData {
     embedType: 'card' | 'inline'
     customText: string
   }>
+  mediaFiles: MediaFile[]
 }
 
 const CATEGORIES = [
@@ -44,12 +55,15 @@ export default function CreatePostPage() {
     location: '',
     status: 'published',
     embeddedServices: [],
+    mediaFiles: [],
   })
   const [tagInput, setTagInput] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [availableServices, setAvailableServices] = useState<any[]>([])
   const [loadingServices, setLoadingServices] = useState(false)
+  const [uploadingMedia, setUploadingMedia] = useState(false)
+  const [mediaError, setMediaError] = useState<string | null>(null)
 
   // 獲取可用服務列表
   useEffect(() => {
@@ -134,6 +148,65 @@ export default function CreatePostPage() {
       embeddedServices: prev.embeddedServices.map((s) =>
         s.serviceId === serviceId ? { ...s, [field]: value } : s
       ),
+    }))
+  }
+
+  const handleMediaSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.currentTarget.files
+    if (!files || files.length === 0) return
+
+    const newFiles = Array.from(files)
+
+    // Check total file count
+    if (formData.mediaFiles.length + newFiles.length > 20) {
+      setMediaError(`最多只能上傳 20 個檔案，目前已有 ${formData.mediaFiles.length} 個`)
+      return
+    }
+
+    try {
+      setUploadingMedia(true)
+      setMediaError(null)
+
+      // Create FormData for upload
+      const uploadFormData = new FormData()
+      newFiles.forEach((file) => {
+        uploadFormData.append('files', file)
+      })
+
+      // Upload files
+      const response = await fetch('/api/posts/upload', {
+        method: 'POST',
+        body: uploadFormData,
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || '上傳失敗')
+      }
+
+      const result = await response.json()
+      if (result.success && result.data.files) {
+        setFormData((prev) => ({
+          ...prev,
+          mediaFiles: [...prev.mediaFiles, ...result.data.files],
+        }))
+      } else {
+        throw new Error(result.error || '上傳失敗')
+      }
+    } catch (err) {
+      setMediaError(err instanceof Error ? err.message : '未知錯誤')
+      console.error('Media upload error:', err)
+    } finally {
+      setUploadingMedia(false)
+      // Reset input
+      e.currentTarget.value = ''
+    }
+  }
+
+  const handleRemoveMedia = (fileId: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      mediaFiles: prev.mediaFiles.filter((f) => f.id !== fileId),
     }))
   }
 
@@ -340,6 +413,83 @@ export default function CreatePostPage() {
                   </div>
                 ))}
               </div>
+            </div>
+
+            {/* 媒體上傳 */}
+            <div className="mb-8">
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                媒體（圖片和影片）
+              </label>
+              <p className="text-xs text-gray-500 mb-3">最多可上傳 20 個檔案。支援圖片格式：JPG、PNG、GIF、WebP；影片格式：MP4、WebM、MOV</p>
+
+              {mediaError && (
+                <div className="bg-red-50 border border-red-200 rounded-lg p-3 mb-3 text-red-700 text-sm">
+                  {mediaError}
+                </div>
+              )}
+
+              {/* 上傳區域 */}
+              <label className="block mb-4">
+                <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer hover:border-[#002C56] hover:bg-blue-50 transition-colors">
+                  <Upload size={32} className="mx-auto mb-2 text-gray-400" />
+                  <p className="text-gray-700 font-medium">拖拽檔案到此或點擊選擇</p>
+                  <p className="text-xs text-gray-500 mt-1">
+                    已上傳 {formData.mediaFiles.length}/20 個檔案
+                  </p>
+                </div>
+                <input
+                  type="file"
+                  multiple
+                  accept="image/jpeg,image/png,image/gif,image/webp,video/mp4,video/webm,video/quicktime"
+                  onChange={handleMediaSelect}
+                  disabled={uploadingMedia || formData.mediaFiles.length >= 20}
+                  className="hidden"
+                />
+              </label>
+
+              {/* 已上傳媒體預覽 */}
+              {formData.mediaFiles.length > 0 && (
+                <div className="mb-4">
+                  <h3 className="text-sm font-semibold text-gray-700 mb-3">已上傳媒體 ({formData.mediaFiles.length})</h3>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    {formData.mediaFiles.map((media) => (
+                      <div key={media.id} className="relative group">
+                        <div className="bg-gray-100 rounded-lg overflow-hidden aspect-square flex items-center justify-center">
+                          {media.type === 'image' ? (
+                            <img
+                              src={media.url}
+                              alt={media.name}
+                              className="w-full h-full object-cover"
+                            />
+                          ) : (
+                            <div className="flex flex-col items-center justify-center w-full h-full bg-gray-200">
+                              <VideoIcon size={24} className="text-gray-400 mb-1" />
+                              <p className="text-xs text-gray-600 text-center px-2">{media.name}</p>
+                            </div>
+                          )}
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveMedia(media.id)}
+                          className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                        <p className="text-xs text-gray-600 mt-1 truncate">{media.name}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {uploadingMedia && (
+                <div className="text-center py-4">
+                  <div className="inline-block">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#002C56]"></div>
+                  </div>
+                  <p className="text-sm text-gray-600 mt-2">上傳中...</p>
+                </div>
+              )}
             </div>
 
             {/* 嵌入商品 */}

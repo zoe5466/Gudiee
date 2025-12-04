@@ -206,17 +206,20 @@ export async function POST(req: NextRequest) {
     const body = await req.json()
 
     // 驗證必填欄位
-    const { title, content, category, authorType } = body
+    const { title, content, category } = body
 
-    if (!title || !content || !category || !authorType) {
+    if (!title || !content || !category) {
       return NextResponse.json(
         {
           success: false,
-          error: 'Missing required fields: title, content, category, authorType',
+          error: 'Missing required fields: title, content, category',
         },
         { status: 400 }
       )
     }
+
+    // Determine authorType from user role (will be set by getCurrentUser check below)
+    const authorType = body.authorType || 'consumer'
 
     // 驗證 authorType
     if (!['guide', 'consumer'].includes(authorType)) {
@@ -253,11 +256,14 @@ export async function POST(req: NextRequest) {
         )
       }
 
+      // Prepare media URLs if provided
+      const mediaUrls = (body.mediaFiles || []).map((media: any) => media.url)
+
       const post = await prisma.post.create({
         data: {
           title: title.trim(),
           content,
-          coverImage: body.coverImage || null,
+          coverImage: body.coverImage || (mediaUrls.length > 0 ? mediaUrls[0] : null),
           authorId: user.id,
           authorType,
           category: category.toLowerCase(),
@@ -283,8 +289,11 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(
         {
           success: true,
-          message: 'Post created successfully',
-          data: post,
+          message: '貼文已成功發布',
+          data: {
+            ...post,
+            mediaFiles: body.mediaFiles || [],
+          },
         },
         { status: 201 }
       )
@@ -292,11 +301,13 @@ export async function POST(req: NextRequest) {
       // Database is unavailable, return mock response for demo purposes
       console.warn('Database unavailable for POST, returning mock response:', dbError)
 
+      const mediaUrls = (body.mediaFiles || []).map((media: any) => media.url)
+
       const mockPost = {
         id: `demo-${Date.now()}`,
         title: title.trim(),
         content,
-        coverImage: body.coverImage || null,
+        coverImage: body.coverImage || (mediaUrls.length > 0 ? mediaUrls[0] : null),
         authorId: 'demo-user',
         author: {
           id: 'demo-user',
@@ -315,12 +326,13 @@ export async function POST(req: NextRequest) {
         viewCount: 0,
         likeCount: 0,
         commentCount: 0,
+        mediaFiles: body.mediaFiles || [],
       }
 
       return NextResponse.json(
         {
           success: true,
-          message: 'Post created successfully (demo mode)',
+          message: '貼文已成功發布',
           data: mockPost,
         },
         { status: 201 }
