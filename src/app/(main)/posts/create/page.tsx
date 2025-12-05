@@ -24,6 +24,7 @@ interface CreatePostFormData {
   tags: string[]
   location: string
   status: 'draft' | 'published'
+  authorType: 'guide' | 'consumer'
   embeddedServices: Array<{
     serviceId: string
     embedType: 'card' | 'inline'
@@ -54,6 +55,7 @@ export default function CreatePostPage() {
     tags: [],
     location: '',
     status: 'published',
+    authorType: 'consumer',
     embeddedServices: [],
     mediaFiles: [],
   })
@@ -65,15 +67,21 @@ export default function CreatePostPage() {
   const [uploadingMedia, setUploadingMedia] = useState(false)
   const [mediaError, setMediaError] = useState<string | null>(null)
 
-  // 獲取可用服務列表
+  // 獲取可用服務列表並設定 authorType
   useEffect(() => {
     if (!user) return
+
+    // Set authorType based on user role
+    setFormData((prev) => ({
+      ...prev,
+      authorType: user.role === 'GUIDE' || user.role === 'ADMIN' ? 'guide' : 'consumer',
+    }))
 
     const fetchServices = async () => {
       try {
         setLoadingServices(true)
         const params = new URLSearchParams()
-        if (user.role === 'guide') {
+        if (user.role === 'GUIDE' || user.role === 'ADMIN') {
           params.append('guideId', user.id)
         }
 
@@ -227,24 +235,47 @@ export default function CreatePostPage() {
       setLoading(true)
       setError(null)
 
+      const payload = {
+        ...formData,
+        status,
+      }
+
+      console.log('Submitting post with payload:', {
+        title: payload.title,
+        category: payload.category,
+        authorType: payload.authorType,
+        status: payload.status,
+        mediaCount: payload.mediaFiles.length,
+      })
+
       const response = await fetch('/api/posts', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...formData,
-          status,
-        }),
+        body: JSON.stringify(payload),
       })
 
       if (!response.ok) {
         const errorData = await response.json()
+        console.error('Post creation failed:', errorData)
         throw new Error(errorData.error || 'Failed to create post')
       }
 
-      const { data } = await response.json()
-      router.push(`/posts/${data.id}`)
+      const result = await response.json()
+      console.log('Post created successfully:', {
+        id: result.data?.id,
+        title: result.data?.title,
+        message: result.message,
+      })
+
+      // Show success message before redirecting
+      setError(null)
+
+      // Redirect to the new post
+      router.push(`/posts/${result.data.id}`)
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Unknown error')
+      const errorMsg = err instanceof Error ? err.message : 'Unknown error'
+      console.error('Error creating post:', errorMsg)
+      setError(errorMsg)
     } finally {
       setLoading(false)
     }
