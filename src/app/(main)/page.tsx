@@ -1,10 +1,8 @@
-'use client'
-
 import { PostCard } from '@/components/post/post-card'
 import Link from 'next/link'
 import { Plus, Search } from 'lucide-react'
 
-// Mock posts data for homepage display
+// Mock posts data for fallback display
 const MOCK_POSTS = [
   {
     id: 'mock-1',
@@ -84,7 +82,34 @@ const MOCK_POSTS = [
   },
 ]
 
-export default function HomePage() {
+async function getPosts() {
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
+    const response = await fetch(`${baseUrl}/api/posts?limit=20&sortBy=latest`, {
+      next: { revalidate: 60 }, // Cache for 60 seconds
+    })
+
+    if (!response.ok) {
+      console.warn('Failed to fetch posts from API, using mock data')
+      return MOCK_POSTS
+    }
+
+    const result = await response.json()
+    if (result.success && result.data && result.data.length > 0) {
+      console.log(`Fetched ${result.data.length} posts from API`)
+      // Combine API posts with mock posts for fallback
+      return result.data.length > 0 ? result.data : MOCK_POSTS
+    }
+    return MOCK_POSTS
+  } catch (error) {
+    console.warn('Error fetching posts from API:', error)
+    return MOCK_POSTS
+  }
+}
+
+export default async function HomePage() {
+  const posts = await getPosts()
+
   return (
     <div className="min-h-screen bg-white">
       {/* 頂部導航 - 簡約精致 */}
@@ -154,16 +179,22 @@ export default function HomePage() {
 
           {/* 貼文網格 - 使用 Grid 而不是 Columns 以獲得更好的相容性 */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {MOCK_POSTS.map((post) => (
-              <PostCard
-                key={post.id}
-                {...post}
-                onLike={() => console.log('Liked:', post.id)}
-                onBookmark={() => console.log('Bookmarked:', post.id)}
-                isLiked={false}
-                isBookmarked={false}
-              />
-            ))}
+            {posts && posts.length > 0 ? (
+              posts.map((post: any) => (
+                <PostCard
+                  key={post.id}
+                  {...post}
+                  onLike={() => console.log('Liked:', post.id)}
+                  onBookmark={() => console.log('Bookmarked:', post.id)}
+                  isLiked={false}
+                  isBookmarked={false}
+                />
+              ))
+            ) : (
+              <div className="col-span-full text-center py-12">
+                <p className="text-gray-500 text-lg">暫無故事，成為第一個分享的人吧！</p>
+              </div>
+            )}
           </div>
         </div>
       </div>
