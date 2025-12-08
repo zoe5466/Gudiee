@@ -74,14 +74,14 @@ export default function CreatePostPage() {
     // Set authorType based on user role
     setFormData((prev) => ({
       ...prev,
-      authorType: user.role === 'GUIDE' || user.role === 'ADMIN' ? 'guide' : 'consumer',
+      authorType: user.role === 'guide' || user.role === 'admin' ? 'guide' : 'consumer',
     }))
 
     const fetchServices = async () => {
       try {
         setLoadingServices(true)
         const params = new URLSearchParams()
-        if (user.role === 'GUIDE' || user.role === 'ADMIN') {
+        if (user.role === 'guide' || user.role === 'admin') {
           params.append('guideId', user.id)
         }
 
