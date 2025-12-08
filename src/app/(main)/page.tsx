@@ -84,9 +84,15 @@ const MOCK_POSTS = [
 
 async function getPosts() {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
+    // Only fetch from API in production with a valid base URL
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL
+    if (!baseUrl) {
+      return MOCK_POSTS
+    }
+
     const response = await fetch(`${baseUrl}/api/posts?limit=20&sortBy=latest`, {
       next: { revalidate: 60 }, // Cache for 60 seconds
+      signal: AbortSignal.timeout(5000), // 5 second timeout
     })
 
     if (!response.ok) {
@@ -97,12 +103,11 @@ async function getPosts() {
     const result = await response.json()
     if (result.success && result.data && result.data.length > 0) {
       console.log(`Fetched ${result.data.length} posts from API`)
-      // Combine API posts with mock posts for fallback
-      return result.data.length > 0 ? result.data : MOCK_POSTS
+      return result.data
     }
     return MOCK_POSTS
   } catch (error) {
-    console.warn('Error fetching posts from API:', error)
+    console.warn('Error fetching posts from API, using mock data:', error instanceof Error ? error.message : error)
     return MOCK_POSTS
   }
 }
@@ -183,11 +188,18 @@ export default async function HomePage() {
               posts.map((post: any) => (
                 <PostCard
                   key={post.id}
-                  {...post}
-                  onLike={() => console.log('Liked:', post.id)}
-                  onBookmark={() => console.log('Bookmarked:', post.id)}
-                  isLiked={false}
-                  isBookmarked={false}
+                  id={post.id}
+                  title={post.title}
+                  content={post.content}
+                  coverImage={post.coverImage}
+                  author={post.author}
+                  category={post.category}
+                  tags={post.tags}
+                  location={post.location}
+                  viewCount={post.viewCount}
+                  likeCount={post.likeCount}
+                  commentCount={post.commentCount}
+                  publishedAt={post.publishedAt}
                 />
               ))
             ) : (
