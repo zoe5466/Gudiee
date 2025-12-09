@@ -57,7 +57,7 @@ export async function POST(request: NextRequest) {
         passwordHash: hashedPassword,
         name,
         phone: phone || null,
-        role: userType.toUpperCase() as 'CUSTOMER' | 'GUIDE' | 'ADMIN',
+        role: userType.toLowerCase() as 'customer' | 'guide' | 'admin',
         isEmailVerified: false,
         isKycVerified: false,
         isCriminalRecordVerified: userType === 'guide' ? false : null,
@@ -109,9 +109,15 @@ export async function POST(request: NextRequest) {
 
   } catch (error) {
     console.error('Registration error:', error);
-    return NextResponse.json({
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error('Error details:', errorMessage);
+    const response: any = {
       success: false,
       error: '註冊失敗，請稍後再試'
-    }, { status: 500 });
+    };
+    if (process.env.NODE_ENV === 'development') {
+      response.debug = errorMessage;
+    }
+    return NextResponse.json(response, { status: 500 });
   }
 }
