@@ -19,61 +19,74 @@ export function HomeSidebar() {
       icon: <Home className="w-5 h-5" />,
       label: '首頁',
       path: '/',
-      description: '探索精彩的旅遊故事'
+      description: '探索精彩的旅遊故事',
+      requireAuth: false
     },
     {
       icon: <Newspaper className="w-5 h-5" />,
       label: '貼文',
       path: '/feed',
-      description: '查看更多地陪和旅客的貼文'
+      description: '查看更多地陪和旅客的貼文',
+      requireAuth: false
     },
     {
       icon: <Search className="w-5 h-5" />,
       label: '探索',
       path: '/explore',
-      description: '探索更多服務和導遊'
+      description: '探索更多服務和導遊',
+      requireAuth: false
     },
     {
       icon: <CheckSquare className="w-5 h-5" />,
       label: '任務牆',
       path: '/tasks',
-      description: '查看和管理任務'
+      description: '查看和管理任務',
+      requireAuth: false
     },
     {
       icon: <ShoppingBag className="w-5 h-5" />,
       label: '訂單紀錄',
       path: '/orders',
-      description: '查看歷史訂單紀錄'
+      description: '查看歷史訂單紀錄',
+      requireAuth: true
     },
     {
       icon: <MessageCircle className="w-5 h-5" />,
       label: '對話',
       path: '/messages',
-      description: '與導遊和客戶聊天'
+      description: '與導遊和客戶聊天',
+      requireAuth: true
     },
     {
       icon: <Heart className="w-5 h-5" />,
       label: '我的收藏',
       path: '/favorites',
-      description: '收藏的服務和導遊'
+      description: '收藏的服務和導遊',
+      requireAuth: true
     },
     {
       icon: <User className="w-5 h-5" />,
       label: '個人資料',
       path: '/profile',
-      description: '查看和編輯個人資料'
+      description: '查看和編輯個人資料',
+      requireAuth: true
     }
   ];
 
-  const handleItemClick = (path: string, e?: React.MouseEvent) => {
+  const handleItemClick = (path: string, requireAuth: boolean = false, e?: React.MouseEvent) => {
     if (e) {
       e.preventDefault();
       e.stopPropagation();
     }
-    if (!isAuthenticated) {
-      router.push('/auth/login');
+
+    // 只有需要认证的页面才检查登录状态
+    if (requireAuth && !isAuthenticated) {
+      router.push('/auth/login?redirect=' + encodeURIComponent(path));
+      setIsOpen(false);
       return;
     }
+
+    // 直接导航到目标页面
     router.push(path);
     setIsOpen(false);
   };
@@ -131,7 +144,7 @@ export function HomeSidebar() {
             <div className="mb-4 sm:mb-6 p-3 sm:p-4 bg-blue-50 border border-blue-200 rounded-lg">
               <p className="text-sm text-blue-800 mb-2">請先登入以使用完整功能</p>
               <button
-                onClick={() => handleItemClick('/auth/login')}
+                onClick={() => handleItemClick('/auth/login', false)}
                 className="text-sm font-medium text-blue-600 hover:text-blue-700"
               >
                 立即登入 →
@@ -143,7 +156,7 @@ export function HomeSidebar() {
             {menuItems.map((item, index) => (
               <button
                 key={index}
-                onClick={(e) => handleItemClick(item.path, e)}
+                onClick={(e) => handleItemClick(item.path, item.requireAuth, e)}
                 className="w-full flex items-start p-3 sm:p-4 rounded-lg hover:bg-[#cfdbe9] active:bg-gray-100 transition-colors duration-150 text-left group touch-manipulation cursor-pointer"
                 style={{ minHeight: '64px' }}
               >
@@ -153,6 +166,9 @@ export function HomeSidebar() {
                 <div className="ml-3 flex-1 min-w-0">
                   <p className="text-sm font-medium text-gray-900 group-hover:text-blue-600 transition-colors">
                     {item.label}
+                    {item.requireAuth && !isAuthenticated && (
+                      <span className="ml-2 text-xs text-blue-600">需登入</span>
+                    )}
                   </p>
                   <p className="text-xs text-gray-500 mt-1">
                     {item.description}
@@ -169,7 +185,7 @@ export function HomeSidebar() {
               如果您有任何問題，請聯繫我們的客服團隊。
             </p>
             <button
-              onClick={(e) => handleItemClick('/support', e)}
+              onClick={(e) => handleItemClick('/support', false, e)}
               className="text-xs font-medium text-blue-600 hover:text-blue-700 cursor-pointer"
             >
               聯繫客服 →
