@@ -57,11 +57,11 @@ export async function POST(request: NextRequest) {
         passwordHash: hashedPassword,
         name,
         phone: phone || null,
-        role: userType.toLowerCase() as 'customer' | 'guide' | 'admin',
+        role: userType.toUpperCase() as 'CUSTOMER' | 'GUIDE' | 'ADMIN',
         isEmailVerified: false,
         isKycVerified: false,
-        isCriminalRecordVerified: userType === 'guide' ? false : null,
-        permissions: userType === 'guide' ? ['user:read', 'guide:manage'] : ['user:read'],
+        isCriminalRecordVerified: userType.toLowerCase() === 'guide' ? false : null,
+        permissions: userType.toLowerCase() === 'guide' ? ['user:read', 'guide:manage'] : ['user:read'],
         settings: { subscribeNewsletter }
       }
     });
