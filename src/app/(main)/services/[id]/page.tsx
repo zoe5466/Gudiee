@@ -103,24 +103,26 @@ export default function ServiceDetailPage({ params }: { params: { id: string } }
             description: result.data.description,
             location: result.data.location,
             price: result.data.price,
-            rating: result.data.stats.averageRating, // 平均評分
-            reviewCount: result.data.stats.totalReviews, // 評論總數
-            duration: result.data.duration.toString(), // 時長（小時）
-            maxGuests: result.data.maxGuests, // 最大人數
-            images: result.data.images, // 服務圖片列表
+            rating: result.data.averageRating || 0, // 平均評分
+            reviewCount: result.data.reviewCount || 0, // 評論總數
+            duration: (result.data.durationHours || 4).toString(), // 時長（小時）
+            maxGuests: result.data.maxGuests || 6, // 最大人數
+            images: result.data.images && result.data.images.length > 0
+              ? result.data.images
+              : ['https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800&h=600&fit=crop'], // 服務圖片列表（提供默認圖片）
             guide: { // 導遊資訊轉換
               id: result.data.guide.id,
               name: result.data.guide.name,
               avatar: result.data.guide.avatar || 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face', // 預設頭像
-              rating: 4.9, // TODO: 從導遊評價計算實際評分
-              reviewCount: 156, // TODO: 從導遊評價計算實際數量
+              rating: result.data.guide.rating || 4.8, // 導遊評分
+              reviewCount: result.data.guide.reviewCount || 0, // 導遊評論數
               languages: result.data.guide.languages || ['中文'], // 支援語言
-              experience: `${result.data.guide.experienceYears || 3}年導覽經驗`, // 經驗年數
-              specialties: result.data.guide.specialties || ['專業導覽'], // 專長領域
+              experience: result.data.guide.experience || '專業導遊', // 經驗描述
+              specialties: result.data.guide.specialties || ['旅遊導覽'], // 專長領域
               bio: result.data.guide.bio || '專業導遊，熱愛分享旅遊體驗' // 個人簡介
             },
-            highlights: result.data.highlights, // 服務亮點
-            reviews: result.data.reviews.map((review: any) => ({ // 評論資料轉換
+            highlights: result.data.highlights || [], // 服務亮點
+            reviews: (result.data.reviews || []).map((review: any) => ({ // 評論資料轉換
               id: review.id,
               userName: review.reviewer?.name || '匿名用戶', // 處理匿名評論
               userAvatar: review.reviewer?.avatar || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face',
@@ -130,11 +132,11 @@ export default function ServiceDetailPage({ params }: { params: { id: string } }
             })),
             category: result.data.category?.name || '旅遊導覽', // 服務類別
             isAvailable: result.data.status === 'ACTIVE', // 是否可預訂
-            cancellationPolicy: result.data.cancellationPolicy, // 取消政策
-            included: result.data.included, // 包含項目
-            notIncluded: result.data.excluded // 不包含項目
+            cancellationPolicy: result.data.cancellationPolicy || '24小時前免費取消', // 取消政策
+            included: result.data.included || [], // 包含項目
+            notIncluded: result.data.notIncluded || [] // 不包含項目
           };
-          
+
           setService(serviceData);
         } else {
           throw new Error('載入失敗');
