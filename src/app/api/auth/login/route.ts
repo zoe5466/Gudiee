@@ -40,11 +40,20 @@ export async function POST(request: NextRequest) {
       }, { status: 400 });
     }
 
+    console.log('[Login] Attempting login for:', email);
+
     // 從資料庫查找用戶
-    const user = await prisma.user.findUnique({
-      where: { email: email.toLowerCase() }
-    });
-    
+    let user;
+    try {
+      user = await prisma.user.findUnique({
+        where: { email: email.toLowerCase() }
+      });
+      console.log('[Login] User found:', user ? 'yes' : 'no');
+    } catch (dbError) {
+      console.error('[Login] Database error:', dbError);
+      throw new Error('Database connection failed');
+    }
+
     if (!user) {
       return Response.json({
         success: false,
@@ -53,7 +62,15 @@ export async function POST(request: NextRequest) {
     }
 
     // 驗證密碼
-    const isValidPassword = await bcrypt.compare(password, user.passwordHash);
+    let isValidPassword;
+    try {
+      isValidPassword = await bcrypt.compare(password, user.passwordHash);
+      console.log('[Login] Password valid:', isValidPassword);
+    } catch (bcryptError) {
+      console.error('[Login] Bcrypt error:', bcryptError);
+      throw new Error('Password validation failed');
+    }
+
     if (!isValidPassword) {
       return Response.json({
         success: false,
@@ -62,20 +79,34 @@ export async function POST(request: NextRequest) {
     }
 
     // 生成 token
-    const token = generateToken(user);
+    let token;
+    try {
+      token = generateToken(user);
+      console.log('[Login] Token generated successfully');
+    } catch (tokenError) {
+      console.error('[Login] Token generation error:', tokenError);
+      throw new Error('Token generation failed - check JWT_SECRET');
+    }
 
     // 設置 cookie
-    const cookieStore = cookies();
-    cookieStore.set('auth-token', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 7 * 24 * 60 * 60 // 7 天
-    });
+    try {
+      const cookieStore = cookies();
+      cookieStore.set('auth-token', token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        maxAge: 7 * 24 * 60 * 60 // 7 天
+      });
+      console.log('[Login] Cookie set successfully');
+    } catch (cookieError) {
+      console.error('[Login] Cookie error:', cookieError);
+      throw new Error('Failed to set authentication cookie');
+    }
 
     // 準備回應資料（移除密碼）
     const { passwordHash, ...userWithoutPassword } = user;
 
+    console.log('[Login] Login successful for user:', user.id);
     return Response.json({
       success: true,
       data: {
@@ -85,11 +116,12 @@ export async function POST(request: NextRequest) {
       message: '登入成功'
     });
 
-  } catch (error) {
-    console.error('Login error:', error);
+  } catch (error: any) {
+    console.error('[Login] Error:', error);
     return Response.json({
       success: false,
-      error: '登入失敗，請稍後再試'
+      error: error.message || '登入失敗，請稍後再試',
+      details: process.env.NODE_ENV === 'development' ? error.stack : undefined
     }, { status: 500 });
   }
 }
