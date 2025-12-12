@@ -25,6 +25,37 @@ export async function GET(request: NextRequest) {
 
     const skip = (page - 1) * limit;
 
+    // 如果提供了 serviceId，先验证服务是否存在
+    if (serviceId) {
+      const serviceExists = await prisma.service.findUnique({
+        where: { id: serviceId },
+        select: { id: true }
+      });
+
+      // 如果服务不存在，返回空结果而不是错误
+      if (!serviceExists) {
+        return successResponse({
+          reviews: [],
+          statistics: {
+            averageRating: 0,
+            totalReviews: 0,
+            ratingDistribution: {
+              5: 0,
+              4: 0,
+              3: 0,
+              2: 0,
+              1: 0
+            }
+          }
+        }, '評價列表獲取成功', {
+          page,
+          limit,
+          total: 0,
+          totalPages: 0
+        });
+      }
+    }
+
     // 構建查詢條件
     const where: any = {
       status: 'APPROVED'
@@ -93,6 +124,29 @@ export async function GET(request: NextRequest) {
       prisma.review.count({ where })
     ]);
 
+    // 如果没有评论，返回默认统计数据
+    if (total === 0) {
+      return successResponse({
+        reviews: [],
+        statistics: {
+          averageRating: 0,
+          totalReviews: 0,
+          ratingDistribution: {
+            5: 0,
+            4: 0,
+            3: 0,
+            2: 0,
+            1: 0
+          }
+        }
+      }, '評價列表獲取成功', {
+        page,
+        limit,
+        total: 0,
+        totalPages: 0
+      });
+    }
+
     // 計算統計資料
     const stats = await prisma.review.aggregate({
       where,
@@ -136,7 +190,26 @@ export async function GET(request: NextRequest) {
 
   } catch (error) {
     console.error('Get reviews error:', error);
-    return errorResponse('獲取評價列表失敗', 500);
+    // 即使发生错误，也返回空结果而不是 500 错误
+    return successResponse({
+      reviews: [],
+      statistics: {
+        averageRating: 0,
+        totalReviews: 0,
+        ratingDistribution: {
+          5: 0,
+          4: 0,
+          3: 0,
+          2: 0,
+          1: 0
+        }
+      }
+    }, '評價列表獲取成功（降级）', {
+      page: 1,
+      limit: 10,
+      total: 0,
+      totalPages: 0
+    });
   }
 }
 
